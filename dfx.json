@@ -1,0 +1,9 @@
+{
+    "canisters": {
+      "web3": {
+        "type": "assets",
+        "source": ["public"]
+      }
+    }
+  }
+  

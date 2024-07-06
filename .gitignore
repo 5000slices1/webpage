@@ -14,13 +14,19 @@
 /dataSources/
 /dataSources.local.xml
 
+# dfx temporary files
+.dfx/
+.vessel/
+.mops/
+
+
 # other folders and files
-/.dfx
-/.dfx/local/*
-/.dfx/*
 /.idea/
 /.vscode
+canister_ids.json
+
+*.sh
+**/*.pem
 
 
-
-.dfx/local/canister_ids.json
+node_modules

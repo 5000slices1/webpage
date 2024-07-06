@@ -10,8 +10,7 @@ export { idlFactory } from "./web3.did.js";
  * beginning in dfx 0.15.0
  */
 export const canisterId =
-  process.env.CANISTER_ID_WEB3 ||
-  process.env.WEB3_CANISTER_ID;
+  process.env.CANISTER_ID_WEB3;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
@@ -40,4 +39,4 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const web3 = createActor(canisterId);
+export const web3 = canisterId ? createActor(canisterId) : undefined;

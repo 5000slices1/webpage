@@ -23,3 +23,4 @@ fetchPairPrice(pairName)
     console.error(error);
     priceContainer.textContent = 'Error fetching price';
   });
+

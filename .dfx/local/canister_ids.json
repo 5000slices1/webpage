@@ -1,8 +1,11 @@
 {
   "__Candid_UI": {
-    "local": "b77ix-eeaaa-aaaaa-qaada-cai"
+    "local": "bd3sg-teaaa-aaaaa-qaaba-cai"
   },
   "web3": {
-    "local": "bw4dl-smaaa-aaaaa-qaacq-cai"
+    "local": "bkyz2-fmaaa-aaaaa-qaaaq-cai"
+  },
+  "web3_frontend": {
+    "local": "by6od-j4aaa-aaaaa-qaadq-cai"
   }
 }

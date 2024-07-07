@@ -1,4 +1,15 @@
 {
+  "name": "web3",
+  "version": "0.2.0",
+  "description": "Internet Computer starter application",
+  "placeholder_type": "module",
+  "keywords": [
+    "Internet Computer",
+    "Motoko",
+    "JavaScript",
+    "Canister"
+  ],
+
   "scripts": {
     "build": "webpack",
     "prebuild": "dfx generate",

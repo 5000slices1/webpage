@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <!-- basic -->
     <meta charset="utf-8">
@@ -21,7 +21,9 @@
 
     <!-- awesome fontfamily -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-        
+    
+    <link type="text/css" rel="stylesheet" href="/src/frontend/assets/css/MainStyles/MainStyles.css" />
+
     <link type="text/css" rel="stylesheet" href="css/MainStyles/MainStyles.css" />
     
     <!-- <script type="text/javascript" src="/src/frontend/assets/scripts/testjavascript.js"></script> -->
@@ -43,7 +45,7 @@
       <script src="/public/scripts/PriceFetchers/Icpswap/liquid3.js"></script>
       <script src="/public/scripts/PriceFetchers/Icpswap/liquid4.js"></script>
       <script src="supply.js"></script> -->
-      <style>
+      <!-- <style>
         .header-buttons {
           display: flex;
           margin-bottom: 20px;
@@ -68,7 +70,7 @@
         .header-buttons button:hover {
           background-color: aqua;
         }
-      </style>
+      </style> -->
 
 
     <!-- Header section -->
@@ -84,9 +86,11 @@
      
 </head>
 <!-- body -->
-<body>
-<header style="height: 80px;">
-    <!-- Header section -->
+<body style="height: 100%;">
+
+<!-- Header section -->
+header style="height: 80px;">
+    
     <div>
         <table style="width: 100%;min-width: 450px;">
             <td align="left" style="width:60px">
@@ -95,10 +99,11 @@
                      alt="5000 Slices Swap-App" />
             </td>
             <td align="left" style="width:auto; min-width: 60px;vertical-align: center" >
-                <table>
+                <table style="color: rgb(177, 174, 174);">
                     <td style="padding-right: 8px;">
                         <b>
-                            placeholder1
+                            <button type="submit" class="button-navigation"  
+            id="buttontest" style="color: rgb(143, 143, 143);width: 60px;height: 25px;">test</button>
                         </b>
                     </td>
                     <td style="padding-right: 8px;">
@@ -133,8 +138,7 @@
                 "></label>
                         </td>
                         <td>
-                        <td>
-                            <!-- #region Wallet Connection Control -->
+                        <td>                            
                             <div class="dropdown">
                                 <button id="buttonWalletDropDown" style="border-radius: 6px;
                 height:35px;width:120px" type="submit" class="dropbtn">Wallet
@@ -143,7 +147,7 @@
                                 <div id="dropDownWalletMenu" class="dropdown-content"
                                      style="padding: 3px 3px 3px 6px; position: fixed; width: 180px;
                   left: 100%; 
-                   margin-left: -210px; margin-top: 70px;                                 
+                   margin-left: -410px; margin-top: 8px;                                 
                   background-color: hsl(249, 32%, 8%);box-shadow: 0 0 10px 0 rgba(242, 241, 241, 0.3);border-radius: 0.8em;">
 
                                     <table>
@@ -171,8 +175,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                            </div>
-                            <!-- #endregion Wallet Connection Control -->
+                            </div>                            
                         </td>
 
                     </table>
@@ -182,7 +185,30 @@
     </div>
 
 </header>
+
+<main style="height: 100%;">
+    <div style="height: 100%;">
+        <!-- <embed type="text/html" src="http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai" /> -->
+        <!-- <iframe src="http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai" -->
+            <!-- <iframe src="https://bioniq.io/blog/motoko-sentinels/" -->
+                <!-- <iframe src="http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai" -->
+            <iframe name="frame_swap" id="cross_domain_swapapp" src="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/"
+                
+            width="100%" height="100%" 
+            style="border: none;"
+         >
+        </iframe>
+        <!-- <embed src="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/" width="1200" height="1400"> </embed>  -->
+        <!-- <link rel="import" href="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/" style="width: 1200px; height: 1000px;" /> -->
+    </div>
+</main>
+
+<footer>
+
+</footer>
+
 </body>
+
 
 <!--<body class="main-layout">-->
 <!--    &lt;!&ndash; loader  &ndash;&gt;-->

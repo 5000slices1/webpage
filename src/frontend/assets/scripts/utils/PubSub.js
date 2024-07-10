@@ -16,7 +16,7 @@ export const PubSub = (() => {
       return true;
     }
   
-    function subscribe(subscriber_identifier, event, func) {
+    function subscribe(subscriber_identifier, event, func) {      
       if (!events[event]) {
         events[event] = [];
       }

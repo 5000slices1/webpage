@@ -1,6 +1,8 @@
 import { UsersIdentity } from "./UsersIdentity";
 import { Artemis } from 'artemis-web3-adapter';
-
+import { PubSub } from "../../utils/PubSub";
+import { WalletTypes } from "../../types/CommonTypes";
+import { Principal } from "@dfinity/principal";
 
 export class IdentiyProvider {
 
@@ -17,10 +19,41 @@ export class IdentiyProvider {
     UsersIdentity = new UsersIdentity();
     
     constructor() {
+
+        // this.#_adapter = new Artemis();
+        // window.artemis = this.#_adapter;
+
+        //window.artemis =  new Artemis();
+        //this.#_adapter = window.artemis; 
+
+        // if (window.artemis != null)
+        // {
+        //     console.log("not null");
+        //     //this.#_adapter = window.artemis;  
+        //     //this.#_adapter = new Artemis();
+        //     window.artemis =  new Artemis();
+        //     this.#_adapter = window.artemis; 
+        // }
+        // else{
+        //     console.log("null");
+        //     this.#_adapter = new Artemis();
+        //     window.artemis = this.#_adapter;
+        // }
+
         this.#_adapter = new Artemis();    
         this.#_init_done = false;
+
+        console.log("after");
+        console.log("web3");
+        console.log(window);
+        console.log("web3 ok");        
+
     }
 
+    GetAdapter(){
+        return this.#_adapter;
+    }
+    
     IsWalletConnected() {
 
         if (this.#_adapter.provider == null || this.#_adapter.provider == false) {
@@ -67,7 +100,7 @@ export class IdentiyProvider {
                 this.UsersIdentity.AccountPrincipalText = principalText;
                 this.UsersIdentity.AccountPrincipal = principal;
                 //let provider = this.#_adapter?.provider;                
-                this.WalletsProvider.UsersIdentity.IsConnected = true;
+                this.UsersIdentity.IsConnected = true;
 
             } else {
                 return;

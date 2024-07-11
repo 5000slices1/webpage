@@ -31,3 +31,5 @@ canister_ids.json
 
 node_modules
 
+.env
+.dfx/local/network-id

@@ -9,7 +9,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const frontendDirectory = "frontend";
 
-const frontend_entry = path.join("src",frontendDirectory, "src","index.html");
+const frontend_entry = path.join("src",frontendDirectory,"mainfiles", "index.html");
 
 module.exports = {
   target: "web",
@@ -70,14 +70,21 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
+        {          
+          from: path.join(__dirname, "src", frontendDirectory, "assets"),
+                  to: path.join(__dirname, "dist", frontendDirectory, "assets"),
+          noErrorOnMissing: false,
+        },
         {
           //from: `src/${frontendDirectory}/src/.ic-assets.json*`,
-          from: `src/${frontendDirectory}/src/.ic-assets.json*`,
+          from: `src/${frontendDirectory}/.ic-assets.json*`,
           to: ".ic-assets.json5",
           noErrorOnMissing: false,
         },
+        
       ],
     }),
+    
   ],
   // proxy /api to port 4943 during development.
   // if you edit dfx.json to define a project-specific local network, change the port to match.
@@ -92,7 +99,7 @@ module.exports = {
       },
     },
     // static: path.resolve(__dirname, "src", frontendDirectory, "assets"),
-    static: path.resolve(__dirname, "src",frontendDirectory, "assets"),
+    static: path.resolve(__dirname, "src",frontendDirectory,"assets"),
     hot: true,
     // watchFiles: [path.resolve(__dirname, "src", frontendDirectory)],
     watchFiles: [path.resolve(__dirname, "src",frontendDirectory)],

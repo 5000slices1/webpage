@@ -1,8 +1,601 @@
-<!doctype html><html lang="en" style="height: 100%;"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="initial-scale=1,maximum-scale=1"><title>5000 SLICES $ GOLDSLICES: WEB3 Community in the Internet Computer (ICP)</title><meta name="keywords" content=""><meta name="description" content=""><meta name="author" content=""><link rel="stylesheet" href="/src/frontend/assets/css/MainStyles/MainStyles.css"/><link rel="stylesheet" href="css/MainStyles/MainStyles.css"/><!--[if lt IE 9]>
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>5000 SLICES $ GOLDSLICES: WEB3 Community in the Internet Computer (ICP)</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <!-- style css -->
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <!-- responsive-->
+    <!-- <link rel="stylesheet" href="css/responsive.css"> -->
+
+    <!-- awesome fontfamily -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    
+    <link type="text/css" rel="stylesheet" href="../assets/css/MainStyles/MainStyles.css" />
+
+    <!-- <link type="text/css" rel="stylesheet" href="css/MainStyles/MainStyles.css" /> -->
+    
+    <!-- <script type="text/javascript" src="/src/frontend/assets/scripts/testjavascript.js"></script> -->
+    <!-- <script type="module" src="../public/assets/scripts/testjavascript.js"></script> -->
+    <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><script defer="defer" src="index.js"></script></head><body style="height: 100%;">header style="height: 80px;"><div><table style="width: 100%;min-width: 450px;"><td align="left" style="width:60px"><img src="images/icons/5000SlicesIcon.png" width="75" height="75" style="margin-right: 12px;min-width: 75px; min-height: 75px;margin-top: -14px; margin-left: -24px" alt="5000 Slices Swap-App"/></td><td align="left" style="width:auto; min-width: 60px;vertical-align: center"><table style="color: rgb(177, 174, 174);"><td style="padding-right: 8px;"><b><button type="submit" class="button-navigation" id="buttontest" style="color: rgb(143, 143, 143);width: 60px;height: 25px;">test</button></b></td><td style="padding-right: 8px;"><b>placeholder2</b></td><td style="padding-right: 8px;"><b>placeholder3</b></td><td style="padding-right: 8px;"><b>placeholder4</b></td><td style="padding-right: 8px;"><b>placeholder5</b></td></table></td><td align="right"><div style="align-content: flex-end;vertical-align: center"><table><td><div style="margin-top: 6px;"><label id="labelWalletConnectionStatus" style="margin-right: 22px;font-size: 0.8em;
-                color: rgb(40, 40, 211);font-weight: bold; vertical-align: middle;"></label></div></td><td></td><td><div class="dropdown"><button id="buttonWalletDropDown" style="border-radius: 6px;
-                height:35px;width:120px" type="submit" class="dropbtn">Wallet Connection</button><div id="dropDownWalletMenu" class="dropdown-content" style="padding: 3px 3px 3px 6px; position: fixed; width: 180px;
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+      
+      <!-- <script type="module" src="index.js"></script> -->
+      <!-- <script type="module" src="./index.js"></script>  -->
+      <!-- <script src="/public/scripts/PriceFetchers/Icpswap/priceFetcher_ICP_USDT.js"></script>
+      <script src="/public/scripts/PriceFetchers/Binance/fetcher_Sli.js"></script>
+      <script src="/public/scripts/PriceFetchers/Icpswap/priceFetcher_ckBTC_ICP.js"></script>
+      <script src="/public/scripts/PriceFetchers/Binance/fetcher_Glds.js"></script>
+      <script src="/public/scripts/PriceFetchers/Binance/fetcher_Glds2.js"></script>
+      <script src="/public/scripts/PriceFetchers/Binance/fetcher_sliV2.js"></script>
+      <script src="/public/scripts/PriceFetchers/Icpswap/liquid.js"></script>
+      <script src="/public/scripts/PriceFetchers/Icpswap/liquid2.js"></script>
+      <script src="/public/scripts/PriceFetchers/Icpswap/liquid3.js"></script>
+      <script src="/public/scripts/PriceFetchers/Icpswap/liquid4.js"></script>
+      <script src="supply.js"></script> -->
+      <!-- <style>
+        .header-buttons {
+          display: flex;
+          margin-bottom: 20px;
+        }
+      
+        .header-buttons button {
+          border: none;
+          border-radius: 5px;
+          background-color: #e98000;
+          padding: 8px;
+          font-size: 12px;
+          text-decoration-color: black;
+          cursor: pointer;
+          margin-right: 2px; /* Adjust the margin as per your preference */
+          justify-content: center;
+        }
+      
+        .header-buttons button:last-child {
+          margin-right: 0;
+        }
+        
+        .header-buttons button:hover {
+          background-color: aqua;
+        }
+      </style> -->
+
+
+    <!-- Header section -->
+<!--    <div class="header-buttons">-->
+<!--        <button onclick="window.location.href='index.html'">HOME</button>-->
+<!--        <button onclick="window.location.href='about.html'">WEB3</button>-->
+<!--        <button class="active" onclick="window.location.href='projectidea.html'">NFTs</button>-->
+<!--        <button onclick="window.location.href='gold.html'">GOLD</button>-->
+<!--        <button onclick="window.location.href='sliceinfo.html'">NEWS</button>-->
+<!--        <button onclick="window.location.href='https://nuance.xyz/infoslice/4630-zjfrd-tqaaa-aaaaf-qakia-cai/whitepaper-'">WHITEPAPER</button>-->
+<!--        <button onclick="window.location.href='roadmap.html'">ROADMAP</button>-->
+<!--      </div>-->
+     
+<script defer src="index.js"></script></head>
+<!-- body -->
+<body style="height: 100%;">
+
+<!-- Header section -->
+<header style="height: 80px;">
+    
+    <div>
+        <table style="width: 100%;min-width: 450px;">
+            <td align="left" style="width:60px">
+                <img src="../assets/icons/5000SlicesIcon.png" width="75" height="75"
+                     style="margin-right: 12px;min-width: 75px; min-height: 75px;margin-top: -14px; margin-left: -24px"
+                     alt="5000 Slices Swap-App" />
+            </td>
+            <td align="left" style="width:auto; min-width: 60px;vertical-align: center" >
+                <table style="color: rgb(177, 174, 174);">
+                    <td style="padding-right: 8px;">
+                        <b>
+                            <button type="submit" class="button-navigation"  
+            id="buttontest" style="color: rgb(143, 143, 143);width: 60px;height: 25px;">test</button>
+                        </b>
+                    </td>
+                    <td style="padding-right: 8px;">
+                        <b>
+                            placeholder2
+                        </b>
+                    </td>
+                    <td style="padding-right: 8px;">
+                        <b>
+                            placeholder3
+                        </b>
+                    </td>
+                    <td style="padding-right: 8px;">
+                        <b>
+                            placeholder4
+                        </b>
+                    </td>
+                    <td style="padding-right: 8px;">
+                        <b>
+                            placeholder5
+                        </b>
+                    </td>
+                </table>
+            </td>
+            <td align="right">
+                <div style="align-content: flex-end;vertical-align: center">
+                    <table>
+                        <td>
+                            <div style="margin-top: 6px;">
+                                <label id="labelWalletConnectionStatus" style="margin-right: 22px;font-size: 0.8em;
+                color: rgb(40, 40, 211);font-weight: bold; vertical-align: middle; 
+                "></label>
+                        </td>
+                        <td>
+                        <td>                            
+                            <div class="dropdown">
+                                <button id="buttonWalletDropDown" style="border-radius: 6px;
+                height:35px;width:120px" type="submit" class="dropbtn">Wallet
+                                    Connection</button>
+
+                                <div id="dropDownWalletMenu" class="dropdown-content"
+                                     style="padding: 3px 3px 3px 6px; position: fixed; width: 180px;
                   left: 100%; 
                    margin-left: -410px; margin-top: 8px;                                 
-                  background-color: hsl(249, 32%, 8%);box-shadow: 0 0 10px 0 rgba(242, 241, 241, 0.3);border-radius: 0.8em;"><table><tr class="spaceUnder"><button id="loginStoic" type="submit" class="button-dropdownmenu"><img src="appIcons/stoic.png" width="22px" height="22px" style="float: left;margin-left: 4px;"/><div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Stoic</div></button></tr><tr class="spaceUnder"><button id="loginPlug" type="submit" class="button-dropdownmenu"><img src="appIcons/plug.jpg" width="22px" height="22px" style="float: left;margin-left: 4px;"/><div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Plug</div></button></tr><tr><button id="logout" type="submit" class="button-dropdownmenu"><div style="margin: auto;text-align: right;margin-right: 10px;  margin-top: 0px;">Log out</div></button></tr></table></div></div></td></table></div></td></table></div><main style="height: 100%;"><div style="height: 100%;"><iframe name="frame_swap" id="cross_domain_swapapp" src="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/" width="100%" height="100%" style="border: none;"></iframe></div></main><footer></footer></body></html>
+                  background-color: hsl(249, 32%, 8%);box-shadow: 0 0 10px 0 rgba(242, 241, 241, 0.3);border-radius: 0.8em;">
+
+                                    <table>
+                                        <tr class="spaceUnder">
+                                            <button id="loginStoic" type="submit" class="button-dropdownmenu">
+                                                <img src="appIcons/stoic.png" width="22px" height="22px"
+                                                     style="float: left;margin-left: 4px;" />
+                                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Stoic</div>
+                                            </button>
+                                        </tr>
+
+                                        <tr class="spaceUnder">
+                                            <button id="loginPlug" type="submit" class="button-dropdownmenu">
+                                                <img src="appIcons/plug.jpg" width="22px" height="22px"
+                                                     style="float: left;margin-left: 4px;" />
+                                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Plug</div>
+                                            </button>
+                                        </tr>
+                                        <tr>
+                                            <button id="logout" type="submit" class="button-dropdownmenu">
+
+                                                <div style="margin: auto;text-align: right;margin-right: 10px;  margin-top: 0px;">Log out
+                                                </div>
+                                            </button>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>                            
+                        </td>
+
+                    </table>
+                </div>
+            </td>
+        </table>
+    </div>
+
+</header>
+
+<main style="height: 100%;">
+    <div style="height: 100%;">
+        <!-- <embed type="text/html" src="http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai" /> -->
+        <!-- <iframe src="http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai" -->
+            <!-- <iframe src="https://bioniq.io/blog/motoko-sentinels/" -->
+                <!-- <iframe src="http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai" -->
+            <iframe name="frame_swap" id="cross_domain_swapapp" src="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/"
+                
+            width="100%" height="100%" 
+            style="border: none;"
+         >
+        </iframe>
+        <!-- <embed src="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/" width="1200" height="1400"> </embed>  -->
+        <!-- <link rel="import" href="https://fw7s5-6yaaa-aaaap-ahktq-cai.icp0.io/" style="width: 1200px; height: 1000px;" /> -->
+    </div>
+</main>
+
+<footer>
+
+</footer>
+
+</body>
+
+
+<!--<body class="main-layout">-->
+<!--    &lt;!&ndash; loader  &ndash;&gt;-->
+<!--    <div class="loader_bg">-->
+<!--        <div class="loader"><img src="images/loading.gif" alt="" /></div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end loader &ndash;&gt;-->
+<!--    <div id="mySidepanel" class="sidepanel">-->
+<!--        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>-->
+<!--        <a href="index.html">Home</a>-->
+<!--        <a href="about.html"> WEB3 </a>-->
+<!--        <a class="active" href="projectidea.html">NFTs</a>-->
+<!--        <a href="gold.html">GOLD</a>-->
+<!--        <a href="sliceinfo.html">NEWS</a>-->
+<!--        <a href="https://acrobat.adobe.com/id/urn:aaid:sc:eu:8926bb9e-a3e5-48a8-bb4c-456180810df0">WHITEPAPER</a>-->
+<!--        <a href="roadmap.html">ROADMAP</a>-->
+<!--      </div>-->
+<!--    &lt;!&ndash; header &ndash;&gt;-->
+<!--    <header>-->
+<!--        &lt;!&ndash; header inner &ndash;&gt;-->
+<!--        <div class="head-top">-->
+<!--            <div class="container-fluid">-->
+<!--                <div class="row d_flex">-->
+<!--                    <div class="col-sm-3" style="font-family: 'Agency FB', sans-serif;">-->
+<!--                        <div class="logo">-->
+<!--                            <img src="images/logo.png" alt="5000SLICES Logo" style="width: 35px; height: 35px; margin-right: 10px;">-->
+<!--                            <h1 style="font-family: 'Agency FB', sans-serif;">5000SLICES Experiment <span class="blinking-text">Introducing Trabyter</span></h1>-->
+<!--                            <p style="color: rgb(200, 191, 191); text-decoration: underline; font-family: 'Agency FB', sans-serif;">Token Information:</p>-->
+<!--                            <h2 style="color: darkgray; font-family: 'Agency FB', sans-serif;">ICP Price: <span id="icp-price"></span></h2>-->
+<!--                            <h2 style="color: darkgray; font-family: 'Agency FB', sans-serif;">SLI Price: <span id="icpSliPrice"></span><span id="SliIcpPrice"></span></h2>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">GLDS Price: <span id="icpGldsPrice"></span><span id="GldsIcpPrice"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">SLI Market Cap: <span id="marketCapSli"></span><span id="marketCapIcp"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">GLDS Market Cap: <span id="GldsMarketCap"></span><span id="IcpMarketCap"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">SLI Liquidity: <span id="usdliquidity2"></span><span id="usdliquidity"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">GLDS Liquidity: <span id="usdliquidity3"></span><span id="usdliquidity4"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">SLI current Supply:4,980.26 SLI <span id="totalSupply"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">GLDS current Supply:2,980.08 GLDS <span id="totalSupply"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">GLDS Total Burnt:19.91 GLDS <span id="totalSupply"></span></h3>-->
+<!--                            <h3 style="color: darkgray; font-family: 'Agency FB', sans-serif;">SLI Total Burnt:19.73 SLI <span id="totalSupply"></span></h3>-->
+<!--                            <p style="color: rgb(205, 193, 193); text-decoration: underline; font-size: 12px; font-family: 'Agency FB', sans-serif;">Source: <a href="https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=zzriv-cqaaa-aaaao-a2gjq-cai" target="_blank" style="font-size: 10px; font-family: 'Agency FB', sans-serif; color:rgb(251, 173, 56)">ICPSwap.com</a></p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    -->
+<!--                    <div class="col-sm-5">-->
+<!--                        <ul class="social_icon text_align_right d_none">-->
+<!--                            <li> <a href="https://www.facebook.com/mysliceinfo"><i class="fa fa-facebook-f"></i></a></li>-->
+<!--                            <li> <a href="https://twitter.com/info_slice"><i class="fa fa-twitter"></i></a></li>-->
+<!--                            <li> <a href="https://www.youtube.com/channel/UCErWBRjdOWo_hmHNqb4yxDg"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>-->
+<!--                            <li> <a href="https://github.com/5000slices1/5000slices-Goldslices-Dip20-standards/tree/master"><i class="fa fa-github" aria-hidden="true"></i></a></li>-->
+<!--                            <li> <a href="https://t.me/mysliceinfo"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>-->
+<!--                            <li> <a href="https://www.instagram.com/5000slices"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>-->
+<!--                       -->
+
+<!--                        </ul>   -->
+<!--                    </div>-->
+<!--                  -->
+<!--                    <div class="col-sm-4">-->
+<!--                        <ul class="email text_align_right">-->
+<!--                            <li>-->
+<!--                                <button class="openbtn" onclick="openNav()"><img src="images/menu_btn.png"></button>-->
+<!--                            </li>   -->
+<!--                        </ul>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!-- -->
+<!--    </header>-->
+<!--    &lt;!&ndash; end header &ndash;&gt;-->
+<!--    &lt;!&ndash; start slider section &ndash;&gt;-->
+<!--    <div id="top_section" class=" banner_main">-->
+<!--        <div class="container-fluid">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div id="myCarousel" class="carousel slide" data-ride="carousel">-->
+<!--                        <ol class="carousel-indicators">-->
+<!--                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>-->
+<!--                            <li data-target="#myCarousel" data-slide-to="1"></li>-->
+<!--                            <li data-target="#myCarousel" data-slide-to="2"></li>-->
+<!--                        </ol>-->
+<!--                        <div class="carousel-inner">-->
+<!--                            <div class="carousel-item active">-->
+<!--                                <div class="container-fluid">-->
+<!--                                    <div class="carousel-caption relative">-->
+<!--                                        <div class="row d_flex">-->
+<!--                                            <div class="col-md-6">-->
+<!--                                                <div class="con_img">-->
+<!--                                                    <figure><img class="img_responsive" src="images/top_img2.png" alt="#" /></figure>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-6">-->
+<!--                                                <div class="bluid">-->
+<!--                                            <h1 style="color: darkorange; font-family: 'Agency FB', sans-serif; font-weight: bold;">5000 SLICES:<br> The Experiment</h1>-->
+<!--                                                    <p>Introducing Trabyter- Decentralized Trade By Barter Zone <br>-->
+<!--                                                    <h2  style="color: darkorange;font-family: 'Agency FB', sans-serif;">Decentralized Trade By Barter Zone</h2>-->
+<!--                                                     <p>  We have reintroduced the oldest method of trading—Trade By Barter. -->
+<!--                                                        In this marketplace, you can utilize your existing NFTs/Tokens,-->
+<!--                                                         bundle them, and trade them for the items you desire but do not possess. -->
+<!--                                                         Additionally, this platform enables NFT staking for rewards from all projects within the ecosystem. </p>-->
+<!--                                                        <a class="read_more" href="https://acrobat.adobe.com/id/urn:aaid:sc:eu:8926bb9e-a3e5-48a8-bb4c-456180810df0">WHITEPAPER </a> -->
+<!--                                                        <a class="read_more" href="'roadmap.html'">ROADMAP </a> -->
+
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="carousel-item">-->
+<!--                                <div class="container-fluid">-->
+<!--                                    <div class="carousel-caption relative">-->
+<!--                                        <div class="row d_flex">-->
+<!--                                            <div class="col-md-6">-->
+<!--                                                <div class="con_img">-->
+<!--                                                    &lt;!&ndash;<figure><img class="img_responsive" src="images/top_img1.png" alt="#" /></figure> &ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<h1>CURRENT PRICE ON ICPSWAP</h1>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<iframe src= "https://info.icpswap.com/swap/token/details/zzriv-cqaaa-aaaao-a2gjq-cai" width="80%" height="350"></iframe>&ndash;&gt;-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-6">-->
+<!--                                                <div class="bluid">-->
+<!--                                                    <a class="read_more" href="https://dscvr.one/p/5000-slices-official">5000SLICES DSCVR</a><a class="read_more" href="https://oc.app/group/nhzlj-cyaaa-aaaar-ascvq-cai/?ref=tzol4-lqaaa-aaaaf-aanaq-cai">OpenChat</a>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="carousel-item">-->
+<!--                                <div class="container-fluid">-->
+<!--                                    <div class="carousel-caption relative">-->
+<!--                                        <div class="row d_flex">-->
+<!--                                            <div class="col-md-6">-->
+<!--                                                <div class="con_img">-->
+<!--                                                    <figure><img class="img_responsive" src="images/top_img3.png" alt="#" /></figure>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-6">-->
+<!--                                                <div class="bluid">-->
+<!--                                                    <p>-->
+<!--                                                    <h2 style="color: darkorange;font-family: 'Agency FB', sans-serif;"> TRABYTER [Decentralized Trade By Barter Zone]</h2>-->
+<!--                                                    We have reintroduced the oldest method of trading—Trade By Barter. -->
+<!--                                                    In this marketplace, you can utilize your existing NFTs/Tokens,-->
+<!--                                                     bundle them, and trade them for the items you desire but do not possess. -->
+<!--                                                     Additionally, this platform enables NFT staking for rewards from all projects within the ecosystem.-->
+<!--                                                        -->
+
+<!--                                            -->
+<!--                                                    </p>-->
+<!--                                                    <a class="read_more" href="https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=zzriv-cqaaa-aaaao-a2gjq-cai">BUY </a><a class="read_more" href="https://acrobat.adobe.com/id/urn:aaid:sc:eu:676d9184-ec47-4969-b1e6-c1f06f5b3f16">READ WHITEPAPER</a>-->
+<!--                                                    -->
+
+<!--    -->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">-->
+<!--                            <i class="fa fa-angle-left" aria-hidden="true"></i>-->
+<!--                            <span class="sr-only">Previous</span>-->
+<!--                        </a>-->
+<!--                        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">-->
+<!--                            <i class="fa fa-angle-right" aria-hidden="true"></i>-->
+<!--                            <span class="sr-only">Next</span>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end slider section &ndash;&gt;-->
+<!--    <div id="sfc47jfjkk6zaderndk9bxbdduyr8fs7gg4"></div><script type="text/javascript" -->
+<!--                    src="https://counter3.optistats.ovh/private/counter.js?c=47jfjkk6zaderndk9bxbdduyr8fs7gg4&down=async" -->
+<!--                    async></script><br><a href="https://www.freecounterstat.com">VISITORS</a><noscript>-->
+<!--                    <a href="" title="free hit counter"><img src="https://counter3.optistats.ovh/private/freecounterstat.php?c=47jfjkk6zaderndk9bxbdduyr8fs7gg4" border="0" title="free hit counter" alt="free hit counter"></a></noscript>-->
+<!--                    -->
+
+<!--    &lt;!&ndash; wallet &ndash;&gt;-->
+<!--    <div class="wallet">-->
+<!--        <div class="container-fluid">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div class="titlepage text_align_center">-->
+<!--                        <h2 style="color: darkorange;font-family: 'Agency FB', sans-serif;"">50 SLICES of EVERYTHING NFT Collection:</h2>-->
+<!--                            <p>-->
+<!--                            <a href="https://entrepot.app/sale/50-slices-nfts">-->
+<!--                              <img src="images/entre.png" alt="Icon" width="150" height="50">-->
+<!--                            </a>-->
+<!--                            <a class="emcsd2" href="https://entrepot.app/sale/50-slices-nfts">BUY ON ENTREPOT </a>-->
+<!--                        </p>-->
+<!--                            -->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-3 col-sm-6">-->
+<!--                    <div id="wa_hover" class="wallet_box text_align_center">-->
+<!--                        <i><img src="images/nature.png" alt="#"/></i>-->
+<!--                        <h3> Slice of Nature</h3>-->
+<!--                    -->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-lg-3 col-sm-6">-->
+<!--                    <div id="wa_hover" class="wallet_box text_align_center">-->
+<!--                        <i><img src="images/brain.png" alt="#"/></i>-->
+<!--                        <h3>Slice of Brain</h3>-->
+<!--                       -->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-lg-3 col-sm-6">-->
+<!--                    <div id="wa_hover" class="wallet_box text_align_center">-->
+<!--                        <i><img src="images/diamond.png" alt="#"/></i>-->
+<!--                        <h3>Slice of Diamond </h3>-->
+<!--        -->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-lg-3 col-sm-6">-->
+<!--                    <div id="wa_hover" class="wallet_box text_align_center">-->
+<!--                        <i><img src="images/eth.png" alt="#"/></i>-->
+<!--                        <h3>Slice of Eth</h3>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end wallet &ndash;&gt;-->
+<!--      &lt;!&ndash; about &ndash;&gt;-->
+<!--      <div id="about" class="about">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div class="about_border">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="titlepage text_align_left">-->
+<!--                                    <h2>WEB3</h2>-->
+<!--                                </div>-->
+<!--                                <div class="about_text">-->
+<!--                                    &lt;!&ndash;<h1>Introduction</h1> &ndash;&gt;  <br> -->
+<!--                                    <p>In this evolutionary WEB3 Community, we're bringing back the oldest trading concept-Trade By Barter. Community members owning at least -->
+<!--                                        one SLI or one GLDS benefit from the advantages the Trade by Barter Marketplace presents. Read our WHITEPAPER for details.-->
+<!--                                    </p>-->
+<!--                                  &lt;!&ndash;  <p> In the realm of education, the traditional process of connecting teachers with job</p>-->
+<!--                                     <p>opportunities has been plagued by challenges posed by intermediaries and high agent</p>-->
+<!--                                     <p> fees, and teachers unable to find quality because a non direct connection to schools.</p>-->
+<!--                                      <p> Recognizing thes issues, we are thrilled to unveil an innovative solution -</p>-->
+<!--                                    <p>a decentralized Web3 platform that revolutionizes the way teachers and schools connect.</p><br>-->
+<!--                                    -->
+<!--                                    <p>We hereby present the first Web3 ESL Portal, a groundbreaking platform</p> -->
+<!--                                     <p>we plan to design to revolutionize the way English as Second Language (ESL) teachers connect</p> -->
+<!--                                     <p>with students and find job opportunities. In this innovative ecosystem that will be powered by -->
+<!--                                     <p>The internet Computer Protocol, we aim to create a seamless and secure environment for ESL teachers </p>-->
+<!--                                     <p> and learners worldwide to trade educational resources and transact in native tokens $SLI, $GLDS and $ICP</p> <br>-->
+
+<!--                                     <p>By harnessing the power of blockchain technology and peer-to-peer networks, our platform eliminates the need</p>-->
+<!--                                     <p> for middlemen and reduces the burden of agent fees, creating a direct and efficient channel for teachers</p>-->
+<!--                                     <p> and schools to connect with one another.</p>  <br>-->
+
+<!--                                     <p>Through our decentralized portal, teachers can create comprehensive profiles, showcasing their qualifications,</p>-->
+<!--                                     <p> experience, and expertise. Schools or students, on the other hand, can explore a diverse pool of talented educators,</p>-->
+<!--                                     <p>review their profiles, and make informed hiring decisions based on their specific requirements.</p> <br>-->
+
+<!--                                     <p>This Web3 platform prioritizes transparency, security, and cost-effectiveness. All interactions and </p>-->
+<!--                                     <p> transactions between teachers and schools are recorded on the blockchain, ensuring trust and reliability.</p>-->
+<!--                                     <p> By removing intermediaries, we also significantly reduce the financial burden for schools, making the hiring-->
+<!--                                        more accessible and equitable</p-->
+<!--                                                                                                                                      <br>                      -->
+<!--                                                                                ROAD MAP-->
+<!--                                                     <ul> <li>Q4 2023-Q1 2024: Team building and fund sourcing.</li> -->
+<!--                                                        <li>Q2 2024: Begin App development.</li> -->
+<!--                                                        <li>Q3 2024: App testing, bug fixes, and improvements.</li>-->
+<!--                                                         <li>Q4 2024: Payment integrations, wallets, and launch.</li> </ul> &ndash;&gt;-->
+<!--                                    -->
+<!--                                                -->
+<!--                                            -->
+<!--                                                                            -->
+<!--                                    <a class="read_more" href="https://oc.app/community/ovkev-xiaaa-aaaar-asorq-cai/channel/333479041001113364768524958478479859764/?ref=tzol4-lqaaa-aaaaf-aanaq-cai">Join Us!</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="about_img">-->
+<!--                                    <figure><img class="img_responsive" src="images/about2.png" alt="#" /></figure>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end about &ndash;&gt;-->
+<!--    &lt;!&ndash;stake slice&ndash;&gt;-->
+<!--    <div id="about" class="about">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div class="about_border">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="titlepage text_align_left">-->
+<!--                                    <h2 style="color: darkorange;font-family: 'Agency FB', sans-serif;">Mine GOLD</h2>-->
+<!--                                </div>-->
+<!--                                <div class="about_text">-->
+<!--                                    <p>Introducing GoldSlice $GLDS. Only 3000 Max supply and only come into circulation via staking $SLI. Start staking your $SLI to mine GOLD which is even rarer.-->
+<!--                                       Our Trade by Barter D'App will open up unique opportunities to stake NFTS to earn GLDS and other assets. -->
+<!--                                    </p>-->
+<!--                                    <a class="read_more" href="https://app.icpswap.com/staking-token">START mining GOLD </a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="about_img">-->
+<!--                                    <figure><img class="img_responsive" src="images/gold555.png" alt="#" /></figure>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;end stake slice &ndash;&gt;-->
+<!--    &lt;!&ndash; works &ndash;&gt;-->
+<!--    <div class="works">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div class="titlepage text_align_center">-->
+<!--                        <h2 style="color: darkorange;">SLICES of EVERYTHING NFTs</h2>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div class="works_vedio">-->
+<!--                        <figure><img class="img_responsive" src="images/slice4535.jpg" alt="#"></figure>-->
+<!--                        <figure><img class="img_responsive2" src="images/slice2.jpg" alt="#"></figure>-->
+
+<!--                        <iframe width="560" height="315" src="https://www.youtube.com/embed/ZsvE1tBY7Gw" frameborder="0" allowfullscreen></iframe>-->
+<!--                        -->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; works &ndash;&gt;-->
+
+<!--    &lt;!&ndash; footer &ndash;&gt;-->
+<!--    <footer>-->
+<!--        <div class="footer">-->
+<!--            <div class="container">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-md-12">-->
+<!--                        <a class="logo_bottom" href="https://oc.app/group/nhzlj-cyaaa-aaaar-ascvq-cai/?ref=tzol4-lqaaa-aaaaf-aanaq-cai">5000SLICES: JOIN THE COMMUNITY</a>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-3 col-sm-6" >-->
+<!--                  <div class="Informa conta ">-->
+<!--                <div class="copyright text_align_center ">-->
+<!--               <div class="container ">-->
+<!--                  <div class="row ">-->
+<!--                     <div class="col-md-12 ">-->
+<!--                        <p>DISCLAIMER: Trading cryptocurrencies involves inherent risks, including but not limited to -->
+<!--                         market volatility, liquidity risks, regulatory changes, and potential security breaches.-->
+<!--                         The information provided here is for informational purposes only and should not be construed -->
+<!--                        as financial or investment advice. It is important to conduct thorough research, carefully -->
+<!--                         consider your risk tolerance, and consult with a qualified financial advisor before making -->
+<!--                         any investment decisions. The cryptocurrency market can be highly unpredictable, and it is -->
+<!--                         crucial to understand the potential risks and rewards associated with trading cryptocurrencies-->
+<!--                          to make informed investment choices.</p> <br>-->
+<!--                        <p>© 2023 All Rights Reserved. Design by My Slice Info <a href="https://oc.app/group/nhzlj-cyaaa-aaaar-ascvq-cai/?ref=tzol4-lqaaa-aaaaf-aanaq-cai"> OPENCHAT</a></p>-->
+<!--                        <p> Hosted Onchain On the Internet Computer Protocol ICP <a href="https://internetcomputer.org/">ICP</a></p>-->
+<!--                        <figure><img class="img_responsive3" src="images/icplogo.png" alt="#"></figure>-->
+<!--                     </div>-->
+<!--                  </div>-->
+<!--               </div>-->
+<!--            </div>-->
+<!--         </div>-->
+<!--      </div>-->
+<!--      </footer>-->
+<!--      &lt;!&ndash; end footer &ndash;&gt;-->
+<!--      &lt;!&ndash; Javascript files&ndash;&gt;-->
+<!--      <script src="js/jquery.min.js "></script>-->
+<!--      <script src="js/bootstrap.bundle.min.js "></script>-->
+<!--      <script src="js/jquery-3.0.0.min.js "></script>-->
+<!--      <script src="js/custom.js "></script>-->
+<!--   </body>-->
+</html>

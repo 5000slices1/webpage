@@ -30,6 +30,9 @@ padding: 0px 0px 0px 0px;
 
     <!-- <link type="text/css" rel="stylesheet" href="../assets/css/MainStyles/MainStyles.css" /> -->
     <link type="text/css" rel="stylesheet" href="../assets/css/Styles.css" />
+    <link type="text/css" rel="stylesheet" href="../assets/css/WalletLogin.css" />
+    <!-- <script type="module"  src="index.js"></script> -->
+
     <!-- <style>
         /* Style the dropdown button */
 .dropbtn {
@@ -131,57 +134,88 @@ padding: 0px 0px 0px 0px;
           </td>
 
           <td >
-                <button style="width: 100%;height: 3.0em;
-                border-radius: 1.8em;
-                "  >Home</button>
+                <button class="main-header-button" type="menu" id="navButtonHome" >Home</button>                
+               
           </td>
           <td style="width: 1.6em; min-width: 1.6em;">
         </td>
         <td  >
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>
+              <button  class="main-header-button">News</button>
         </td>
         <td  style="width: 1.6em; min-width: 1.6em;" >
         </td>
         <td  >
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>
+              <button  class="main-header-button">Apps</button>
         </td>
         <td  style="width: 1.6em; min-width: 1.6em;">
         </td>
         <td  >
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>
+              <button  class="main-header-button">Tokens / NFT</button>
         </td>
         <td  style="width: 1.6em; min-width: 1.6em;" >
         </td>
         <td  >
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>
+              <button  class="main-header-button">Whitepaper</button>
         </td>
         <td  style="width: 1.6em; min-width: 1.6em;">
         </td>
         <td >
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>
+              <button  class="main-header-button">Roadmap</button>
         </td>
         <!-- <td style="width: 100%; background-color: green;" > -->
             
           <td >
             
-            hello
+            <div class="dropdown">
+                <button id="buttonWalletDropDown" style="border-radius: 6px;
+height:35px;width:120px" type="submit" class="dropbtn">Wallet
+                    Connection</button>
+
+                <div id="dropDownWalletMenu" class="dropdown-content"
+                     style="padding: 3px 3px 3px 6px; position: fixed; width: 180px;
+  left: 100%;
+   margin-left: -410px; margin-top: 8px;
+  background-color: hsl(249, 32%, 8%);box-shadow: 0 0 10px 0 rgba(242, 241, 241, 0.3);border-radius: 0.8em;">
+
+                    <table>
+                        <tr class="spaceUnder">
+                            <button id="loginStoic" type="submit" class="button-dropdownmenu">
+                                <img src="../assets/icons/stoic.png" width="22px" height="22px"
+                                     style="float: left;margin-left: 4px;" />
+                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Stoic</div>
+                            </button>
+                        </tr>
+
+                        <tr class="spaceUnder">
+                            <button id="loginPlug" type="submit" class="button-dropdownmenu">
+                                <img src="../assets/icons/plug.jpg" width="22px" height="22px"
+                                     style="float: left;margin-left: 4px;" />
+                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Plug</div>
+                            </button>
+                        </tr>
+                        <tr>
+                            <button id="logout" type="submit" class="button-dropdownmenu">
+
+                                <div style="margin: auto;text-align: right;margin-right: 10px;  margin-top: 0px;">Log out
+                                </div>
+                            </button>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </td>
 
         </tr>
         
      </table>
+ 
+     <table>
+
+     </table>
     </div>
     <div>
+
+
         <!-- <table style="width: 100%;min-width: 450px;">
             <td align="left" style="width:60px">
                 <img src="../assets/icons/5000SlicesIcon.png" width="75" height="75"
@@ -274,12 +308,14 @@ padding: 0px 0px 0px 0px;
 
 
 
-    <!-- vertical coordinate lines -->
+<!-- vertical coordinate lines -->
+    
     <div style="color: white;position: absolute;
     top: 0px;left: 3.2em;
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
-    opacity: 1.0;
+    display: none;
+    /* display: block; */    
     ">
         <table cellspacing="0" cellpadding="0">
           <tr>
@@ -433,15 +469,11 @@ padding: 0px 0px 0px 0px;
                 width: 10em;
                 " ></div>
             </th>
-
-
-
-
-
           </tr>
         </table>
 
         </div>
+    
 </div>
 </body>
 

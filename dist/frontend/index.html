@@ -5,21 +5,14 @@ margin: 12px 32px 4px 32px;
 vertical-align:middle;
 padding: 0px 0px 0px 0px;
 "> -->
-<html lang="en" style="height: 100%;
-width:138em;
-background-color: #0E0F2C;
-margin: 1.2em 3.2em 0.4em 3.2em;
-vertical-align:middle;
-padding: 0px 0px 0px 0px;
-font-size: 62.5%;
-">
+<html lang="en" >
 <head>
     <!-- basic -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=3">
     <!-- site metas -->
     <title>5000 SLICES $ GOLDSLICES: WEB3 Community in the Internet Computer (ICP)</title>
     <meta name="keywords" content="">
@@ -34,8 +27,12 @@ font-size: 62.5%;
 
     <!-- awesome fontfamily -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-    
+
     <!-- <link type="text/css" rel="stylesheet" href="../assets/css/MainStyles/MainStyles.css" /> -->
+    <link type="text/css" rel="stylesheet" href="../assets/css/Styles.css" />
+    <link type="text/css" rel="stylesheet" href="../assets/css/WalletLogin.css" />
+    <!-- <script src="index.js"></script> -->
+
     <!-- <style>
         /* Style the dropdown button */
 .dropbtn {
@@ -111,90 +108,115 @@ font-size: 62.5%;
             }
         }
     </style> -->
- 
-     
+
+
 <script defer src="index.js"></script></head>
 <!-- body -->
-<body style="height: 100%; width: 1376px;
-margin: 0px 0px 0px 0px;
-">
-    
-
+<body>
 
 <div>
 <!-- Header section -->
-<header style="height: 10.2em;">
-    <div style="background-color: #55557B; height: 80px;width: 100%;
-    border-top-left-radius: 2.8em;
-    border-top-right-radius: 2.8em;        
-    box-shadow: 0 0.2em 0.4em rgba(255, 254, 254, 0.25);
-    box-shadow: inset 0.2em 0.2em 0.4em rgba(255, 251, 251, 0.25); 
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
-    ">
-     <table cellspacing="0" cellpadding="0" style="height: 100%;">       
+<header class="main-header">
+    <div class="main-header-div">
+     <table cellspacing="0" cellpadding="0" class="main-header table">
         <tr>
-          <th scope="col" >
-              <div style="height:100%;              
-              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-              width: 10em;
-              " >
-            <img src="../assets/icons/5000SlicesIcon.png" width="72" height="72"
+          <td >
+              <div>
+            <img src="../assets/icons/5000SlicesIcon.png" width="68" height="68"
             vertical-align="middle"
-            horizontal-align="center"   
-             style="margin-left: 0.8em; margin-top: 0.4em;"
-            alt="5000 Slices Swap-App" />  
-            </div>                
-          </th>  
+            horizontal-align="center"
+                class="main-header-image"
+            alt="5000 Slices Swap-App" />
+            </div>
+          </td>
 
-          <th scope="col" style="width: 1.6em;" >            
-          </th>
-          <th scope="col" style="width: 10em;">            
-                <button style="width: 100%;height: 3.0em;
-                border-radius: 1.8em;
-                "  >Home</button>                        
-          </th>
-          <th scope="col" style="width: 1.6em;" >            
-        </th>
-        <th scope="col" style="width: 10em;">            
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>                        
-        </th>
-        <th scope="col" style="width: 1.6em;" >            
-        </th>
-        <th scope="col" style="width: 10em;">            
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>                        
-        </th>
-        <th scope="col" style="width: 1.6em;" >            
-        </th>
-        <th scope="col" style="width: 10em;">            
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>                        
-        </th>
-        <th scope="col" style="width: 1.6em;" >            
-        </th>
-        <th scope="col" style="width: 10em;">            
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>                        
-        </th>
-        <th scope="col" style="width: 1.6em;" >            
-        </th>
-        <th scope="col" style="width: 10em;">            
-              <button style="width: 100%;height: 3.0em;
-              border-radius: 1.8em;
-              "  >Home</button>                        
-        </th>
+          <td style="width: 1.6em; min-width: 1.6em;" >            
+          </td>
+
+          <td >
+                <!-- <button class="main-header-button" type="submit" id="navButtonHome" >Home</button> -->
+                <button type="submit"  >Home</button>
+               
+          </td>
+          <td style="width: 1.6em; min-width: 1.6em;">
+        </td>
+        <td  >
+              <button  class="main-header-button">News</button>
+        </td>
+        <td  style="width: 1.6em; min-width: 1.6em;" >
+        </td>
+        <td  >
+              <button  class="main-header-button">Apps</button>
+        </td>
+        <td  style="width: 1.6em; min-width: 1.6em;">
+        </td>
+        <td  >
+              <button  class="main-header-button">Tokens / NFT</button>
+        </td>
+        <td  style="width: 1.6em; min-width: 1.6em;" >
+        </td>
+        <td  >
+              <button  class="main-header-button">Whitepaper</button>
+        </td>
+        <td  style="width: 1.6em; min-width: 1.6em;">
+        </td>
+        <td >
+              <button  class="main-header-button">Roadmap</button>
+        </td>
+        <!-- <td style="width: 100%; background-color: green;" > -->
+            
+          <td >
+            
+            <div class="dropdown">
+                <button id="buttonWalletDropDown" style="border-radius: 6px;
+height:35px;width:120px" type="submit" class="dropbtn">Wallet
+                    Connection</button>
+
+                <div id="dropDownWalletMenu" class="dropdown-content"
+                     style="padding: 3px 3px 3px 6px; position: fixed; width: 180px;
+  left: 100%;
+   margin-left: -410px; margin-top: 8px;
+  background-color: hsl(249, 32%, 8%);box-shadow: 0 0 10px 0 rgba(242, 241, 241, 0.3);border-radius: 0.8em;">
+
+                    <table>
+                        <tr class="spaceUnder">
+                            <button id="loginStoic" type="submit" class="button-dropdownmenu">
+                                <img src="../assets/icons/stoic.png" width="22px" height="22px"
+                                     style="float: left;margin-left: 4px;" />
+                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Stoic</div>
+                            </button>
+                        </tr>
+
+                        <tr class="spaceUnder">
+                            <button id="loginPlug" type="submit" class="button-dropdownmenu">
+                                <img src="../assets/icons/plug.jpg" width="22px" height="22px"
+                                     style="float: left;margin-left: 4px;" />
+                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Plug</div>
+                            </button>
+                        </tr>
+                        <tr>
+                            <button id="logout" type="submit" class="button-dropdownmenu">
+
+                                <div style="margin: auto;text-align: right;margin-right: 10px;  margin-top: 0px;">Log out
+                                </div>
+                            </button>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+
         </tr>
+        
      </table>
- 
+     <button type="submit" id="navButtonHome" >Home</button>
+     <table>
 
+     </table>
     </div>
     <div>
+
+
         <!-- <table style="width: 100%;min-width: 450px;">
             <td align="left" style="width:60px">
                 <img src="../assets/icons/5000SlicesIcon.png" width="75" height="75"
@@ -212,12 +234,12 @@ margin: 0px 0px 0px 0px;
                             <a href="web3-sub3.html">Sub Link 3</a>
                         </div>
                     </div>
-                    
+
                     <a href="projectidea.html">NFTs</a>
                     <a href="gold.html">GOLD</a>
-                    <a href="sliceinfo.html">NEWS</a>                    
+                    <a href="sliceinfo.html">NEWS</a>
                     <a href="roadmap.html">ROADMAP</a>
-                </div>              
+                </div>
             </td>
             <td align="right">
                 <div style="align-content: flex-end;vertical-align: center">
@@ -225,11 +247,11 @@ margin: 0px 0px 0px 0px;
                         <td>
                             <div style="margin-top: 6px;">
                                 <label id="labelWalletConnectionStatus" style="margin-right: 22px;font-size: 0.8em;
-                color: rgb(40, 40, 211);font-weight: bold; vertical-align: middle; 
+                color: rgb(40, 40, 211);font-weight: bold; vertical-align: middle;
                 "></label>
                         </td>
                         <td>
-                        <td>                            
+                        <td>
                             <div class="dropdown">
                                 <button id="buttonWalletDropDown" style="border-radius: 6px;
                 height:35px;width:120px" type="submit" class="dropbtn">Wallet
@@ -237,8 +259,8 @@ margin: 0px 0px 0px 0px;
 
                                 <div id="dropDownWalletMenu" class="dropdown-content"
                                      style="padding: 3px 3px 3px 6px; position: fixed; width: 180px;
-                  left: 100%; 
-                   margin-left: -410px; margin-top: 8px;                                 
+                  left: 100%;
+                   margin-left: -410px; margin-top: 8px;
                   background-color: hsl(249, 32%, 8%);box-shadow: 0 0 10px 0 rgba(242, 241, 241, 0.3);border-radius: 0.8em;">
 
                                     <table>
@@ -266,7 +288,7 @@ margin: 0px 0px 0px 0px;
                                         </tr>
                                     </table>
                                 </div>
-                            </div>                            
+                            </div>
                         </td>
 
                     </table>
@@ -278,183 +300,181 @@ margin: 0px 0px 0px 0px;
 </header>
 
 <main style="height: 100%;">
- 
+
 </main>
 
 <footer>
 
 </footer>
 
- 
 
-    <!-- vertical coordinate lines -->
+
+<!-- vertical coordinate lines -->
+<!--
+    
     <div style="color: white;position: absolute;
     top: 0px;left: 3.2em;
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
     opacity: 0.0;
     ">
-        <table cellspacing="0" cellpadding="0">       
+        <table cellspacing="0" cellpadding="0">
           <tr>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
+                " ></div>
+            </th>
             <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
                 <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px;width: 1.6em;
-                " ></div>                
+                " ></div>
             </th>
             <th scope="col" style="height: 100%;">
                 <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
                 opacity: 0.15;
                 margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
                 width: 10em;
-                " ></div>                
-            </th>                        
-            
-             
-           
-          
-
+                " ></div>
+            </th>
           </tr>
         </table>
-        
+
         </div>
+    -->
 </div>
 </body>
 

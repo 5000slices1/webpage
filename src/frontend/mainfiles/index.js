@@ -1,6 +1,7 @@
 import {PubSub } from "../scripts/utils/PubSub";
 import {CommonIdentityProvider, WalletTypes} from "../scripts/types/CommonTypes";
 import { HelloWorld } from "../scripts/utils/CommonUtils";
+
 /// react on Identity changed. (login, logout, etc..)
 async function IdentityChanged() {
 
@@ -38,6 +39,12 @@ function OnToggleWalletDropDownMenu() {
     }
   }
 
+  function ButtonNavHomeClicked(){
+
+    console.log("hello");
+    alert('hello');
+  }
+
   function ButtonTestClicked(){
     console.log("web3: test clicked");    
     // console.log("frames.frame_swap");
@@ -64,18 +71,27 @@ function OnToggleWalletDropDownMenu() {
     }
 
   document.addEventListener('DOMContentLoaded', async function () {
-  //alert('moin');
+  alert('in init');
   //document.domain = 'icp0.io';
     console.log("init");
+
+    var navButton = document.getElementById("navButtonHome");
+    console.log(navButton); 
+    navButton.addEventListener('click', function () { ButtonNavHomeClicked(); }, false);
+
+    /*
     PubSub.subscribe('index_js_UserIdentityChanged', 'UserIdentityChanged', IdentityChanged);
     await CommonIdentityProvider.Init();
       
+    
+    
     document.getElementById("buttontest").addEventListener('click', function () { ButtonTestClicked(); }, false);
 
     document.getElementById("buttonWalletDropDown").addEventListener('click', function () { OnToggleWalletDropDownMenu(); }, false);
     document.getElementById("loginPlug").addEventListener('click', async function () { await CommonIdentityProvider.Login(WalletTypes.plug) }, false);
     document.getElementById("loginStoic").addEventListener('click', async function () { await CommonIdentityProvider.Login(WalletTypes.stoic) }, false);
     document.getElementById("logout").addEventListener('click', async function () { await CommonIdentityProvider.Logout() }, false);
+    */
     console.log("init done");
   }, false)
 

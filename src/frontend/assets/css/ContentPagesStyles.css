@@ -1,0 +1,14 @@
+.content-control-div{
+
+    width: 100%;       
+    border-radius: 0.8em;
+    
+    background-color: rgba(85,85,123,0.3);
+    /* background-color: yellow; */
+    
+    box-shadow: 0 0.2em 0.3em rgba(255, 254, 254, 0.25), inset 0.2em 0.15em 0.3em rgba(255, 251, 251, 0.25);
+    box-shadow: 0.2em 0.15em 0.3em rgba(255, 251, 251, 0.25), inset 0 0.2em 0.3em rgba(255, 254, 254, 0.25);
+
+    
+
+}

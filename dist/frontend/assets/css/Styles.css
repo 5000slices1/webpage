@@ -7,6 +7,7 @@ html{
     padding: 0px 0px 0px 0px;
     font-size: 62.5%;
     min-width: 120em;
+    /* width: 144em; */
 
 }
 
@@ -23,11 +24,11 @@ body {
 
 .main-header-div {
     background-color: #55557B;
-    height: 80px;
+    height: 8em;
     width: 100%;    
     border-top-left-radius: 2.8em;
     border-top-right-radius: 2.8em;
-    box-shadow: 0 0.2em 0.4em rgba(255, 254, 254, 0.25), inset 0.2em 0.2em 0.4em rgba(255, 251, 251, 0.25);
+    box-shadow: 0 0.4em 0.6em rgba(255, 254, 254, 0.25), inset 0.4em 0.3em 0.6em rgba(255, 251, 251, 0.25);
 }
 
 .main-header table {
@@ -53,11 +54,12 @@ body {
 .main-header td:last-child {
     width:100%;        
     text-align: end;
-    padding-right: 4.8em;
+    padding-right: 1.0em;
   } 
 
 
-.main-header-button {
+  /* #region header buttons */
+.main-header-button, .walletLoginButton, .button-dropdownmenu{
 
     width: 100%;
 
@@ -76,24 +78,168 @@ body {
     transition-duration: 0.4s;
     height: 4.0em;
     border-radius: 1.8em;
-    cursor:grab;
+    
     box-shadow: 0 0.2em 0.3em rgba(255, 254, 254, 0.05), inset 0.2em 0.3em 0.4em rgba(255, 251, 251, 0.25);
-    /* box-shadow: inset 0.2em 0.2em 0.4em rgba(28, 114, 243, 0.95); */
+    
   }
 
+.walletLoginButton {  
+    width: 16em;    
+    border: 0.3em solid rgba(90, 11, 54, 0.8);
+}
 
-  /* .main-header-button  */
-
-.main-header-button:hover{ 
+  
+.main-header-button:hover, .walletLoginButton:hover, .button-dropdownmenu:hover{ 
     filter: brightness(1.1);
-    background-color: green;
-    color: green;
-    width: 250px;
+    background-color: rgba(188, 215, 255, 0.95);
+    color: rgba(6, 42, 97, 0.8);
+    
 }
 
-.main-header-button:active {
-    transform: scale(.8);
+.main-header-button-selected{
+    filter: brightness(1.1);
+    background-color: rgba(188, 215, 255, 0.95);
+    color: rgba(6, 42, 97, 0.8);
+    transition-duration: 0.8s;
 }
-  /* style="width: 100%;height: 3.0em;
-                border-radius: 1.8em;
-                "  */
+
+
+/* #endregion header buttons */
+
+/* #region Wallet login control */
+
+.wallet-control-not-logged-in {
+    
+    display: none;
+    position:absolute;    
+    text-align: end;
+    margin-left: 1.0em; 
+    margin-top: 3.0em;
+    background-color: #55557B;
+    height: 18.5em;    
+    padding-top: 1.0em;
+    width: 100%;
+    border-bottom-left-radius: 2.8em;
+    border-bottom-right-radius: 2.8em;
+    box-shadow: 0 0.4em 0.6em rgba(255, 254, 254, 0.25), inset 0.4em 0.3em 0.6em rgba(255, 251, 251, 0.25);
+}
+
+
+.button-dropdownmenu {
+    /* float: left; */
+    height: 4em;
+    width: 14em;
+    left: 4em; 
+    
+    margin: 0.4em 1.0em 0.4em 0.4em;    
+    cursor: pointer;
+    border-radius: 0.6em;
+    
+    color: rgb(222, 218, 218);
+    transition-duration: 0.1s;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+    display: block;
+} 
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+
+/* #endregion Wallet login control */
+.sub-navigation-div{
+    display: none;
+    position:absolute;
+    top:10.5em;
+
+    border-top-left-radius: 0em;
+    border-top-right-radius: 0em;
+    border-bottom-left-radius: 1.2em;
+    border-bottom-right-radius: 1.2em;
+    box-shadow: 0 0.2em 0.2em rgba(255, 254, 254, 0.25), inset 0.1em 0.2em 0.3em rgba(255, 251, 251, 0.25);
+    background-color: #55557B;            
+    height: 4.7em;
+    width: 45em;
+    color: white;
+
+}
+
+.sub-navigation-button{
+
+    width: 100%;
+    background-color: transparent;
+    border: transparent;
+    font-size: 1.3em;
+    font-weight: bold;  
+    cursor: pointer;
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+
+    color: rgba(84,143,232, 1.0);
+    height: 2.0em;
+    
+    display: inline-block;  
+    position: relative;
+    letter-spacing: 0.072em;
+    -webkit-text-stroke: 0.057em #060606; 
+    paint-order: stroke fill;
+    
+}
+.sub-navigation-button:hover{
+
+    color: rgba(255,255,255, 0.8);
+    transition-duration: 0.5s;
+}
+
+.sub-navigation-button-vertical-line {
+    width:0.3em; 
+    margin-left: 0.6em;   
+    background-color: #0E0F2C;    
+    height: 5.0em;
+}
+
+.sub-navigation-button-horizontal-line {
+    width:9.0em;     
+    margin-left: 0.6em;   
+    background-color:transparent;    
+    height: 0.3em;
+    display: block;
+}
+
+
+/* .sub-navigation-button:hover ~ .sub-navigation-button-horizontal-line {
+
+    display: block;
+    background-color:rgba(255,255,255, 0.8);
+    transition-duration: 0.5s;     
+} */
+
+.sub-navigation-button-horizontal-line-selected{
+    display: block;
+    background-color:rgba(255,255,255, 0.8);
+    transition-duration: 0.5s;  
+}
+
+.sub-navigation-button-selected{
+    
+    color: rgba(255,255,255, 0.8);
+    transition-duration: 0.5s;
+}
+
+.sub-navigation-table{
+    width:50em;
+    padding-top: -2em;
+    padding-left: 0.0em;
+}
+
+
+/* #region sub navigation menu */
+
+
+
+
+/* #endregion sub navigation menu */

@@ -1,457 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <!-- basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- mobile metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=3">
-    <!-- site metas -->
-    <title>5000 SLICES $ GOLDSLICES: WEB3 Community in the Internet Computer (ICP)</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- bootstrap css -->
-    <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
-    <!-- style css -->
-    <!-- <link rel="stylesheet" href="css/style.css"> -->
-    <!-- responsive-->
-    <!-- <link rel="stylesheet" href="css/responsive.css"> -->
-
-    <!-- awesome fontfamily -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-
-    <!-- <link type="text/css" rel="stylesheet" href="../assets/css/MainStyles/MainStyles.css" /> -->
-    <link type="text/css" rel="stylesheet" href="../assets/css/MainStyles.css" />
-    <link type="text/css" rel="stylesheet" href="../assets/css/ContentPagesStyles.css" />
-    <!-- <link type="text/css" rel="stylesheet" href="../assets/css/WalletLogin.css" /> -->
-    <!-- <script type="module"  src="index.js"></script> -->
-
-
-<script defer src="index.js"></script></head>
-<!-- body -->
-
-<body>
-
-    <div style="min-height: 100vh;width: 100%; vertical-align: top; margin: 0 0 0 0; padding: 0 0 0 0;">
-             
-    <table cellspacing="0" cellpadding="0" style="width: 100%;height: 100vh;">
-    <tr>
-        <td style="height: 1.2em;">
-
-        </td>
-    </tr>
-        <tr style="height: 17.2em;">  
-        <td>
-        <!-- Header section -->
-        <header class="main-header">
-            <div class="main-header-div" id="divMainMenu" style="vertical-align: top;">                                
-                <table cellspacing="0" cellpadding="0" class="main-header table" style="vertical-align: top;">
-                    <tr>
-                        <td>
-                            <div>
-                                <img src="../assets/icons/5000SlicesIcon2.png" width="64" height="64"
-                                    vertical-align="middle" horizontal-align="center" class="main-header-image"
-                                    alt="5000 Slices Swap-App" />
-                            </div>
-                        </td>
-
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                        </td>
-
-                        <td>
-                            <button class="main-header-button" type="menu" id="navButtonHome">Home</button>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                        </td>
-                        <td>
-                            <button class="main-header-button" type="menu" id="navButtonNews">News</button>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                        </td>
-                        <td>
-                            <button class="main-header-button" type="menu" id="navButtonApps">Apps</button>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                        </td>
-                        <td>
-                            <button class="main-header-button" type="menu" id="navButtonTokensNft">Tokens / NFT</button>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                        </td>
-                        <td>
-                            <button class="main-header-button" type="menu" id="navButtonWhitepaper">Whitepaper</button>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                        </td>
-                        <td>
-                            <button class="main-header-button" type="menu" id="navButtonRoadmap">Roadmap</button>
-                        </td>
-                        <td>
-                            <!-- #region Wallet connection dropdown -->
-                            <div class="dropdown">
-                                <button id="buttonWalletDropDown" type="submit" class="walletLoginButton">Wallet
-                                    Connection</button>
-
-                                <div id="dropDownWalletMenu" class="wallet-control-not-logged-in">
-
-                                    <table cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <button id="loginStoic" type="submit" class="button-dropdownmenu">
-                                                <img src="../assets/icons/stoic.png" width="22em" height="22em"
-                                                    style="float: left;margin-left: 0.4em;" />
-                                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect
-                                                    with Stoic</div>
-                                            </button>
-                                        </tr>
-
-                                        <tr>
-                                            <button id="loginPlug" type="submit" class="button-dropdownmenu">
-                                                <img src="../assets/icons/plug.jpg" width="22em" height="22em"
-                                                    style="float: left;margin-left: 0.4em;" />
-                                                <div style="margin: auto;text-align: center;margin-top: 2px;">Connect
-                                                    with Plug</div>
-                                            </button>
-                                        </tr>
-                                        <tr>
-                                            <button id="logout" type="submit" class="button-dropdownmenu">
-
-                                                <div
-                                                    style="margin: auto;text-align: right;margin-right: 10px;  margin-top: 0px;">
-                                                    Log out
-                                                </div>
-                                            </button>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- #endregion Wallet connection dropdown -->
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- submenu -->
-            <div class="sub-navigation-div" id="sub-navigation-div">
-                <table cellspacing="0" cellpadding="0" class="sub-navigation-table">
-                    <tr>
-                        <td>
-                            <button class="sub-navigation-button" type="menu"
-                                id="secondNavButtonOverview">Overview</button>
-                            <div class="sub-navigation-button-horizontal-line" id="secondNavButtonOverviewLine">
-                            </div>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                            <div class="sub-navigation-button-vertical-line">
-                            </div>
-                        </td>
-                        <td>
-                            <button class="sub-navigation-button" type="menu" id="secondNavButtonSliToken">SLI
-                                Token</button>
-                            <div class="sub-navigation-button-horizontal-line" id="secondNavButtonSliTokenLine">
-                            </div>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                            <div class="sub-navigation-button-vertical-line">
-                            </div>
-                        </td>
-                        <td>
-                            <button class="sub-navigation-button" type="menu" id="secondNavButtonGldsToken">GLDS
-                                Token</button>
-                            <div class="sub-navigation-button-horizontal-line" id="secondNavButtonGldsTokenLine">
-                            </div>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                            <div class="sub-navigation-button-vertical-line">
-                            </div>
-                        </td>
-                        <td>
-                            <button class="sub-navigation-button" type="menu" id="secondNavButtonSlicesNft">Slices
-                                NFT</button>
-                            <div class="sub-navigation-button-horizontal-line" id="secondNavButtonSlicesNftLine">
-                            </div>
-                        </td>
-                        <td style="width: 1.6em; min-width: 1.6em;">
-                            <div class="sub-navigation-button-vertical-line">
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-
-            </div>
-
-        </header>
-    </td>           
-    </tr>
-   
-    <tr style="height: 100%;vertical-align: top;">
-        <td>                    
-            <table cellspacing="0" cellpadding="0" style="height: 100%;width: 100%;">
-                <tr >
-                    <!-- #region left navigation area -->
-                    <td  style="width:10em;height:100%;">
-                        <div class="content-control-left-navigation" style="width: 10em; 
-                        height: 100%;" >  
-                        
-                        <table cellspacing="0" cellpadding="0" style="width: 100%;" >
-                            <tr>
-                                <td style="height: 2em;" >
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <button class="content-control-left-navigation-button"
-                                     type="menu" id="leftNavButtonTokenInformation">Information</button>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td style="height: 2em;" >
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <button class="content-control-left-navigation-button"
-                                     type="menu" id="leftNavButtonTokenExplorer">Explorer</button>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td style="height: 2em;" >
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <button class="content-control-left-navigation-button"
-                                     type="menu" id="leftNavButtonTokenHolders">Holders</button>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td style="height: 2em;" >
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <button class="content-control-left-navigation-button"
-                                     type="menu" id="leftNavButtonTokenInterface">Interface</button>
-                                </td>
-                            </tr>
-
-                          
-
-
-                        </table>
-
-                        </div>
-                    </td>
-                    <!-- #endregion left navigation area -->
-
-                    
-                    <td style="width: 1.6em; min-width: 1.6em;">
-                    </td>
-
-                    <!-- #region main page content area -->
-                    <td style="width:100%;height:100%;">
-                        <div class="content-control-div" style=" height: 100%;" >                                
-                        </div>
-                    </td>
-                    <!-- #endregion main page content area -->
-
-                </tr>
-                <tr style="height: 2em;">
-
-                </tr>
-            </table>
-        
-         </td>
-    </tr>
-    <tr>
-        <td>
-        <footer>
-            <div class="footer-div" style="width: 100%;height: 5em;background-color:white;
-            
-            ">
-            </div>
-        </footer>
-    </td>
-    </tr>  
-    <tr style="height: 0.8em;">
-
-    </tr>                              
-</table>
-</div>
-    
- <!-- vertical coordinate lines, 'display:block' should only used for designing tasks -->
-
- <div style="color: white;position: absolute;
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="initial-scale=1,maximum-scale=3"><title>5000 SLICES $ GOLDSLICES: WEB3 Community in the Internet Computer (ICP)</title><meta name="keywords" content=""><meta name="description" content=""><meta name="author" content=""><link rel="stylesheet" href="../assets/css/MainStyles.css"/><link rel="stylesheet" href="../assets/css/ContentPagesStyles.css"/><script defer="defer" src="index.js"></script></head><body><div style="min-height: 100vh;width: 100%; vertical-align: top; margin: 0 0 0 0; padding: 0 0 0 0;"><table cellspacing="0" cellpadding="0" style="width: 100%;height: 100vh;"><tr><td style="height: 1.2em;"></td></tr><tr style="height: 17.2em;"><td><header class="main-header"><div class="main-header-div" id="divMainMenu" style="vertical-align: top;"><table cellspacing="0" cellpadding="0" class="main-header table" style="vertical-align: top;"><tr><td><div><img src="../assets/icons/5000SlicesIcon2.png" width="64" height="64" vertical-align="middle" horizontal-align="center" class="main-header-image" alt="5000 Slices Swap-App"/></div></td><td style="width: 1.6em; min-width: 1.6em;"></td><td><button class="main-header-button" type="menu" id="navButtonHome">Home</button></td><td style="width: 1.6em; min-width: 1.6em;"></td><td><button class="main-header-button" type="menu" id="navButtonNews">News</button></td><td style="width: 1.6em; min-width: 1.6em;"></td><td><button class="main-header-button" type="menu" id="navButtonApps">Apps</button></td><td style="width: 1.6em; min-width: 1.6em;"></td><td><button class="main-header-button" type="menu" id="navButtonTokensNft">Tokens / NFT</button></td><td style="width: 1.6em; min-width: 1.6em;"></td><td><button class="main-header-button" type="menu" id="navButtonWhitepaper">Whitepaper</button></td><td style="width: 1.6em; min-width: 1.6em;"></td><td><button class="main-header-button" type="menu" id="navButtonRoadmap">Roadmap</button></td><td><!-- #region Wallet connection dropdown --><div class="dropdown"><button id="buttonWalletDropDown" type="submit" class="walletLoginButton">Wallet Connection</button><div id="dropDownWalletMenu" class="wallet-control-not-logged-in"><table cellspacing="0" cellpadding="0"><tr><button id="loginStoic" type="submit" class="button-dropdownmenu"><img src="../assets/icons/stoic.png" width="22em" height="22em" style="float: left;margin-left: 0.4em;"/><div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Stoic</div></button></tr><tr><button id="loginPlug" type="submit" class="button-dropdownmenu"><img src="../assets/icons/plug.jpg" width="22em" height="22em" style="float: left;margin-left: 0.4em;"/><div style="margin: auto;text-align: center;margin-top: 2px;">Connect with Plug</div></button></tr><tr><button id="logout" type="submit" class="button-dropdownmenu"><div style="margin: auto;text-align: right;margin-right: 10px;  margin-top: 0px;">Log out</div></button></tr></table></div></div><!-- #endregion Wallet connection dropdown --></td></tr></table></div><div class="sub-navigation-div" id="sub-navigation-div"><table cellspacing="0" cellpadding="0" class="sub-navigation-table"><tr><td><button class="sub-navigation-button" type="menu" id="secondNavButtonOverview">Overview</button><div class="sub-navigation-button-horizontal-line" id="secondNavButtonOverviewLine"></div></td><td style="width: 1.6em; min-width: 1.6em;"><div class="sub-navigation-button-vertical-line"></div></td><td><button class="sub-navigation-button" type="menu" id="secondNavButtonSliToken">SLI Token</button><div class="sub-navigation-button-horizontal-line" id="secondNavButtonSliTokenLine"></div></td><td style="width: 1.6em; min-width: 1.6em;"><div class="sub-navigation-button-vertical-line"></div></td><td><button class="sub-navigation-button" type="menu" id="secondNavButtonGldsToken">GLDS Token</button><div class="sub-navigation-button-horizontal-line" id="secondNavButtonGldsTokenLine"></div></td><td style="width: 1.6em; min-width: 1.6em;"><div class="sub-navigation-button-vertical-line"></div></td><td><button class="sub-navigation-button" type="menu" id="secondNavButtonSlicesNft">Slices NFT</button><div class="sub-navigation-button-horizontal-line" id="secondNavButtonSlicesNftLine"></div></td><td style="width: 1.6em; min-width: 1.6em;"><div class="sub-navigation-button-vertical-line"></div></td></tr></table></div><div></div></header></td></tr><tr style="height: 100%;vertical-align: top;"><td><table cellspacing="0" cellpadding="0" style="height: 100%;width: 100%;"><tr><!-- #region left navigation area --><td style="width:10.3em;height:100%;"><div class="content-control-left-navigation" style="width: 10.3em; 
+                        height: 100%;"><table cellspacing="0" cellpadding="0" style="width: 100%;"><tr><td style="height: 2em;"></td></tr><tr><td align="center"><button class="content-control-left-navigation-button" type="menu" id="leftNavButtonTokenInformation">Information</button></td></tr><tr><td style="height: 2em;"></td></tr><tr><td align="center"><button class="content-control-left-navigation-button" type="menu" id="leftNavButtonTokenExplorer">Explorer</button></td></tr><tr><td style="height: 2em;"></td></tr><tr><td align="center"><button class="content-control-left-navigation-button" type="menu" id="leftNavButtonTokenHolders">Holders</button></td></tr><tr><td style="height: 2em;"></td></tr><tr><td align="center"><button class="content-control-left-navigation-button" type="menu" id="leftNavButtonTokenInterface">Interface</button></td></tr></table></div></td><!-- #endregion left navigation area --><td style="width: 1.2em; min-width: 1.2em;"></td><!-- #region main page content area --><td style="width:100%;height:100%;"><div class="content-control-div" style="height: 100%;"></div></td><!-- #endregion main page content area --></tr><tr style="height: 2em;"></tr></table></td></tr><tr><td><footer><div class="footer-div" style="width: 100%;height: 5em;background-color:white;"></div></footer></td></tr><tr style="height: 0.8em;"></tr></table></div><div style="color: white;position: absolute;
  top: 0px;left: 3.2em;
  margin: 0px 0px 0px 0px;
  padding: 0px 0px 0px 0px;
  display: none;
- /* display: block; */    
- ">
-         <table cellspacing="0" cellpadding="0">
-             <tr>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+ /* display: block; */"><table cellspacing="0" cellpadding="0"><tr><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;">
-                     <div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
+             width: 10em;"></div></th><th scope="col" style="height: 100%;margin: 0px 0px 0px 0px;"><div style="height:1000px;background-color: rgba(131, 130, 130, 0.91);
              opacity: 0.15;
-             margin: 0px 0px 0px 0px;width: 1.6em;
-             "></div>
-                 </th>
-                 <th scope="col" style="height: 100%;">
-                     <div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
+             margin: 0px 0px 0px 0px;width: 1.6em;"></div></th><th scope="col" style="height: 100%;"><div style="height:1000px;background-color: rgba(182, 176, 176, 0.91);
              opacity: 0.15;
              margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;
-             width: 10em;
-             "></div>
-                 </th>
-             </tr>
-         </table>
-
-     </div>  
-</body>
-
-
-</html>
+             width: 10em;"></div></th></tr></table></div></body></html>

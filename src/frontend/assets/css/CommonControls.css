@@ -1,0 +1,117 @@
+@import url('https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css'); 
+
+.content-control-input-text{
+
+    width: 100%;
+
+    background-color:rgba(243, 244, 246, 0.936);
+    color:rgba(29, 28, 28, 0.9);
+    border: 0.2em solid rgba(6, 42, 97, 0.8);
+    
+    font-size: 1.2em;
+    font-weight: bold;
+    /* cursor: pointer; */
+    text-align: center;
+    text-decoration:none;    
+    stroke: #0E0F2C;
+    stroke-width: 1em; 
+    /* font-family: "Hack Nerd Font";   */
+    font-family: "Hack";  
+    font-style: normal;
+    transition-duration: 0.4s;
+    height: 2.5em;
+    border-radius: 0.5em;
+    text-align: left;
+    padding-left: 1.5em;
+    
+    box-shadow: 0 0.2em 0.3em rgba(255, 254, 254, 0.05), 
+    inset 0.2em 0.3em 0.4em rgba(255, 251, 251, 0.25);
+
+}
+
+
+.content-control-input-text::placeholder {
+    font-weight: bold;
+    opacity: 0.8;    
+    font-family: "Arial";     
+    font-style: italic;    
+  }
+
+.control-search-button{
+
+     
+    cursor: pointer;  
+    border:  0.15em solid white;
+    border-radius: 0.8em;
+    border-color: white;
+    stroke-width: 1em;
+    /* background-image: url('../icons/input_search_icon.png');  */
+    /* background-image: url('../../../../icons/input_search_icon.png');   */
+    background-size: cover;
+    margin: 0em;
+    padding: 0em;
+    opacity: 0.9;    
+  }
+
+  .control-search-button:hover{      
+    border:  0.2em solid white;       
+    opacity: 1.0;    
+  }
+
+  .control-token-explorer{
+
+    border-radius: 0.6em;
+    border-color: transparent;    
+    background-color: rgba(84,143,232, 0.3);   
+    color: rgba(228,235,255, 1.0);
+  }
+
+
+.control-table-header-text{
+  font-family: "Montserrat", sans-serif;
+  font-style:normal;
+  font-weight: bold;
+  /* font-weight: 1600; */
+  font-size: 1.6em;
+  /* line-height: 1.6em; */
+    
+  text-align: left;
+  letter-spacing: 0.5px;
+
+  color: rgba(255,255,255,255);
+  -webkit-text-stroke: 0.037em #060606; 
+  paint-order: stroke fill;  
+}
+
+.control-table-cell-text{
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: 100;
+  font-size: 1.4em;
+  /* line-height: 1.6em; */
+    
+  text-align: left;
+  vertical-align: top;
+  /* letter-spacing: 0.5px; */
+
+  color: rgba(255,255,255,200);
+  /* -webkit-text-stroke: 0.057em #060606; 
+  paint-order: stroke fill;   */
+}
+
+.control-table-cell-div-content{
+
+
+  background-color: grey;
+  padding-bottom: 0.1em;
+   border-radius: 0.6em;
+  border: black;
+  background-color: rgba(85,85,123, 0.4);  
+  box-shadow: 0 0.4em 0.4em rgba(0, 0, 0, 0.35), inset 0.02em 0.03em 0.08em rgba(0, 0, 0, 0.85);
+                                       
+}
+
+
+tr.spaceUnder>td {
+  padding-bottom: 0.9em; 
+}

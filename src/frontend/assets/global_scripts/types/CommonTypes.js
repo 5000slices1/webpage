@@ -1,12 +1,12 @@
 import { IdentiyProvider } from "../IdentityConnector/identity/IdentityProvider.js";
 import {createEnum} from "../utils/CommonUtils.js";
-import {PageSliToken} from "../../pages/Tokens_Nft/SliToken/PageSliToken.js";
+import {PageTrabyterBucks} from "../../pages/Tokens_Nft/TrabyterBucks/PageTrabyterBucksToken.js";
 
 class CommonTypesModel {
    
     WalletTypes = createEnum(['NoWallet', 'plug', 'stoic', 'dfinity']);
     CommonIdentityProvider = new IdentiyProvider();    
-    LogicSliToken = new PageSliToken();   
+    LogicTrabyterBucksToken = new PageTrabyterBucks();   
 
     constructor() {
         console.log("CommonTypes constructor");

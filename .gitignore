@@ -21,15 +21,21 @@
 
 
 # other folders and files
+*.sh
 /.idea/
 /.vscode
 canister_ids.json
 
-*.sh
+/*.sh
 **/*.pem
 
 
 node_modules
 
-.env
+/.env
+/.dfx
 .dfx/local/network-id
+dist/
+/dist
+
+

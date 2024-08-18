@@ -164,62 +164,15 @@ async function LoadDynamicHtmlPages() {
     if (innerDiv.hasAttribute("mainContentPageId")) {
       let mainContentPageId = innerDiv.getAttribute("mainContentPageId");
       let htmlSource = innerDiv.getAttribute("html-source");
-
-      console.log("mainContentPageId: " + mainContentPageId);
-      console.log("htmlSource: " + htmlSource);
-
+      
       await fetchAndSetInnerHTML(innerDiv,htmlSource);
 
-        // fetch(htmlSource)
-        // .then(response => response.text())
-        // .then(data => {
-        //   //setInnerHTMLAndExecuteScripts(innerDiv, data);        
-        //   innerDiv.innerHTML = data;            
-        // });
-    
-
-    /* Make an HTTP request using the attribute value as the file name: */
-    /*
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = async function () {
-      if (this.readyState == 4) {
-        if (this.status == 200) {
-          var htmlToShow = this.responseText;
-          
-          innerDiv.innerHTML = htmlToShow;          
-          // await init_javascript_code(tagValueToSearch);
-          //Page_Tokens_Init();
-        }
-        if (this.status == 404) { innerDiv.innerHTML = "Page not found."; }
-      }
-    }
-    xhttp.open("GET", htmlSource, true);
-    xhttp.send();
-*/
-    
-    
-    
-
-      // fetch(htmlSource)
-      //   .then(response => response.text())
-      //   .then(data => {
-      //     innerDiv.innerHTML = data;
-      //   });
     }
   }
 
-  await CommonTypes.LogicSliToken.Page_Sli_Token_Init();
+  await CommonTypes.LogicTrabyterBucksToken.Page_TrabyterBucks_Token_Init();
   console.log(allInnerDivs);
 
-  return;
-  let mainContentUrl = divMainContent.getAttribute("data-main-content-url");
-  let mainContent = document.getElementById("mainContent");
-
-  fetch(mainContentUrl)
-    .then(response => response.text())
-    .then(data => {
-      mainContent.innerHTML = data;
-    });
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -246,13 +199,13 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   // Sub navigation buttons
   let secondNavButtonOverview = document.getElementById("secondNavButtonOverview");
-  let secondNavButtonSliToken = document.getElementById("secondNavButtonSliToken");
-  let secondNavButtonGldsToken = document.getElementById("secondNavButtonGldsToken");
+  let secondNavButtonTraBucksToken = document.getElementById("secondNavButtonTraBucksToken");
+  let secondNavButtonTraPremiumTokenLine = document.getElementById("secondNavButtonTraPremiumTokenLine");
   let secondNavButtonSlicesNft = document.getElementById("secondNavButtonSlicesNft");
 
   secondNavButtonOverview.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonOverview); }, false);
-  secondNavButtonSliToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonSliToken); }, false);
-  secondNavButtonGldsToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonGldsToken); }, false);
+  secondNavButtonTraBucksToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraBucksToken); }, false);
+  secondNavButtonTraPremiumTokenLine.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraPremiumTokenLine); }, false);
   secondNavButtonSlicesNft.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonSlicesNft); }, false);
 
   // Wallet login button(s)

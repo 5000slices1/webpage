@@ -1,9 +1,23 @@
 {
-    "canisters": {
-      "web3": {
-        "type": "assets",
-        "source": ["public"]
+    "canisters": {    
+      "web3_frontend": {        
+        "frontend": {
+          "entrypoint": "src/frontend/mainfiles/index.html"
+        },
+        "source": [
+          "src/frontend/assets",
+          "dist/frontend/"
+        ],
+        "type": "assets"
+      }     
+    },
+    "defaults": {
+      "build": {
+        "_args_comment": "--max-stable-pages=524288 -> 32 GB  [524288 = 32 GB / 64Kb(each page size) ] -> (524288 * 65536) = 34359738368 bytes = 33554432 kb = 32768 MB = 32 GB",
+        "args": "--max-stable-pages=524288", 
+        "packtool": "mops sources"
       }
-    }
-  }
-  
+    },
+    "output_env_file": ".env",
+    "version": 1
+}

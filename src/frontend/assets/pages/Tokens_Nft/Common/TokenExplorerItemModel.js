@@ -5,4 +5,5 @@ export class TokenExplorerItemModel{
      DateTimeString = "";
      From = "";
      To = "";     
+     txIndex = 0;
 }

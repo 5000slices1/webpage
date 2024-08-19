@@ -11,7 +11,7 @@ export class PageTrabyterBucks {
     #tokenExplorer = null;
     #wasInitDone = false;
 
-    #explorerMaxItemsPerPage = 10;
+    #explorerMaxItemsPerPage = 50;
     #explorerTxId_StartIndex = 0;
     #txCount = 0;
 
@@ -35,28 +35,162 @@ export class PageTrabyterBucks {
 
     async Page_TrabyterBucks_Update() {
         // Some variables should be set to default values
-        this.#explorerMaxItemsPerPage = 10;
+        this.#explorerMaxItemsPerPage = 50;
         this.#explorerTxId_StartIndex = 0;
 
         // Get the transactions count
         this.#txCount = await this.#tokenExplorer.Get_TransactionsCount();
-        console.log("TxCount: " + this.#txCount);
-
+        
         // Get the transactions
-        let txStartIndex = Math.min(Number(Number(this.#txCount) - Number(this.#explorerMaxItemsPerPage)
-         + Number(this.#explorerTxId_StartIndex)), Number(0));
+        let relIndex = Number( Number(this.#txCount) - Number(this.#explorerMaxItemsPerPage)
+        + Number(this.#explorerTxId_StartIndex));
+        let minNumber = Number(0);
+        
+        let txStartIndex = Number(Math.max(relIndex, minNumber));                
+        this.#transactions = await this.#tokenExplorer.Get_Transactions(txStartIndex, Number(this.#explorerMaxItemsPerPage));         
+        console.log("this.#transactions: ");
+        console.log(this.#transactions);
 
-        let transactions = await this.#tokenExplorer.Get_Transactions(txStartIndex, Number(this.#explorerMaxItemsPerPage));
-        console.log("Transactions: ");
-        console.log(transactions);
+        await this.#Update_TokenExplorerItems();
     }
 
 
-    // async Update_TokenExplorerItems(){
+    async #Update_TokenExplorerItems(){
+        
+        let id = this.#frontendId + "_TokenExplorer";
+        let tableElement = document.getElementById(id);
+
+        if (tableElement == null){
+            return;
+        }
+
+        let tableHtmlString = this.#Get_TokenExplorerTableStartContentString();
+
+        if (this.#transactions != null && this.#transactions.length > 0) {
+
+            for (let i = 0; i < this.#transactions.length; i++) {
+                let model = this.#transactions[i];
+                let rowString = this.#Get_TokenExplorerTableRowStringByModel(model);
+                tableHtmlString += rowString;
+            }
+        };
+
+        tableHtmlString += this.#Get_TokenExplorerTableEndContentString();
+        tableElement.innerHTML = tableHtmlString;
+        tableElement.style.display = "block";
+    }
 
 
+    #Get_TokenExplorerTableEndContentString(){
 
-    // }
+        return " </table>";
+    }
+
+    #Get_TokenExplorerTableStartContentString(){
+
+        let returnString = `
+            <table cellspacing='0em' cellpadding='0em'  
+            style='width: 100%; 
+            padding-left: 1em; padding-right: 1em;'>
+                <colgroup>
+                    <col style='width: 10em; min-width: 10em;'>
+                    <col style='width: 20em; min-width: 20em;'>
+                    <col style='width: 10em; min-width: 10em;'>
+                    <col style='width: 15em; min-width: 15em;'>
+                    <col style='width: 45em; min-width: 45em;'>
+                    <col style='width: auto; min-width: 45em;'>
+                </colgroup>
+
+                <tr>
+                    <td >
+                        <p class='control-table-header-text'>Tx Id</p>
+                    </td>
+                    <td >
+                        <p class='control-table-header-text'>Date</p>
+                    </td>
+                    <td >
+                        <p class='control-table-header-text'>Type</p>
+                    </td>
+                    <td >
+                        <p class='control-table-header-text'>Amount</p>
+                    </td>
+                    <td >
+                        <p class='control-table-header-text'>From</p>
+                    </td>
+                    <td >
+                        <p class='control-table-header-text'>To</p>
+                    </td>
+
+                    <td>
+
+                    </td>
+                </tr>
+        
+                <tr >
+                    <td colspan='6' >
+                        <div style='width: 100%;height: 0.2em; background-color: white;vertical-align: top;'></div>
+                    </td>
+                </tr>
+                <tr style='height: 2em;'>
+                    <td></td>
+                </tr>`;
+
+        return returnString;                                    
+    }
+
+    #Get_amount_string(amount){
+        let returnValue = Number(amount).toFixed(3);
+        return returnValue;
+    }
+
+    #Get_TokenExplorerTableRowStringByModel(model){
+
+        let returnString = `
+        <tr class='spaceUnder' >                          
+            <td colspan='6'>
+                <div class='control-table-cell-div-content'  >
+                    <table cellspacing='0em' cellpadding='0em' style='width: 100%;'  >
+                        <colgroup>
+                            <col style='width: 10em; min-width: 10em;'>
+                            <col style='width: 20em; min-width: 20em;'>
+                            <col style='width: 10em; min-width: 10em;'>
+                            <col style='width: 15em; min-width: 15em;'>
+                            <col style='width: 45em; min-width: 45em;'>
+                            <col style='width: auto; min-width: 45em;'>
+                        </colgroup>
+                        <tr style='margin: 0em; padding: 0em;'>
+                            <td style='padding-left: 1em;padding-top: 0.1em; vertical-align: top;text-align: right;'>
+                                <p class='control-table-cell-text'
+                                style='text-align: right;margin-right: 2em;'
+                                >` + model.txIndex + `</p>
+                            </td>
+                            <td style='vertical-align: top;padding-top: 0.1em;'>
+                                <p class='control-table-cell-text'>` + model.DateTimeString + `</p>
+                            </td>
+                            <td style='vertical-align: top;padding-top: 0.1em; '>
+                                <p class='control-table-cell-text'>` + model.TransactionType + `</p>
+                            </td>
+                            <td style='vertical-align: top;padding-top: 0.1em;'>
+                                <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + `</p>
+                            </td>                                                    
+                            <td style='vertical-align: top;padding-top: 0.1em;'>
+                                <p class='control-table-cell-text'>` + model.From + `</p>
+                            </td>
+                            <td style='vertical-align: top;padding-top: 0.1em;'>
+                                <p class='control-table-cell-text'>` + model.To + `</p>
+                            </td>                                                                                                                                                                          
+                        </tr>
+                        <tr>
+                            <td>
+
+                            </td>
+                        </tr>
+                    </table>                                              
+                </div> 
+            </td>                                                                                                                                                                                            
+        </tr>`;
+        return returnString;
+    }
 
     // async Add_TokenExplorerItemFromModel(){
 

@@ -2,6 +2,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from "../../../global_scripts/types/TokenInterface.js";
 import { Principal } from "@dfinity/principal";
 import { TokenExplorerItemModel } from "./TokenExplorerItemModel.js";
+import { TokenBalance } from "./TokenBalance.js";
 
 
 export class TokenExplorer{
@@ -10,6 +11,7 @@ export class TokenExplorer{
     #actor = null;
     #localCanisterId = null;
     #mainNetCanisterId = null;
+    #decimals = 8;
 
     constructor() {
         // Add constructor logic here
@@ -62,20 +64,76 @@ export class TokenExplorer{
         return this.#actor 
     };
 
+    #TimeTicksNanoseconds_To_DateTimeString(ticksNanoSeconds) {
+        
+        
+        let timeTicksNanoSeconds = Number(ticksNanoSeconds);
+        let timeTicksMilliSeconds = Math.trunc(Number(timeTicksNanoSeconds / 1000000));
+        let date = new Date(Number(timeTicksMilliSeconds));
+        return date.toLocaleString();              
+    };
+
+    #Update_ModelItem_common_values(model, transaction) {
+
+        let rawAmount = transaction?.amount;
+        let rawTo = transaction?.to?.owner;
+        let rawFrom = transaction?.from?.owner;
+
+        if (rawAmount != null){
+            model.Amount = new TokenBalance( BigInt(rawAmount), Number(this.#decimals))?.GetValue();
+        } else{
+            model.Amount = 0;
+        }
+
+        if (rawTo != null){
+            model.To = Principal.fromHex(rawTo?.toHex())?.toText();
+        } else{
+            model.To = "";
+        }
+
+        if (rawFrom != null){
+            model.From = Principal.fromHex(rawFrom?.toHex())?.toText();
+        } else{
+            model.From = "";
+        }
+    };
+
+
+    
     async Get_Transactions(start, length) {
+        console.log("Get_Transactions");
+        console.log("start: " + start); 
+        console.log("length: " + length);
+
         let transactionsResponse = await this.#Get_transactionsByIndex_internal(start, length);
 
+        console.log("transactionsResponse: ");
+        console.log(transactionsResponse);  
+        
         const transactions = new Array(transactionsResponse.length);
 
         //Now we need to convert
         for (let i = 0; i < transactionsResponse.length; i++) {
             let transaction = transactionsResponse[i];
             let model = new TokenExplorerItemModel();
-            model.TransactionType = transaction.TransactionType;
-            model.Amount = transaction.Amount;
-            model.DateTimeString = transaction.DateTimeString;
-            model.From = transaction.From;
-            model.To = transaction.To;
+            model.TransactionType = transaction.kind;
+            
+            switch (model.TransactionType.toLowerCase()) {
+                case "mint":
+                    this.#Update_ModelItem_common_values(model, transaction.mint[0]);                    
+                    break;
+                case "burn":
+                    this.#Update_ModelItem_common_values(model, transaction.burn[0]);                    
+                    break;
+                case "transfer":
+                    this.#Update_ModelItem_common_values(model, transaction.transfer[0]);                    
+                    break;
+                default:  
+                continue;                                      
+            }
+                     
+            model.DateTimeString = this.#TimeTicksNanoseconds_To_DateTimeString(transaction.timestamp);            
+            model.txIndex = Number(transaction.index);            
             transactions[i] = model;
         }
 
@@ -98,7 +156,7 @@ export class TokenExplorer{
         if (Actor == null){
             return null;
         }
-        let transactions = await actor.get_transactions_by_index(start, length);
+        let transactions = await actor.get_transactions_by_index(start, length);     
         return transactions;
     };
 

@@ -1,11 +1,12 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from "../../../global_scripts/types/TokenInterface.js";
 import { Principal } from "@dfinity/principal";
+import { TokenExplorerItemModel } from "./TokenExplorerItemModel.js";
 
 
 export class TokenExplorer{
 
-    #fronendId = "Tra";
+    #frontendId = "";
     #actor = null;
     #localCanisterId = null;
     #mainNetCanisterId = null;
@@ -15,7 +16,7 @@ export class TokenExplorer{
     }
 
     async Init(frontendId, localCanisterId, maintnetCanisterId) {
-        this.#fronendId = frontendId;
+        this.#frontendId = frontendId;
         this.#localCanisterId = localCanisterId;
         this.#mainNetCanisterId = maintnetCanisterId;
     }
@@ -61,7 +62,38 @@ export class TokenExplorer{
         return this.#actor 
     };
 
-    async Get_transactionsByIndex(start, length) {
+    async Get_Transactions(start, length) {
+        let transactionsResponse = await this.#Get_transactionsByIndex_internal(start, length);
+
+        const transactions = new Array(transactionsResponse.length);
+
+        //Now we need to convert
+        for (let i = 0; i < transactionsResponse.length; i++) {
+            let transaction = transactionsResponse[i];
+            let model = new TokenExplorerItemModel();
+            model.TransactionType = transaction.TransactionType;
+            model.Amount = transaction.Amount;
+            model.DateTimeString = transaction.DateTimeString;
+            model.From = transaction.From;
+            model.To = transaction.To;
+            transactions[i] = model;
+        }
+
+        return transactions;
+    };
+
+    async Get_TransactionsCount(){
+
+        let actor = this.#getActor();
+        if (actor == null){
+            return null;
+        }
+        let count = await actor.get_total_tx();
+        return count;
+    }
+
+
+    async #Get_transactionsByIndex_internal(start, length) {
         let actor = this.#getActor();
         if (Actor == null){
             return null;
@@ -70,7 +102,7 @@ export class TokenExplorer{
         return transactions;
     };
 
-    async GetTransactionyByPrincipal(principalText, start, length) {
+    async #GetTransactionyByPrincipal_internal(principalText, start, length) {
         
         let actor = this.#getActor();
         if (actor == null){

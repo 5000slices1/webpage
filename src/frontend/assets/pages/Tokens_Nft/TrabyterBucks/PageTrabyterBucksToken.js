@@ -6,26 +6,62 @@ import { TokenExplorer } from "../Common/TokenExplorer.js";
 
 export class PageTrabyterBucks {
 
-    tokenName = "Sli";
+    #frontendId = "TrabyterBucks";
     #transactions = null;    
     #tokenExplorer = null;
+    #wasInitDone = false;
+
+    #explorerMaxItemsPerPage = 10;
+    #explorerTxId_StartIndex = 0;
+    #txCount = 0;
 
     constructor() {
         console.log("PageTokens constructor");
     }
-
     
+    async Page_TrabyterBucks_Init() {
+                       
+        if (this.#wasInitDone == true) {
+            return;
+        }
 
-
-    async Page_TrabyterBucks_Token_Init() {
-        console.log("Page_Sli_Token_Init");
+        console.log("Page_TrabyterBucks_Token_Init");
 
         this.#tokenExplorer = new TokenExplorer();
-        this.#tokenExplorer.Init("bd3sg-teaaa-aaaaa-qaaba-cai", "2mjwp-daaaa-aaaak-qimya-cai");
+        await this.#tokenExplorer.Init(this.#frontendId, "be2us-64aaa-aaaaa-qaabq-cai", "2mjwp-daaaa-aaaak-qimya-cai");
+
+        this.#wasInitDone = true;
+    }
+
+    async Page_TrabyterBucks_Update() {
+        // Some variables should be set to default values
+        this.#explorerMaxItemsPerPage = 10;
+        this.#explorerTxId_StartIndex = 0;
+
+        // Get the transactions count
+        this.#txCount = await this.#tokenExplorer.Get_TransactionsCount();
+        console.log("TxCount: " + this.#txCount);
+
+        // Get the transactions
+        let txStartIndex = Math.min(Number(Number(this.#txCount) - Number(this.#explorerMaxItemsPerPage)
+         + Number(this.#explorerTxId_StartIndex)), Number(0));
+
+        let transactions = await this.#tokenExplorer.Get_Transactions(txStartIndex, Number(this.#explorerMaxItemsPerPage));
+        console.log("Transactions: ");
+        console.log(transactions);
     }
 
 
+    // async Update_TokenExplorerItems(){
 
+
+
+    // }
+
+    // async Add_TokenExplorerItemFromModel(){
+
+
+    // }
 
     // TODO: remove
 

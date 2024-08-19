@@ -170,7 +170,8 @@ async function LoadDynamicHtmlPages() {
     }
   }
 
-  await CommonTypes.LogicTrabyterBucksToken.Page_TrabyterBucks_Token_Init();
+  await CommonTypes.LogicTrabyterBucksToken.Page_TrabyterBucks_Init();
+  await CommonTypes.LogicTrabyterBucksToken.Page_TrabyterBucks_Update();  
   console.log(allInnerDivs);
 
 }

@@ -101,15 +101,17 @@ export class TokenExplorer{
 
     
     async Get_Transactions(start, length) {
-        console.log("Get_Transactions");
-        console.log("start: " + start); 
-        console.log("length: " + length);
+        // console.log("Get_Transactions");
+        // console.log("start: " + start); 
+        // console.log("length: " + length);
 
-        let transactionsResponse = await this.#Get_transactionsByIndex_internal(start, length);
+        let transactionsResponse = await this.#Get_transactionsByIndex_internal(start, length);           
+        const transactions = await this.#ConvertTransactionResponseIntoOwnArray(transactionsResponse);
 
-        console.log("transactionsResponse: ");
-        console.log(transactionsResponse);  
-        
+        return transactions;
+    };
+
+    async #ConvertTransactionResponseIntoOwnArray(transactionsResponse) {
         const transactions = new Array(transactionsResponse.length);
 
         //Now we need to convert
@@ -117,28 +119,27 @@ export class TokenExplorer{
             let transaction = transactionsResponse[i];
             let model = new TokenExplorerItemModel();
             model.TransactionType = transaction.kind;
-            
+
             switch (model.TransactionType.toLowerCase()) {
                 case "mint":
-                    this.#Update_ModelItem_common_values(model, transaction.mint[0]);                    
+                    this.#Update_ModelItem_common_values(model, transaction.mint[0]);
                     break;
                 case "burn":
-                    this.#Update_ModelItem_common_values(model, transaction.burn[0]);                    
+                    this.#Update_ModelItem_common_values(model, transaction.burn[0]);
                     break;
                 case "transfer":
-                    this.#Update_ModelItem_common_values(model, transaction.transfer[0]);                    
+                    this.#Update_ModelItem_common_values(model, transaction.transfer[0]);
                     break;
-                default:  
-                continue;                                      
+                default:
+                    continue;
             }
-                     
-            model.DateTimeString = this.#TimeTicksNanoseconds_To_DateTimeString(transaction.timestamp);            
-            model.txIndex = Number(transaction.index);            
+
+            model.DateTimeString = this.#TimeTicksNanoseconds_To_DateTimeString(transaction.timestamp);
+            model.txIndex = Number(transaction.index);
             transactions[i] = model;
         }
-
         return transactions;
-    };
+    }
 
     async Get_TransactionsCount(){
 
@@ -149,6 +150,27 @@ export class TokenExplorer{
         let count = await actor.get_total_tx();
         return count;
     }
+
+    async Get_TransactionsByPrincipal(principal, start, length) {
+        
+        let transactionsResponse = await this.#GetTransactionyByPrincipal_internal(principal,start, length);           
+        const transactions = await this.#ConvertTransactionResponseIntoOwnArray(transactionsResponse);
+
+        return transactions;
+    };
+
+    async Get_TransactionsByPrincipalCount(principal){
+        
+        let actor = this.#getActor();
+        if (actor == null){
+            return null;
+        }
+        let formattedPrincipalText = principal.replace(" ","");
+        let principalObj = Principal.fromText(formattedPrincipalText);
+        let count = await actor.get_transactions_by_principal_count(principalObj);        
+        return count;
+    }
+
 
 
     async #Get_transactionsByIndex_internal(start, length) {
@@ -166,8 +188,9 @@ export class TokenExplorer{
         if (actor == null){
             return null;
         }
-        let principal = Principal.fromText(principalText);
-        let transactions = await actor.get_transactions_by_principal(principal, start, length);
+        let formattedPrincipalText = principalText.replace(" ","");
+        let principalObj = Principal.fromText(formattedPrincipalText); 
+        let transactions = await actor.get_transactions_by_principal(principalObj, start, length);
         return transactions;
     };
 

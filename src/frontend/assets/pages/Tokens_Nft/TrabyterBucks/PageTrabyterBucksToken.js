@@ -14,12 +14,12 @@ export class PageTrabyterBucks {
     #useFilterFromTokenExplorerInputField = false;
     #filterTxId = null;
     #filterByPrincipal = null;
+    #filterByPrincipalCurrentShownLowIndex = 0;
+    #filterByPrincipalCurrentShownHighIndex = 0;
 
     //The startindex of the transactions to show where this index is relative to the index of the last transaction
-    #explorerTxId_StartIndex = 0;
+    #explorerTxId_StartIndex = null;
     #totalTxCount = 0;
-
-    #possibleRowsPerPage = [10, 20, 50, 100, 200];
 
     constructor() {
         console.log("PageTokens constructor");
@@ -27,6 +27,7 @@ export class PageTrabyterBucks {
 
     async Page_TrabyterBucks_Init() {
 
+        console.log("Page_TrabyterBucks_Init");
         if (this.#wasInitDone == true) {
             return;
         }
@@ -38,10 +39,12 @@ export class PageTrabyterBucks {
         console.log("Page_TrabyterBucks_Token_Init");
 
         this.#tokenExplorer = new TokenExplorer();
-        await this.#tokenExplorer.Init(this.#frontendId, "br5f7-7uaaa-aaaaa-qaaca-cai", "2mjwp-daaaa-aaaak-qimya-cai");
+        //await this.#tokenExplorer.Init(this.#frontendId, "br5f7-7uaaa-aaaaa-qaaca-cai", "2mjwp-daaaa-aaaak-qimya-cai");
+        await this.#tokenExplorer.Init(this.#frontendId, "be2us-64aaa-aaaaa-qaabq-cai", "zk4ae-aqaaa-aaaak-qiula-cai");
 
         document.getElementById(this.#frontendId + "rows_dropdown").onchange = async (event) => {
 
+            console.log("rows_dropdown");
             let value = Number(event.target.value);
             this.#explorerMaxItemsPerPage = value;
             await this.Page_TrabyterBucks_Update();
@@ -60,47 +63,58 @@ export class PageTrabyterBucks {
         });
 
         arrow_left_rewind.onclick = async (event) => {
-            this.#explorerTxId_StartIndex = 0;
+            
             if (this.#useFilterFromTokenExplorerInputField == true && this.#filterTxId != null) {
-                this.#RemoveAllSetFilters();
-                filter_input_field_control.value = "";
-            };
+                this.#RemoveAllSetFilters();               
+            } 
+            
+            var totalTx = 0;
+            if (this.#filterByPrincipal != null){
+                totalTx = await this.#tokenExplorer.Get_TransactionsByPrincipalCount(this.#filterByPrincipal);
+            }
+            else{
+                totalTx = await this.#tokenExplorer.Get_TransactionsCount();
+            }
+            this.#explorerTxId_StartIndex = Math.max(Number(totalTx) - 1, 0);
+            
             
             await this.Page_TrabyterBucks_Update();
         };
         arrow_left.onclick = async (event) => {            
-            this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) - Number(this.#explorerMaxItemsPerPage), 0);
+
+            //this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) - Number(this.#explorerMaxItemsPerPage), 0);
             
             if (this.#useFilterFromTokenExplorerInputField == true && this.#filterTxId != null) {
             
-                this.#RemoveAllSetFilters();
-                // this line is needed for this case
-                this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) - Number(this.#explorerMaxItemsPerPage), 0);
-                filter_input_field_control.value = "";            
-            };
-            
+                this.#RemoveAllSetFilters();               
+            } 
+                
+            this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) + Number(this.#explorerMaxItemsPerPage), 0);                        
             await this.Page_TrabyterBucks_Update();
         }
 
         arrow_right_fastforward.onclick = async (event) => {
 
-            this.#explorerTxId_StartIndex = Math.max(Number(this.#totalTxCount) - Number(this.#explorerMaxItemsPerPage), 0);
+            //this.#explorerTxId_StartIndex = Math.max(Number(this.#totalTxCount) - Number(this.#explorerMaxItemsPerPage), 0);
             if (this.#useFilterFromTokenExplorerInputField == true && this.#filterTxId != null) {
                 this.#RemoveAllSetFilters();
-                filter_input_field_control.value = "";
-            };
+              
+            } 
+            this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerMaxItemsPerPage)-1, 0);            
             await this.Page_TrabyterBucks_Update();
         }
 
         arrow_right.onclick = async (event) => {
-
-            this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) + Number(this.#explorerMaxItemsPerPage), 0);
+            console.log("arrow_right: ");
+            //this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) + Number(this.#explorerMaxItemsPerPage), 0);
             if (this.#useFilterFromTokenExplorerInputField == true && this.#filterTxId != null) {
-                this.#RemoveAllSetFilters();
-                   // this line is needed for this case
-                   this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) - Number(this.#explorerMaxItemsPerPage), 0);
-                filter_input_field_control.value = "";
-            };
+                
+                console.log("Remove all Filters");
+                this.#RemoveAllSetFilters();                                    
+            }                                                       
+                
+            console.log("this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);
+            this.#explorerTxId_StartIndex = Math.max(Number(this.#explorerTxId_StartIndex) - Number(this.#explorerMaxItemsPerPage), 0);                       
             await this.Page_TrabyterBucks_Update();
         }
 
@@ -109,9 +123,50 @@ export class PageTrabyterBucks {
             await this.#Page_TrabyterBucks_Update_By_Filter();
         };
         this.#wasInitDone = true;
+
+        //TODO: remove later
+        await this.Page_Is_Shown();
+    }
+
+    async Page_Is_Shown() {        
+
+        console.log("Page_Is_Shown");
+        this.#RemoveAllSetFilters();
+        this.#transactions = null;        
+        this.#explorerMaxItemsPerPage = 10;        
+        this.#totalTxCount = await this.#tokenExplorer.Get_TransactionsCount();
+
+        console.log("this.#totalTxCount: " + this.#totalTxCount);   
+        this.#explorerTxId_StartIndex = Math.max( Number(this.#totalTxCount) - Number(1), Number(0));
+        console.log("this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);
+
+        await this.Page_TrabyterBucks_Update();
+        console.log("OK. Page_Is_Shown");
+
+    };
+
+    #Get_shown_first_tx_index() {
+
+        if (this.#transactions == null || this.#transactions.length == 0) {
+            return 0;
+        }
+        return this.#transactions[0].txIndex;
+    }
+
+    #Get_shown_last_tx_index() {
+        
+        if (this.#transactions == null || this.#transactions.length == 0) {
+            return 0;
+        }
+        let shownTxLength = this.#transactions.length;
+
+        return this.#transactions[shownTxLength-1].txIndex;
     }
 
     async #Page_TrabyterBucks_Update_By_Filter() {
+
+        console.log("#Page_TrabyterBucks_Update_By_Filter");
+
         let filterInputFieldControl = document.getElementById(this.#frontendId + "token_explorer_input_field");
         console.log("button_token_Explorer_Filter: " + filterInputFieldControl);
         let textValue = filterInputFieldControl.value;
@@ -119,10 +174,9 @@ export class PageTrabyterBucks {
 
         if (this.#isNullOrWhiteSpace(textValue)) {
           
-            this.#explorerTxId_StartIndex = 0;
-            this.#useFilterFromTokenExplorerInputField = false;
-            this.#filterTxId = null;
-            this.#filterByPrincipal = null;
+            this.#RemoveAllSetFilters();
+            this.#totalTxCount = await this.#tokenExplorer.Get_TransactionsCount();            
+            this.#explorerTxId_StartIndex = Math.max( Number(this.#totalTxCount) - Number(1), Number(0));        
             await this.Page_TrabyterBucks_Update();
 
         } else if (this.#IsStringANumber(textValue)) {
@@ -130,13 +184,19 @@ export class PageTrabyterBucks {
             this.#useFilterFromTokenExplorerInputField = true;
             this.#filterTxId = Number(textValue);
             this.#filterByPrincipal = null;
+            console.log("1.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);
+            this.#explorerTxId_StartIndex = Number(textValue);
+            console.log("2.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);
             await this.Page_TrabyterBucks_Update();
+            console.log("3.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);
         } else {
             console.log("textValue is a principal");
             this.#useFilterFromTokenExplorerInputField = true;
             this.#filterTxId = null;
             this.#filterByPrincipal = textValue;
-            this.#explorerTxId_StartIndex = 0;
+            let txCount = await this.#tokenExplorer.Get_TransactionsByPrincipalCount(this.#filterByPrincipal);
+            let index = Math.max(Number(txCount) - 1, 0);
+            this.#explorerTxId_StartIndex = index;
             await this.Page_TrabyterBucks_Update();
         };
     };
@@ -167,6 +227,8 @@ export class PageTrabyterBucks {
         this.#useFilterFromTokenExplorerInputField = false;
         this.#filterTxId = null;
         this.#filterByPrincipal = null;
+        document.getElementById(this.#frontendId + "token_explorer_input_field").value = "";
+
     };
 
     #isNullOrWhiteSpace(str) {
@@ -175,10 +237,13 @@ export class PageTrabyterBucks {
 
     async Page_TrabyterBucks_Update() {
 
+        console.log("Page_TrabyterBucks_Update");
+        console.log("0x.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);    
+        
+        /*
         if (this.#useFilterFromTokenExplorerInputField == true && this.#filterTxId != null) {
-         
-           
-
+                    
+            console.log("this.#filterTxId: " + this.#filterTxId);   
             // Get the transactions count
             let totalTxCount  = await this.#tokenExplorer.Get_TransactionsCount();
             var indexToFind = Number(this.#filterTxId);
@@ -221,6 +286,7 @@ export class PageTrabyterBucks {
 
         }
         else
+        */
         {       
             // Get the transactions count                   
             if (this.#filterByPrincipal != null){                
@@ -232,37 +298,60 @@ export class PageTrabyterBucks {
                 this.#totalTxCount = await this.#tokenExplorer.Get_TransactionsCount();
             }
                         
-            // Get the transactions     
-            let relIndex = Number(Number(this.#totalTxCount) - Number(this.#explorerMaxItemsPerPage) - Number(this.#explorerTxId_StartIndex));
-
+            // Get the transactions 
+            console.log("1x.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);    
+            let relIndex = Number(Number(this.#explorerTxId_StartIndex) - Number(this.#explorerMaxItemsPerPage) + Number(1));
             let minNumber = Number(0);
-
             let txStartIndex = Number(Math.max(relIndex, minNumber));
+            console.log("2x.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);    
+            console.log("txStartIndex: " + txStartIndex);
+            
 
+            let lengthToUse = Number(this.#explorerMaxItemsPerPage);
+            if (Number(this.#explorerTxId_StartIndex) - lengthToUse + 1 < 0){
+                lengthToUse = Number(this.#explorerTxId_StartIndex) + 1;                
+                txStartIndex = 0;                                
+            }
             if (this.#filterByPrincipal != null){                
                 console.log("this.#filterByPrincipal: " + this.#filterByPrincipal);
-                this.#transactions = await this.#tokenExplorer.Get_TransactionsByPrincipal(this.#filterByPrincipal,txStartIndex, Number(this.#explorerMaxItemsPerPage));
+                this.#transactions = await this.#tokenExplorer.Get_TransactionsByPrincipal(this.#filterByPrincipal,txStartIndex, Number(lengthToUse));
                 console.log("this.#transactions: ");
                 console.log(this.#transactions);
            } else
            {                
-            this.#transactions = await this.#tokenExplorer.Get_Transactions(txStartIndex, Number(this.#explorerMaxItemsPerPage));
+            this.#transactions = await this.#tokenExplorer.Get_Transactions(txStartIndex, Number(lengthToUse));
            }
 
-            
+           console.log("3x.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);    
           
             await this.#Update_TokenExplorerItems();
+            console.log("4x.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);    
             await this.#Page_TrabyterBucks_UpdateTransactions_Legends();
+            console.log("5x.) this.#explorerTxId_StartIndex: " + this.#explorerTxId_StartIndex);    
         } 
         
     }
 
     async #Page_TrabyterBucks_UpdateTransactions_Legends() {
+        console.log("Page_TrabyterBucks_UpdateTransactions_Legends");
+        // The highest index of the transactions shown
+        let shownHighestTxIndex = this.#Get_shown_first_tx_index();
 
-        let minIndexShown = this.#explorerTxId_StartIndex;
-        let transactionsCount = this.#transactions.length;
-        let maxIndexShown = Number(minIndexShown) + Math.min(Number(transactionsCount), Number(this.#explorerMaxItemsPerPage));
+        // The lowest index of the transactions shown
+        let shownLowestTxIndex = this.#Get_shown_last_tx_index();
 
+        if (this.#useFilterFromTokenExplorerInputField == true && this.#filterByPrincipal != null) {
+            shownHighestTxIndex = this.#explorerTxId_StartIndex;
+
+            shownLowestTxIndex = this.#explorerTxId_StartIndex - this.#transactions.length + 1;
+        }
+
+        //let minIndexShown = this.#explorerTxId_StartIndex;
+        //let transactionsCount = this.#transactions.length;
+        //let maxIndexShown = Number(minIndexShown) + Math.min(Number(transactionsCount), Number(this.#explorerMaxItemsPerPage));
+        console.log("shownHighestTxIndex: " + shownHighestTxIndex);
+        console.log("shownLowestTxIndex: " + shownLowestTxIndex);
+        console.log("this.#totalTxCount: " + this.#totalTxCount);
 
         let arrow_left_rewind = document.getElementById(this.#frontendId + "control-button-left-rewind");
         let arrow_left = document.getElementById(this.#frontendId + "control-button-left");
@@ -270,7 +359,7 @@ export class PageTrabyterBucks {
         let arrow_right_fastforward = document.getElementById(this.#frontendId + "control-button-right-forward");
         if (arrow_left_rewind != null) {
 
-            if (minIndexShown > 0) {
+            if (shownHighestTxIndex + 1 < this.#totalTxCount) {
                 arrow_left_rewind.className = "control-button-left-rewind-highlight";
             } else {
                 arrow_left_rewind.className = "control-button-left-rewind";
@@ -278,7 +367,7 @@ export class PageTrabyterBucks {
         }
 
         if (arrow_left != null) {
-            if (minIndexShown > 0) {
+            if (shownHighestTxIndex + 1 < this.#totalTxCount) {
                 arrow_left.className = "control-button-left-highlight";
             } else {
                 arrow_left.className = "control-button-left";
@@ -286,14 +375,14 @@ export class PageTrabyterBucks {
         }
 
         if (arrow_right != null) {
-            if (maxIndexShown < this.#totalTxCount) {
+            if (shownLowestTxIndex > 0) {            
                 arrow_right.className = "control-button-right-highlight";
             } else {
                 arrow_right.className = "control-button-right";
             }
         }
         if (arrow_right_fastforward != null) {
-            if (maxIndexShown < this.#totalTxCount) {
+            if (shownLowestTxIndex > 0) {            
                 arrow_right_fastforward.className = "control-button-right-forward-highlight";
             } else {
                 arrow_right_fastforward.className = "control-button-right-forward";
@@ -417,7 +506,7 @@ export class PageTrabyterBucks {
                                 <p class='control-table-cell-text'>` + model.TransactionType + `</p>
                             </td>
                             <td style='vertical-align: top;padding-top: 0.1em;'>
-                                <p class='control-table-cell-text'>500` + this.#Get_amount_string(model.Amount) + ` TRA</p>
+                                <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + ` TRA</p>
                             </td>                                                    
                             <td style='vertical-align: top;padding-top: 0.1em;'>
                                 <p class='control-table-cell-text'>` + model.From + `</p>

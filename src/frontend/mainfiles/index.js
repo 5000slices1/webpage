@@ -13,8 +13,9 @@ const _inDesigner = false;
 /// react on Identity changed. (login, logout, etc..)
 async function IdentityChanged() {
 
-  console.log("In method IdentityChanged");
 
+
+  console.log("In method IdentityChanged");
 
 
   //TODO: for later
@@ -32,8 +33,6 @@ async function IdentityChanged() {
   }     
   
 }
-
-
 
 function MainNavButtonClicked(button) {
   button.classList.add("main-header-button-selected");
@@ -144,10 +143,8 @@ function setInnerHTMLAndExecuteScripts(element, html) {
 async function fetchAndSetInnerHTML(innerDiv,htmlSource) {
   try {
       const response = await fetch(htmlSource);
-      const data = await response.text();
-      //setInnerHTMLAndExecuteScripts(innerDiv, data);
-      innerDiv.innerHTML = data;
-      //CommonTypes.LogicSliToken.Page_Sli_Token_Init();
+      const data = await response.text();      
+      innerDiv.innerHTML = data;      
   } catch (error) {
       console.error('Error fetching and setting inner HTML:', error);
   }
@@ -181,7 +178,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   //document.domain = 'icp0.io';
   console.log("init");
 
-
   let navButtonHome = document.getElementById("navButtonHome");
   let navButtonNews = document.getElementById("navButtonNews");
   let navButtonApps = document.getElementById("navButtonApps");
@@ -201,12 +197,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   // Sub navigation buttons
   let secondNavButtonOverview = document.getElementById("secondNavButtonOverview");
   let secondNavButtonTraBucksToken = document.getElementById("secondNavButtonTraBucksToken");
-  let secondNavButtonTraPremiumTokenLine = document.getElementById("secondNavButtonTraPremiumTokenLine");
+  let secondNavButtonTraPremiumToken = document.getElementById("secondNavButtonTraPremiumToken");
   let secondNavButtonSlicesNft = document.getElementById("secondNavButtonSlicesNft");
 
   secondNavButtonOverview.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonOverview); }, false);
   secondNavButtonTraBucksToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraBucksToken); }, false);
-  secondNavButtonTraPremiumTokenLine.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraPremiumTokenLine); }, false);
+  secondNavButtonTraPremiumToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraPremiumToken); }, false);
   secondNavButtonSlicesNft.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonSlicesNft); }, false);
 
   // Wallet login button(s)

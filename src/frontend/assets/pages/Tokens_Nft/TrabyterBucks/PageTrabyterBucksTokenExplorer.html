@@ -1,0 +1,149 @@
+<div tokenExplorerContentPageId='TraBucks_PageTokenExplorer' 
+style='display: block;'>
+    <table cellspacing='0' cellpadding='0' style='width: 100%;'>
+        <tr>
+            <td>
+                <div class='content-control-div-header-text'>
+                    Token explorer - TRA (Trabyter Bucks)
+                </div>
+            </td>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td style='width: 56.8em;'>
+                <input type='text' class='content-control-input-text' style='width: 56.8em;'
+                    placeholder='Search by principal or transaction index' id="TraBucks_token_explorer_input_field" />
+            </td>
+            <td style='width: 2em;min-width: 1.5em'></td>
+            <td style='width: 4.4em;'>
+
+                <button class='control-search-button' id ="TraBucks_token_explorer_input_field_button"
+                    style="
+                 width: 3.4em; height: 2.5em;background-image: url('../../../icons/input_search_icon.png');">
+                </button>
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+    <div style='height: 5em;'></div>
+    
+    <div class='control-token-explorer' 
+     style='height:100%;width:100%;padding: 1.5em;display: block;'
+        id='TraBucks_TokenExplorer'>                                             
+    </div>
+
+    <p></p>
+    <table align="right" style="color: white;  
+    width: 100%;height: 3em;margin-right: -3em;"
+    cellspacing='0' cellpadding='0'>
+        <colgroup>
+            
+            <col style='width: auto; min-width: 0em;'>
+
+            <!-- Rows -->
+            <col style='width: 4em; min-width: 4em;'>
+            <col style='width: 1em; min-width: 1em;'>  
+            
+            <!-- 50 -->
+            <col style='width: 3em; min-width: 3em;'>
+            <col style='width: 1em; min-width: 1em;'>
+
+            <!-- Arrow -->
+            <col style='width: 5em; min-width: 5em;'>
+            <col style='width: 2em; min-width: 2em;'>
+
+            <!-- from to + entries count -->                                    
+            <col style='width: 2em; min-width: 5em;'>
+            <col style='width: 2em; min-width: 7em;'>
+
+            <!-- left forward -->                                    
+            <col style='width: 2em; min-width: 1em;'>
+            <col style='width: 2em; min-width: 2em;'>
+
+            <!-- left -->                                    
+            <col style='width: 2em; min-width: 1em;'>
+            <col style='width: 2em; min-width: 2em;'>
+
+            <!-- right -->                                    
+            <col style='width: 2em; min-width: 1em;'>
+            <col style='width: 0em; min-width: 2em;'>
+
+            <!-- right forward -->
+            
+            <col style='width: 2em; min-width: 2em;'>
+            </colgroup>
+        <tr>
+            <td></td>
+                <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    Rows:
+                </td>
+           
+            <td></td>
+          
+                <td >
+                    <div id ="TraBucks_TokenExplorer_RowsCount">
+                        <!-- <form> -->
+                            <!-- <label for="myDropdown">choose:</label> -->
+                            <select id="TraBucks_rows_dropdown" style=" height: 2em; margin: 0em; padding: 0em;
+                            text-align: right;padding-right: 0.5em;
+                            color: white; background-color: transparent; border-width: 0em;
+                            
+                            font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                            "
+                            >
+                                <option value="10" style="color: black;font-size: 1.0em;" selected>10</option>
+                                <option value="20" style="color: black;font-size: 1.0em;">20</option>
+                                <option value="50" style="color: black;font-size: 1.0em;">50</option>
+                                <option value="100" style="color: black;font-size: 1.0em;">100</option>
+                                <option value="200" style="color: black;font-size: 1.0em;">200</option>
+                            </select>                                                                                           
+                    </div>                                            
+                </td>
+          
+            <td></td>
+           
+                <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    <div id ="TraBucks_TokenExplorer_Arrow"></div>                                            
+                </td>
+          
+            <td></td>                                  
+                <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    <div id ="TraBucks_TokenExplorer_FromTo">1-50</div>                                            
+                </td>                                    
+            <td></td>
+
+            <td>
+                <button  class="control-button-left-rewind" id="TraBucks_control-button-left-rewind"
+                style="width: 2em; height: 2em;margin: 0em; padding: 0em;">                            
+               </button>
+            </td>         
+            <td></td>                           
+
+            <td>
+                <button  class="control-button-left" id="TraBucks_control-button-left"
+                style="width: 1em; height: 2em;margin: 0em;  padding: 0em;">                            
+               </button>
+            </td>
+            <td></td>                           
+
+            <td >
+                <button  class="control-button-right" id="TraBucks_control-button-right"
+                style="width: 1em; height: 2em;margin: 0em; padding: 0em;">                            
+               </button>
+            </td>
+            <td></td>                           
+
+            <td >
+                <button  class="control-button-right-forward" id="TraBucks_control-button-right-forward"
+                style="width: 2em; height: 2em;margin: 0em; padding: 0em;">                            
+               </button>
+            </td>
+                                    
+        </tr>
+    </table>
+    <p></p>
+    <p><br/></p>        
+</div>

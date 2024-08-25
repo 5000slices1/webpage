@@ -13,11 +13,7 @@ const _inDesigner = false;
 /// react on Identity changed. (login, logout, etc..)
 async function IdentityChanged() {
 
-
-
   console.log("In method IdentityChanged");
-
-
   //TODO: for later
   let identityProvider = CommonTypes.CommonIdentityProvider;
   //let labelInfo = document.getElementById("labelWalletConnectionStatus");
@@ -34,7 +30,8 @@ async function IdentityChanged() {
   
 }
 
-function MainNavButtonClicked(button) {
+// Main navigation button clicked
+async function MainNavButtonStylingUpdate(button) {
   button.classList.add("main-header-button-selected");
   var id = button.getAttribute("id");
 
@@ -44,8 +41,9 @@ function MainNavButtonClicked(button) {
   } else {
     document.getElementById("sub-navigation-div").style.display = "none";
   }
-
-  var divMainMenu = document.getElementById("divMainMenu");
+  
+  // set other buttons to not selected
+  //var divMainMenu = document.getElementById("divMainMenu");
   var buttons = document.getElementsByClassName("main-header-button");
   for (var i = 0; i < buttons.length; i++) {
     var currentId = buttons[i].getAttribute("id");
@@ -55,13 +53,15 @@ function MainNavButtonClicked(button) {
   }
 }
 
-function SubNavButtonClicked(button) {
+// Sub navigation button clicked
+async function SubNavButtonStylingUpdate(button) {
   console.log("subnavbuttonclicked");
   var subNavigationDiv = document.getElementById("sub-navigation-div");
   var buttons = subNavigationDiv.getElementsByClassName("sub-navigation-button");
+
+  // Handle the button stylings
   for (var i = 0; i < buttons.length; i++) {
-    let buttonId = buttons[i].getAttribute("id");
-    console.log(buttonId);
+    let buttonId = buttons[i].getAttribute("id");    
     let lineId = buttonId + "Line";
     let currentButton = buttons[i];
     let currentLine = document.getElementById(lineId);
@@ -74,16 +74,7 @@ function SubNavButtonClicked(button) {
       currentButton.classList.add("sub-navigation-button-selected");
       currentLine.classList.add("sub-navigation-button-horizontal-line-selected");
     }
-  }
-
-  let buttonId = button.getAttribute("id");
-
-  if (buttonId == 'secondNavButtonSliToken') {
-
-
-
-  }
-
+  } 
 }
 
 function ButtonTestClicked() {
@@ -173,10 +164,104 @@ async function LoadDynamicHtmlPages() {
 
 }
 
+function Get_div_main_content() {
+  return document.getElementById("divMainContent");  
+}
+
+// #region Show Main Pages
+
+async function Show_Page_Mainpage_Home(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/PageHome/PageHome.html");
+
+}
+
+async function Show_Page_Mainpage_News(){ 
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/PageNews/PageNews.html");
+}
+
+async function Show_Page_Mainpage_Apps(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/PageApps/PageApps.html");
+}
+
+async function Show_Page_Mainpage_TokensNft(){
+  
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  let secondNavButtonOverview = document.getElementById("secondNavButtonOverview");
+  await SubNavButtonStylingUpdate(secondNavButtonOverview); 
+  await Show_Page_TokensNft_Overview();
+
+}
+
+async function Show_Page_Mainpage_Whitepaper(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/PageWhitepaper/PageWhitepaper.html");
+}
+
+async function Show_Page_Mainpage_Roadmap(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/PageRoadmap/PageRoadmap.html");
+}
+
+// #endregion Show Main Pages
+
+
+// #region Show TokensNft Pages
+
+async function Show_Page_TokensNft_Overview(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/Tokens_Nft/PageOverview/PageOverview.html");
+} 
+
+async function Show_Page_TokensNft_TraBucksToken(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/Tokens_Nft/TrabyterBucks/PageTrabyterBucksToken.html");
+  await CommonTypes.LogicTrabyterBucksToken.Page_TrabyterBucks_Init();
+
+}
+
+async function Show_Page_TokensNft_TraPremiumToken(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/Tokens_Nft/TrabyterPremiumBucks/PageTrabyterPremiumBucksToken.html");
+}
+
+async function Show_Page_TokensNft_SlicesNft(){
+  let divMainContent = Get_div_main_content();
+  divMainContent.innerHTML = "";
+  await fetchAndSetInnerHTML(divMainContent, 
+    "../assets/pages/Tokens_Nft/PageNfts/PageNfts.html");
+
+}
+
+// #endregion Show TokensNft Pages
+
 document.addEventListener('DOMContentLoaded', async function () {
   // alert('hello');
   //document.domain = 'icp0.io';
   console.log("init");
+
+  document.getElementById("sub-navigation-div").style.display = "none";
 
   let navButtonHome = document.getElementById("navButtonHome");
   let navButtonNews = document.getElementById("navButtonNews");
@@ -187,12 +272,36 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
   // Main navigation buttons
-  navButtonHome.addEventListener('click', function () { MainNavButtonClicked(navButtonHome); }, false);
-  navButtonNews.addEventListener('click', function () { MainNavButtonClicked(navButtonNews); }, false);
-  navButtonApps.addEventListener('click', function () { MainNavButtonClicked(navButtonApps); }, false);
-  navButtonTokensNft.addEventListener('click', function () { MainNavButtonClicked(navButtonTokensNft); }, false);
-  navButtonWhitepaper.addEventListener('click', function () { MainNavButtonClicked(navButtonWhitepaper); }, false);
-  navButtonRoadmap.addEventListener('click', function () { MainNavButtonClicked(navButtonRoadmap); }, false);
+  navButtonHome.addEventListener('click', async function () { 
+    await MainNavButtonStylingUpdate(navButtonHome); 
+    await Show_Page_Mainpage_Home();
+  }, false);
+
+  navButtonNews.addEventListener('click', async function () { 
+    await MainNavButtonStylingUpdate(navButtonNews);
+    await Show_Page_Mainpage_News();
+  }, false);
+
+  navButtonApps.addEventListener('click', async function () { 
+    MainNavButtonStylingUpdate(navButtonApps); 
+    await Show_Page_Mainpage_Apps();
+  }, false);
+
+  navButtonTokensNft.addEventListener('click', async function () { 
+    await MainNavButtonStylingUpdate(navButtonTokensNft); 
+    await Show_Page_Mainpage_TokensNft();
+  }, false);
+
+  navButtonWhitepaper.addEventListener('click', async function () { 
+    await MainNavButtonStylingUpdate(navButtonWhitepaper);
+    await Show_Page_Mainpage_Whitepaper();
+  
+  }, false);
+
+  navButtonRoadmap.addEventListener('click', async function () { 
+    await MainNavButtonStylingUpdate(navButtonRoadmap); 
+    await Show_Page_Mainpage_Roadmap();
+  }, false);
 
   // Sub navigation buttons
   let secondNavButtonOverview = document.getElementById("secondNavButtonOverview");
@@ -200,10 +309,25 @@ document.addEventListener('DOMContentLoaded', async function () {
   let secondNavButtonTraPremiumToken = document.getElementById("secondNavButtonTraPremiumToken");
   let secondNavButtonSlicesNft = document.getElementById("secondNavButtonSlicesNft");
 
-  secondNavButtonOverview.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonOverview); }, false);
-  secondNavButtonTraBucksToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraBucksToken); }, false);
-  secondNavButtonTraPremiumToken.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonTraPremiumToken); }, false);
-  secondNavButtonSlicesNft.addEventListener('click', function () { SubNavButtonClicked(secondNavButtonSlicesNft); }, false);
+  secondNavButtonOverview.addEventListener('click', async function () { 
+    await SubNavButtonStylingUpdate(secondNavButtonOverview); 
+    await Show_Page_TokensNft_Overview();
+  }, false);
+
+  secondNavButtonTraBucksToken.addEventListener('click', async function () { 
+    await SubNavButtonStylingUpdate(secondNavButtonTraBucksToken); 
+    await Show_Page_TokensNft_TraBucksToken();
+  }, false);
+
+  secondNavButtonTraPremiumToken.addEventListener('click', async function () { 
+    await SubNavButtonStylingUpdate(secondNavButtonTraPremiumToken); 
+    await Show_Page_TokensNft_TraPremiumToken();
+  }, false);
+
+  secondNavButtonSlicesNft.addEventListener('click', async function () { 
+    await SubNavButtonStylingUpdate(secondNavButtonSlicesNft); 
+    await Show_Page_TokensNft_SlicesNft();
+  }, false);
 
   // Wallet login button(s)
   document.getElementById("buttonWalletDropDown").addEventListener('click', function () { OnToggleWalletDropDownMenu(); }, false);
@@ -218,7 +342,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById("logout").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Logout() }, false);
   }
 
-  LoadDynamicHtmlPages();
+  //LoadDynamicHtmlPages();
 
    // Pubsub actions
    PubSub.subscribe('index_js_UserIdentityChanged', 'UserIdentityChanged', IdentityChanged);

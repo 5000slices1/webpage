@@ -3,9 +3,10 @@ import { idlFactory, init, GetTransactionsRequest } from "../../../global_script
 import { IDL } from "@dfinity/candid";
 import { Principal } from "@dfinity/principal";
 import { TokenExplorer } from "../Common/TokenExplorer.js";
-import {PageTrabyterTokenExplorer} from "./PageTrabyterBucksTokenExplorer.js";
-
+import {PageTrabyterTokenExplorer} from "./TokenExplorer/PageTrabyterBucksTokenExplorer.js";
 import {fetchAndSetInnerHTML} from "../../../global_scripts/utils/CommonUtils.js";
+import {CommonTypes} from "../../../global_scripts/types/CommonTypes.js";
+
 export class PageTrabyterBucks {
 
     //#wasInitDone = false;
@@ -33,7 +34,9 @@ export class PageTrabyterBucks {
         await this.Init_common_field_values();      
         this.Event_Handlers_Remove();
         this.Event_Handlers_Add();
-        await this.Show_Page_Token_Explorer();
+        
+        await this.Show_Page_Token_Information();
+        //await this.Show_Page_Token_Explorer();
         // this.#wasInitDone = true;
     }
 
@@ -73,28 +76,68 @@ export class PageTrabyterBucks {
 
     };
 
+    async Left_Navigation_Button_Apply_Activated_Style(button){
+        var id = button.id;
+        
+        button.classList.add("content-control-left-navigation-button-active");
+        console.log("button classlist");
+        console.log(button.classList);
+        
+        if (id != this.#leftNavButtonTokenInformation.id)
+        {
+            this.#leftNavButtonTokenInformation.classList.remove("content-control-left-navigation-button-active");
+        }
+        
+        if (id != this.#leftNavButtonTokenExplorer.id)
+        {
+            this.#leftNavButtonTokenExplorer.classList.remove("content-control-left-navigation-button-active");
+             
+        }
+
+        if (id != this.#leftNavButtonTokenHolders.id)
+        {
+            this.#leftNavButtonTokenHolders.classList.remove("content-control-left-navigation-button-active");
+             
+        }
+
+        if (id != this.#leftNavButtonTokenInterface.id)
+        {
+            this.#leftNavButtonTokenInterface.classList.remove("content-control-left-navigation-button-active");             
+        }        
+    }
+
     async Show_Page_Token_Information() {
 
-        
-        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/PageTrabyterBucksTokenInformation.html");
+        await this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenInformation);
+        this.#innerContentDiv.innerHTML = "";
+        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/Information/PageTrabyterBucksTokenInformation.html");
     }
 
     async Show_Page_Token_Explorer() {
 
+
+        await  this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenExplorer);
+        this.#innerContentDiv.innerHTML = "";
         
-        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/PageTrabyterBucksTokenExplorer.html");
-        this.#tokenExplorerPage.Init();
+        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/TokenExplorer/PageTrabyterBucksTokenExplorer.html");
+        await this.#tokenExplorerPage.Init();
+        
     };
 
     async Show_Page_Token_Holders(){
         
-        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/PageTrabyterBucksTokenHolders.html");
+        await  this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenHolders);
+        this.#innerContentDiv.innerHTML = "";
+        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/Holders/PageTrabyterBucksTokenHolders.html");
 
     };
 
     async Show_Page_Token_Interface() {
         
-        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/PageTrabyterBucksTokenInterface.html");
+        await this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenInterface);
+        this.#innerContentDiv.innerHTML = "";
+        await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/Interface/PageTrabyterBucksTokenInterface.html");
+        await CommonTypes.LogicTrabyterBucksTokenInterface.Init();
     }
    
     

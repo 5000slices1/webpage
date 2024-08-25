@@ -6,7 +6,7 @@ html{
     margin: 0.0em 0.0em 0.0em 0.0em ;
     padding: 0px 0px 0px 0px;
     font-size: 62.5%;
-    min-width: 120em;
+    min-width: 108em;
     /* width: 144em; */
 
 }
@@ -157,7 +157,7 @@ body {
 /* #endregion Wallet login control */
 .sub-navigation-div{
     /* display: none; */
-    display: block;
+    display: none;
     position:absolute;
     top:10.5em;
 
@@ -185,7 +185,9 @@ body {
     font-family: "Montserrat", sans-serif;
 
     color: rgba(84,143,232, 1.0);
-    height: 2.0em;
+    /* height: 3.0em; */
+    height: auto;
+    
     
     display: inline-block;  
     position: relative;
@@ -208,8 +210,8 @@ body {
 }
 
 .sub-navigation-button-horizontal-line {
-    width:9.0em;     
-    margin-left: 0.6em;   
+    width:8.4em;     
+    margin-left: 0.9em;   
     background-color:transparent;    
     height: 0.3em;
     display: block;

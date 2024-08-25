@@ -1,20 +1,18 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
-import { idlFactory, init, GetTransactionsRequest } from "../../../global_scripts/types/TokenInterface.js";
+import { idlFactory, init, GetTransactionsRequest } from "../../../../global_scripts/types/TokenInterface.js";
 import { IDL } from "@dfinity/candid";
 import { Principal } from "@dfinity/principal";
-import { TokenExplorer } from "../Common/TokenExplorer.js";
+import { TokenExplorer } from "../../Common/TokenExplorer.js";
+import { TrabyterBucks_Constants } from "../TrabyterBucksConstants.js";
 
 export class PageTrabyterTokenExplorer {
     #frontendId = "TraBucks_";
     #transactions = null;
-    #tokenExplorer = null;
-    #wasInitDone = false;
+    #tokenExplorer = null;  
     #explorerMaxItemsPerPage = 10;
     #useFilterFromTokenExplorerInputField = false;
     #filterTxId = null;
-    #filterByPrincipal = null;
-    #filterByPrincipalCurrentShownLowIndex = 0;
-    #filterByPrincipalCurrentShownHighIndex = 0;
+    #filterByPrincipal = null;  
     #explorerTxId_StartIndex = null;
     #totalTxCount = 0;
 
@@ -22,16 +20,18 @@ export class PageTrabyterTokenExplorer {
     async Init() {
 
         console.log("Page_TrabyterBucks_Init");
-        if (this.#wasInitDone == true) {
-            return;
-        }
+      
 
         // Some variables should be set to default values
         this.#explorerMaxItemsPerPage = 10;
         this.#explorerTxId_StartIndex = 0;
         this.#tokenExplorer = new TokenExplorer();
-        await this.#tokenExplorer.Init(this.#frontendId, "be2us-64aaa-aaaaa-qaabq-cai", "zk4ae-aqaaa-aaaak-qiula-cai");
+        await this.#tokenExplorer.Init(this.#frontendId, 
+            TrabyterBucks_Constants.LocalCanisterId,
+            TrabyterBucks_Constants.MainnetCanisterId            
+        );
 
+        document.getElementById(this.#frontendId + "rows_dropdown").onchange = null;
         document.getElementById(this.#frontendId + "rows_dropdown").onchange = async (event) => {
             let value = Number(event.target.value);
             this.#explorerMaxItemsPerPage = value;
@@ -46,38 +46,27 @@ export class PageTrabyterTokenExplorer {
         let arrow_right_forward = document.getElementById(this.#frontendId + "control-button-right-forward");
         let filter_input_field_control = document.getElementById(this.#frontendId + "token_explorer_input_field");
 
-
         filter_input_field_control.addEventListener("keypress", this.handleKeyPress.bind(this));
-
-        // filter_input_field_control.addEventListener("keypress", async (event) => {            
-        //     if (event.key === "Enter") {
-        //         await this.#Update_All_Views_By_Filter();             
-        //     }
-        // });
-
-
-
-
+     
         arrow_left_rewind.onclick = async (event) => {await this.Arrow_left_rewind_Click();};
         arrow_left.onclick = async (event) => { await this.Arrow_left_Click();};
         arrow_right.onclick = async (event) => { await this.Arrow_right_Click();};
         arrow_right_forward.onclick = async (event) =>  {await this.Arrow_right_forward_Click();};
 
-        let button_token_Explorer_Filter = document.getElementById(this.#frontendId + "token_explorer_input_field_button");
-        
+        let button_token_Explorer_Filter = document.getElementById(this.#frontendId + "token_explorer_input_field_button");        
         button_token_Explorer_Filter.onclick = async (event) => {await this.#Update_All_Views_By_Filter();};
-
-        // button_token_Explorer_Filter.onclick = async (event) => {
-        //     await this.#Update_All_Views_By_Filter();
-        // };
-        this.#wasInitDone = true;
-
+      
         this.#RemoveAllSetFilters();
         this.#transactions = null;
         this.#explorerMaxItemsPerPage = 10;
         this.#totalTxCount = await this.#tokenExplorer.Get_TransactionsCount();
         this.#explorerTxId_StartIndex = Math.max(Number(this.#totalTxCount) - Number(1), Number(0));
         await this.Update_All_Views();
+        document.getElementById(this.#frontendId + "TokenExplorer").setAttribute("style", 
+            "display:block");
+        document.getElementById(this.#frontendId + "TokenExplorer_TableLegend").setAttribute("style", 
+            "display:block");
+
     }
 
     async Remove_All_Events() {
@@ -294,6 +283,10 @@ export class PageTrabyterTokenExplorer {
                 arrow_right_fastforward.className = "control-button-right-forward";
             }
         }
+
+        let controlTxRange = document.getElementById(this.#frontendId + "TokenExplorer_FromTo");
+        let txRangeString = this.#Get_shown_last_tx_index() + " - " + this.#Get_shown_first_tx_index() +"";
+        controlTxRange.innerHTML = txRangeString;
     }
 
     async #Update_TokenExplorerItems() {
@@ -331,20 +324,18 @@ export class PageTrabyterTokenExplorer {
 
         let returnString = `
             <table cellspacing='0em' cellpadding='0em'  
-            style='width: 100%; 
+            style='width: 100%; min-width:65em;
             padding-left: 1em; padding-right: 1em;'>
                 <colgroup>
-                    <col style='width: 10em; min-width: 10em;'>
-                    <col style='width: 20em; min-width: 20em;'>
-                    <col style='width: 10em; min-width: 10em;'>
-                    <col style='width: 15em; min-width: 15em;'>
-                    <col style='width: 45em; min-width: 45em;'>
-                    <col style='width: auto; min-width: 45em;'>
+                      <col style='width: 10em;'>
+                      <col style='width: 20em;'>
+                      <col style='width: 10em;'>            
+                      <col style='width: auto;'>
                 </colgroup>
 
                 <tr>
                     <td >
-                        <p class='control-table-header-text'>Tx Id</p>
+                        <p class='control-table-header-text' style='margin-left: 2em'>Tx Id</p>
                     </td>
                     <td >
                         <p class='control-table-header-text'>Date</p>
@@ -355,12 +346,7 @@ export class PageTrabyterTokenExplorer {
                     <td >
                         <p class='control-table-header-text'>Amount</p>
                     </td>
-                    <td >
-                        <p class='control-table-header-text'>From</p>
-                    </td>
-                    <td >
-                        <p class='control-table-header-text'>To</p>
-                    </td>
+                   
 
                     <td>
 
@@ -390,17 +376,19 @@ export class PageTrabyterTokenExplorer {
         <tr class='spaceUnder' >                          
             <td colspan='6'>
                 <div class='control-table-cell-div-content'  >
-                    <table cellspacing='0em' cellpadding='0em' style='width: 100%;'  >
+                    <table cellspacing='0em' cellpadding='0em' style='width: 100%'  >
                         <colgroup>
-                            <col style='width: 10em; min-width: 10em;'>
-                            <col style='width: 20em; min-width: 20em;'>
-                            <col style='width: 10em; min-width: 10em;'>
-                            <col style='width: 15em; min-width: 15em;'>
-                            <col style='width: 45em; min-width: 45em;'>
-                            <col style='width: auto; min-width: 45em;'>
+                            <col style='width: 10em;'>
+                            <col style='width: 20em;'>
+                            <col style='width: 10em;'>                     
+                            <col style='width: auto;'>
                         </colgroup>
-                        <tr style='margin: 0em; padding: 0em;'>
-                            <td style='padding-left: 1em;padding-top: 0.1em; vertical-align: top;text-align: right;'>
+                                      
+                        <tr style='margin: 0em; padding: 0em;line-height: 1.8em; '>
+                            
+                        <td style='padding-left: 1em;padding-top: 0.1em; 
+                            vertical-align: top;text-align: right;'>
+
                                 <p class='control-table-cell-text'
                                 style='text-align: right;margin-right: 2em;'
                                 >` + model.txIndex + `</p>
@@ -413,14 +401,56 @@ export class PageTrabyterTokenExplorer {
                             </td>
                             <td style='vertical-align: top;padding-top: 0.1em;'>
                                 <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + ` TRA</p>
-                            </td>                                                    
-                            <td style='vertical-align: top;padding-top: 0.1em;'>
-                                <p class='control-table-cell-text'>` + model.From + `</p>
-                            </td>
-                            <td style='vertical-align: top;padding-top: 0.1em;'>
-                                <p class='control-table-cell-text'>` + model.To + `</p>
-                            </td>                                                                                                                                                                          
+                            </td>   
+                            <tr style='line-height: 0.2em;min-height: 0.2em;'>
+                                <td colspan='6'>
+                                    <div class='control-table-cell-text' 
+                                    style="background-color: black;min-height: 0.2em;
+                                    margin-left: 1.5em; margin-right: 1.5em;
+                                    ">
+
+                                    </div> 
+                                </td>                    
+                            </tr>
+
+                         <tr style='line-height: 0.4em; max-height: 0.4em;'>
+                                <td colspan='6' style='padding-left: 3.7em;padding-top: 0.1em;
+                                    vertical-align: top;padding-right: 2em;' align="left" >
+                                    <table cellspacing='0em' cellpadding='0em' >
+                                        <tr>
+                                            <td style="text-align: left;">
+                                                <p  style="text-align: right;" class='control-table-cell-text'>From:</p>
+                                            </td>
+                                            <td style="width: 2em;">
+                                                
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <p class='control-table-cell-text'
+                                                style="text-align: right;"
+                                                >` + model.From + `</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">
+                                                <p  style="text-align: right;" class='control-table-cell-text'>To:</p>
+                                            </td>
+                                            <td style="width: 2em;">
+                                                
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <p class='control-table-cell-text'
+                                                style="text-align: right;"
+                                                >` + model.To + `</p>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>                    
                         </tr>
+
+                                        
                         <tr>
                             <td>
 

@@ -1,12 +1,11 @@
 import { UsersIdentity } from "./UsersIdentity.js";
-import { Artemis } from 'artemis-web3-adapter';
 // import { Artemis } from  "../../../../../node_modules/artemis-web3-adapter/src/index.js";
 import { PubSub } from "../../utils/PubSub.js";
 //import { WalletTypes } from "../../types/CommonTypes.js";
 import { CommonTypes } from "../../types/CommonTypes.js";
-import { Principal } from "@dfinity/principal";
 // import { Principal } from "../../../../../node_modules/@dfinity/principal/lib/cjs/index.js";
 import {TrabyterBucks_Constants} from "../../../pages/Tokens_Nft/TrabyterBucks/TrabyterBucksConstants.js";
+
 export class IdentiyProvider {
 
     //private fields    
@@ -45,7 +44,7 @@ export class IdentiyProvider {
 
 
         
-        this.#_adapter = new Artemis();    
+        this.#_adapter = new CommonTypes.Artemis();    
         this.#_init_done = false;
         
     }
@@ -93,7 +92,7 @@ export class IdentiyProvider {
                     default: return;
                 }
                 let principalText = this.#_adapter?.principalId;
-                let principal = Principal.fromText(principalText);
+                let principal = CommonTypes.Principal.fromText(principalText);
 
 
                 this.UsersIdentity.Name = connectedWalletInfo.name;

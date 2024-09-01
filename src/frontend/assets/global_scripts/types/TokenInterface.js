@@ -1,4 +1,5 @@
-import { IDL } from "@dfinity/candid";
+//import { IDL } from "@dfinity/candid";
+import {IDL} from "../../../../../node_modules/@dfinity/candid/lib/cjs/index";
 
 export const idlFactory = ({ IDL }) => {
   const ArchiveInterface = IDL.Rec();

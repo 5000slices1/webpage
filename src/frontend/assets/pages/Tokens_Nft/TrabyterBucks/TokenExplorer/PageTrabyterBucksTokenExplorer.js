@@ -1,9 +1,6 @@
-import { Actor, HttpAgent } from "@dfinity/agent";
-import { idlFactory, init, GetTransactionsRequest } from "../../../../global_scripts/types/TokenInterface.js";
-import { IDL } from "@dfinity/candid";
-import { Principal } from "@dfinity/principal";
 import { TokenExplorer } from "../../Common/TokenExplorer.js";
 import { TrabyterBucks_Constants } from "../TrabyterBucksConstants.js";
+import {CommonTypes} from "../../../../global_scripts/types/CommonTypes.js";
 
 export class PageTrabyterTokenExplorer {
     #frontendId = "TraBucks_";

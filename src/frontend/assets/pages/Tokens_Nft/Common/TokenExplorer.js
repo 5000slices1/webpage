@@ -1,8 +1,7 @@
-import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from "../../../global_scripts/types/TokenInterface.js";
-import { Principal } from "@dfinity/principal";
 import { TokenExplorerItemModel } from "./TokenExplorerItemModel.js";
 import { TokenBalance } from "./TokenBalance.js";
+import { CommonTypes } from "../../../global_scripts/types/CommonTypes.js";
 
 
 export class TokenExplorer{
@@ -35,12 +34,12 @@ export class TokenExplorer{
 
         if (isDevelopment){            
             let host = "http://127.0.0.1:4943";
-            let agent = new HttpAgent({ host });
+            let agent = new CommonTypes.HttpAgent({ host });
             agent.fetchRootKey().catch(err=>{
                 console.warn("Unable to fetch root key. Check to ensure that your local replica is running");
                 console.error(err);
               });
-            let actor = Actor.createActor(
+            let actor = CommonTypes.Actor.createActor(
                 idlFactory,
                 {
                     canisterId: this.#localCanisterId,
@@ -51,8 +50,8 @@ export class TokenExplorer{
         } else {
             
             let host = "https://ic0.app";
-            let agent = new HttpAgent({ host });           
-            let actor = Actor.createActor(
+            let agent = new CommonTypes.HttpAgent({ host });           
+            let actor = CommonTypes.Actor.createActor(
                 idlFactory,
                 {
                     canisterId: this.#mainNetCanisterId,
@@ -86,13 +85,13 @@ export class TokenExplorer{
         }
 
         if (rawTo != null){
-            model.To = Principal.fromHex(rawTo?.toHex())?.toText();
+            model.To = CommonTypes.Principal.fromHex(rawTo?.toHex())?.toText();
         } else{
             model.To = "";
         }
 
         if (rawFrom != null){
-            model.From = Principal.fromHex(rawFrom?.toHex())?.toText();
+            model.From = CommonTypes.Principal.fromHex(rawFrom?.toHex())?.toText();
         } else{
             model.From = "";
         }
@@ -166,7 +165,7 @@ export class TokenExplorer{
             return null;
         }
         let formattedPrincipalText = principal.replace(" ","");
-        let principalObj = Principal.fromText(formattedPrincipalText);
+        let principalObj = CommonTypes.Principal.fromText(formattedPrincipalText);
         let count = await actor.get_transactions_by_principal_count(principalObj);        
         return count;
     }
@@ -175,7 +174,7 @@ export class TokenExplorer{
 
     async #Get_transactionsByIndex_internal(start, length) {
         let actor = this.#getActor();
-        if (Actor == null){
+        if (actor == null){
             return null;
         }
         let transactions = await actor.get_transactions_by_index(start, length);     
@@ -189,7 +188,7 @@ export class TokenExplorer{
             return null;
         }
         let formattedPrincipalText = principalText.replace(" ","");
-        let principalObj = Principal.fromText(formattedPrincipalText); 
+        let principalObj = CommonTypes.Principal.fromText(formattedPrincipalText); 
         let transactions = await actor.get_transactions_by_principal(principalObj, start, length);
         return transactions;
     };

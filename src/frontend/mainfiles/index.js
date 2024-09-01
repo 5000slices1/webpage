@@ -6,13 +6,16 @@ import { CommonTypes } from "../assets/global_scripts/types/CommonTypes.js";
 
 import { HelloWorld } from "../assets/global_scripts/utils/CommonUtils.js";
 //import { Page_Tokens_Init } from "../assets/pages/Tokens/PageTokens.js";
-const _inDesigner = false;
-//const _inDesigner = true;
+//const _inDesigner = false;
+
 
 
 /// react on Identity changed. (login, logout, etc..)
 async function IdentityChanged() {
 
+  if (CommonTypes.InDesigner == true) {
+    return;
+  }
   console.log("In method IdentityChanged");
   //TODO: for later
   let identityProvider = CommonTypes.CommonIdentityProvider;
@@ -257,90 +260,16 @@ async function Show_Page_TokensNft_SlicesNft(){
 // #endregion Show TokensNft Pages
 
 document.addEventListener('DOMContentLoaded', async function () {
+  
+  CommonTypes.InDesigner = true;
+  CommonTypes.Init();
   // alert('hello');
   //document.domain = 'icp0.io';
   console.log("init");
 
   document.getElementById("sub-navigation-div").style.display = "none";
 
-  let navButtonHome = document.getElementById("navButtonHome");
-  let navButtonNews = document.getElementById("navButtonNews");
-  let navButtonApps = document.getElementById("navButtonApps");
-  let navButtonTokensNft = document.getElementById("navButtonTokensNft");
-  let navButtonWhitepaper = document.getElementById("navButtonWhitepaper");
-  let navButtonRoadmap = document.getElementById("navButtonRoadmap");
-
-
-  // Main navigation buttons
-  navButtonHome.addEventListener('click', async function () { 
-    await MainNavButtonStylingUpdate(navButtonHome); 
-    await Show_Page_Mainpage_Home();
-  }, false);
-
-  navButtonNews.addEventListener('click', async function () { 
-    await MainNavButtonStylingUpdate(navButtonNews);
-    await Show_Page_Mainpage_News();
-  }, false);
-
-  navButtonApps.addEventListener('click', async function () { 
-    MainNavButtonStylingUpdate(navButtonApps); 
-    await Show_Page_Mainpage_Apps();
-  }, false);
-
-  navButtonTokensNft.addEventListener('click', async function () { 
-    await MainNavButtonStylingUpdate(navButtonTokensNft); 
-    await Show_Page_Mainpage_TokensNft();
-  }, false);
-
-  navButtonWhitepaper.addEventListener('click', async function () { 
-    await MainNavButtonStylingUpdate(navButtonWhitepaper);
-    await Show_Page_Mainpage_Whitepaper();
-  
-  }, false);
-
-  navButtonRoadmap.addEventListener('click', async function () { 
-    await MainNavButtonStylingUpdate(navButtonRoadmap); 
-    await Show_Page_Mainpage_Roadmap();
-  }, false);
-
-  // Sub navigation buttons
-  let secondNavButtonOverview = document.getElementById("secondNavButtonOverview");
-  let secondNavButtonTraBucksToken = document.getElementById("secondNavButtonTraBucksToken");
-  let secondNavButtonTraPremiumToken = document.getElementById("secondNavButtonTraPremiumToken");
-  let secondNavButtonSlicesNft = document.getElementById("secondNavButtonSlicesNft");
-
-  secondNavButtonOverview.addEventListener('click', async function () { 
-    await SubNavButtonStylingUpdate(secondNavButtonOverview); 
-    await Show_Page_TokensNft_Overview();
-  }, false);
-
-  secondNavButtonTraBucksToken.addEventListener('click', async function () { 
-    await SubNavButtonStylingUpdate(secondNavButtonTraBucksToken); 
-    await Show_Page_TokensNft_TraBucksToken();
-  }, false);
-
-  secondNavButtonTraPremiumToken.addEventListener('click', async function () { 
-    await SubNavButtonStylingUpdate(secondNavButtonTraPremiumToken); 
-    await Show_Page_TokensNft_TraPremiumToken();
-  }, false);
-
-  secondNavButtonSlicesNft.addEventListener('click', async function () { 
-    await SubNavButtonStylingUpdate(secondNavButtonSlicesNft); 
-    await Show_Page_TokensNft_SlicesNft();
-  }, false);
-
-  // Wallet login button(s)
-  document.getElementById("buttonWalletDropDown").addEventListener('click', function () { OnToggleWalletDropDownMenu(); }, false);
-
-  if (_inDesigner != true) {
-
-    // Important init
-    await CommonTypes.CommonIdentityProvider.Init();
-
-    document.getElementById("loginPlug").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Login(CommonTypes.WalletTypes.plug) }, false);
-    document.getElementById("loginStoic").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Login(CommonTypes.WalletTypes.stoic) }, false);
-    document.getElementById("logout").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Logout() }, false);
-  }
+  await AddEventHandlers();
 
   //LoadDynamicHtmlPages();
 
@@ -352,4 +281,81 @@ document.addEventListener('DOMContentLoaded', async function () {
 }, false)
 
 
+
+async function AddEventHandlers() {
+
+  let navButtonHome = document.getElementById("navButtonHome");
+  let navButtonNews = document.getElementById("navButtonNews");
+  let navButtonApps = document.getElementById("navButtonApps");
+  let navButtonTokensNft = document.getElementById("navButtonTokensNft");
+  //let navButtonWhitepaper = document.getElementById("navButtonWhitepaper");
+  //let navButtonRoadmap = document.getElementById("navButtonRoadmap");
+  // Main navigation buttons
+  navButtonHome.addEventListener('click', async function () {
+    await MainNavButtonStylingUpdate(navButtonHome);
+    await Show_Page_Mainpage_Home();
+  }, false);
+
+  navButtonNews.addEventListener('click', async function () {
+    await MainNavButtonStylingUpdate(navButtonNews);
+    await Show_Page_Mainpage_News();
+  }, false);
+
+  navButtonApps.addEventListener('click', async function () {
+    MainNavButtonStylingUpdate(navButtonApps);
+    await Show_Page_Mainpage_Apps();
+  }, false);
+
+  navButtonTokensNft.addEventListener('click', async function () {
+    await MainNavButtonStylingUpdate(navButtonTokensNft);
+    await Show_Page_Mainpage_TokensNft();
+  }, false);
+
+  // navButtonWhitepaper.addEventListener('click', async function () { 
+  //   await MainNavButtonStylingUpdate(navButtonWhitepaper);
+  //   await Show_Page_Mainpage_Whitepaper();
+  // }, false);
+  // navButtonRoadmap.addEventListener('click', async function () { 
+  //   await MainNavButtonStylingUpdate(navButtonRoadmap); 
+  //   await Show_Page_Mainpage_Roadmap();
+  // }, false);
+  // Sub navigation buttons
+  let secondNavButtonOverview = document.getElementById("secondNavButtonOverview");
+  let secondNavButtonTraBucksToken = document.getElementById("secondNavButtonTraBucksToken");
+  let secondNavButtonTraPremiumToken = document.getElementById("secondNavButtonTraPremiumToken");
+  let secondNavButtonSlicesNft = document.getElementById("secondNavButtonSlicesNft");
+
+  secondNavButtonOverview.addEventListener('click', async function () {
+    await SubNavButtonStylingUpdate(secondNavButtonOverview);
+    await Show_Page_TokensNft_Overview();
+  }, false);
+
+  secondNavButtonTraBucksToken.addEventListener('click', async function () {
+    await SubNavButtonStylingUpdate(secondNavButtonTraBucksToken);
+    await Show_Page_TokensNft_TraBucksToken();
+  }, false);
+
+  secondNavButtonTraPremiumToken.addEventListener('click', async function () {
+    await SubNavButtonStylingUpdate(secondNavButtonTraPremiumToken);
+    await Show_Page_TokensNft_TraPremiumToken();
+  }, false);
+
+  secondNavButtonSlicesNft.addEventListener('click', async function () {
+    await SubNavButtonStylingUpdate(secondNavButtonSlicesNft);
+    await Show_Page_TokensNft_SlicesNft();
+  }, false);
+
+  // Wallet login button(s)
+  document.getElementById("buttonWalletDropDown").addEventListener('click', function () { OnToggleWalletDropDownMenu(); }, false);
+
+  if (CommonTypes.InDesigner != true) {
+
+    // Important init
+    await CommonTypes.CommonIdentityProvider.Init();
+
+    document.getElementById("loginPlug").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Login(CommonTypes.WalletTypes.plug); }, false);
+    document.getElementById("loginStoic").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Login(CommonTypes.WalletTypes.stoic); }, false);
+    document.getElementById("logout").addEventListener('click', async function () { await CommonTypes.CommonIdentityProvider.Logout(); }, false);
+  }
+}
 

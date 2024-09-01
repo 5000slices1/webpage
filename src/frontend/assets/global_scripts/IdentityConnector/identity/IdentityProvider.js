@@ -1,11 +1,10 @@
 import { UsersIdentity } from "./UsersIdentity.js";
-import { Artemis } from 'artemis-web3-adapter';
 // import { Artemis } from  "../../../../../node_modules/artemis-web3-adapter/src/index.js";
 import { PubSub } from "../../utils/PubSub.js";
 //import { WalletTypes } from "../../types/CommonTypes.js";
 import { CommonTypes } from "../../types/CommonTypes.js";
-import { Principal } from "@dfinity/principal";
 // import { Principal } from "../../../../../node_modules/@dfinity/principal/lib/cjs/index.js";
+import {TrabyterBucks_Constants} from "../../../pages/Tokens_Nft/TrabyterBucks/TrabyterBucksConstants.js";
 
 export class IdentiyProvider {
 
@@ -45,14 +44,9 @@ export class IdentiyProvider {
 
 
         
-        this.#_adapter = new Artemis();    
+        this.#_adapter = new CommonTypes.Artemis();    
         this.#_init_done = false;
-
-        console.log("after");
-        console.log("web3");
-        console.log(window);
-        console.log("web3 ok");        
-
+        
     }
 
     GetAdapter(){
@@ -98,7 +92,7 @@ export class IdentiyProvider {
                     default: return;
                 }
                 let principalText = this.#_adapter?.principalId;
-                let principal = Principal.fromText(principalText);
+                let principal = CommonTypes.Principal.fromText(principalText);
 
 
                 this.UsersIdentity.Name = connectedWalletInfo.name;
@@ -119,12 +113,28 @@ export class IdentiyProvider {
         }
     }
 
+    GetAllCanisterIds() {
+        const idArray = [];        
+        idArray.push(TrabyterBucks_Constants.MainnetCanisterId);         
+        return idArray;
+      }
+
     //This method is called when user identiy (inside plug wallet) is switched 
     async OnPlugUserIdentitySwitched() {
         await this.Login(CommonTypes.WalletTypes.plug);
     }
 
     async ReInitConnectionObject() {
+
+        var canisterIds = this.GetAllCanisterIds();        
+        canisterIds = Array.from(new Set([...canisterIds]));
+
+        let connectedObj = {
+            whitelist: canisterIds,
+            host: 'https://icp0.io/'
+        };
+
+        this.#_connectionObject = connectedObj;
 
         // var canisterIds = this.WalletsProvider.GetAllCanisterIds();
         // canisterIds.push(this.SwapAppPrincipalText);

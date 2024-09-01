@@ -64,6 +64,15 @@
     -0.02em 0.02em 0.2em 0.2em rgba(0, 0, 0, 0.50), 0.02em -0.02em 0.2em 0.04em rgba(0, 0, 0, 0.50);
 }
 
+.content-control-left-navigation-button-active{
+    color: rgba(255,255,255, 1.0);
+    background-color: rgba(84,143,232, 0.70);; 
+
+    box-shadow: 
+    -0.03em 0.03em 0.3em 0.3em rgba(0, 0, 0, 0.50), 0.03em -0.03em 0.3em 0.05em rgba(0, 0, 0, 0.60);
+
+}
+
 .content-control-div-header-text{
 
     font-size: 2.5em;
@@ -79,8 +88,8 @@
 }
 
 .inner-content-control-spacing{
-    padding-left: 11.5em;
-    padding-right: 11.5em;
+    padding-left: 2.0em;
+    padding-right: 2.0em;
     padding-top: 2em;
     padding-bottom: 2em;
 };

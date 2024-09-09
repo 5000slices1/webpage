@@ -5,8 +5,8 @@ html{
     background-color: #0E0F2C;
     margin: 0.0em 0.0em 0.0em 0.0em ;
     padding: 0px 0px 0px 0px;
-    font-size: 62.5%;
-    min-width: 108em;
+    /* font-size: 62.5%;  */
+    min-width: 83.5em;
     /* width: 144em; */
 
 }
@@ -18,8 +18,10 @@ body {
     left: 1.2em;
 }
 
+ /* The complete header height inclusive the sub-navigation menu height */
 .main-header {
-    height: 17.2em;
+    /* height: 17.2em; */
+    height: auto;
     width: auto;
 }
 
@@ -113,11 +115,13 @@ body {
 
 .wallet-control-not-logged-in {
     
-    display: none;
-    position:absolute;    
+    display: none; 
+    /* display: block; */
+    position:absolute;     
+    
     text-align: end;
     margin-left: 1.0em; 
-    margin-top: 3.0em;
+    margin-top: 2.5em;
     background-color: #55557B;
     height: 18.5em;    
     padding-top: 1.0em;
@@ -155,12 +159,14 @@ body {
 
 
 /* #endregion Wallet login control */
-.sub-navigation-div{
-    /* display: none; */
-    display: none;
-    position:absolute;
-    top:10.5em;
 
+.sub-navigation-div{
+    display: none; 
+    
+    /* position:absolute; */
+    /* top:10.5em; */
+
+    margin-top: 1em;
     border-top-left-radius: 0em;
     border-top-right-radius: 0em;
     border-bottom-left-radius: 1.2em;

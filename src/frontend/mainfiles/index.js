@@ -262,15 +262,25 @@ async function Show_Page_TokensNft_SlicesNft(){
 document.addEventListener('DOMContentLoaded', async function () {
   
   CommonTypes.InDesigner = true;
+  document.getElementById("sub-navigation-div").style.display = "none";
+  
+  let navButtonHome = document.getElementById("navButtonHome");
+  await MainNavButtonStylingUpdate(navButtonHome);
+  await Show_Page_Mainpage_Home();
+  
+
+   window.dispatchEvent( new Event('resize') );
+
   CommonTypes.Init();
   // alert('hello');
   //document.domain = 'icp0.io';
   console.log("init");
 
-  document.getElementById("sub-navigation-div").style.display = "none";
+  
 
   await AddEventHandlers();
 
+  
   //LoadDynamicHtmlPages();
 
    // Pubsub actions

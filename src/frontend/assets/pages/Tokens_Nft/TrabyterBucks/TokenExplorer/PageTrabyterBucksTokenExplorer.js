@@ -59,10 +59,8 @@ export class PageTrabyterTokenExplorer {
         this.#totalTxCount = await this.#tokenExplorer.Get_TransactionsCount();
         this.#explorerTxId_StartIndex = Math.max(Number(this.#totalTxCount) - Number(1), Number(0));
         await this.Update_All_Views();
-        document.getElementById(this.#frontendId + "TokenExplorer").setAttribute("style", 
-            "display:block");
-        document.getElementById(this.#frontendId + "TokenExplorer_TableLegend").setAttribute("style", 
-            "display:block");
+        document.getElementById(this.#frontendId + "TokenExplorer").style.display ="block";
+        document.getElementById(this.#frontendId + "TokenExplorer_TableLegend").style.display = "block";
 
     }
 
@@ -321,7 +319,7 @@ export class PageTrabyterTokenExplorer {
 
         let returnString = `
             <table cellspacing='0em' cellpadding='0em'  
-            style='width: 100%; min-width:65em;
+            style='width: 65em; min-width:65em;
             padding-left: 1em; padding-right: 1em;'>
                 <colgroup>
                       <col style='width: 10em;'>
@@ -352,7 +350,7 @@ export class PageTrabyterTokenExplorer {
         
                 <tr >
                     <td colspan='6' >
-                        <div style='width: 100%;height: 0.2em; background-color: white;vertical-align: top;'></div>
+                        <div style='height: 0.2em; background-color: white;vertical-align: top;'></div>
                     </td>
                 </tr>
                 <tr style='height: 2em;'>
@@ -370,10 +368,10 @@ export class PageTrabyterTokenExplorer {
     #Get_TokenExplorerTableRowStringByModel(model) {
 
         let returnString = `
-        <tr class='spaceUnder' >                          
+        <tr class='spaceUnder' style='height:14em;min-height:14em;' >                          
             <td colspan='6'>
                 <div class='control-table-cell-div-content'  >
-                    <table cellspacing='0em' cellpadding='0em' style='width: 100%'  >
+                    <table cellspacing='0em' cellpadding='0em'   >
                         <colgroup>
                             <col style='width: 10em;'>
                             <col style='width: 20em;'>
@@ -402,7 +400,7 @@ export class PageTrabyterTokenExplorer {
                             <tr style='line-height: 0.2em;min-height: 0.2em;'>
                                 <td colspan='6'>
                                     <div class='control-table-cell-text' 
-                                    style="background-color: black;min-height: 0.2em;
+                                    style="background-color: rgba(84,143,232,0.9);min-height: 0.2em;
                                     margin-left: 1.5em; margin-right: 1.5em;
                                     ">
 
@@ -423,7 +421,7 @@ export class PageTrabyterTokenExplorer {
                                             </td>
                                             <td style="text-align: right;">
                                                 <p class='control-table-cell-text'
-                                                style="text-align: right;"
+                                                style="text-align: left;"
                                                 >` + model.From + `</p>
 
                                             </td>
@@ -437,7 +435,7 @@ export class PageTrabyterTokenExplorer {
                                             </td>
                                             <td style="text-align: right;">
                                                 <p class='control-table-cell-text'
-                                                style="text-align: right;"
+                                                style="text-align: left;"
                                                 >` + model.To + `</p>
 
                                             </td>

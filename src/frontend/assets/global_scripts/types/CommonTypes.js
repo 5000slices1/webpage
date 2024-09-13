@@ -14,7 +14,7 @@ class CommonTypesModel {
     WalletTypes = createEnum(['NoWallet', 'plug', 'stoic', 'dfinity']);
     CommonIdentityProvider;
     LogicTrabyterBucksToken;
-    LogicTrabyterBucksTokenInterface;
+    LogicTrabyterBucksTokenInterface;    
     Artemis = Artemis;
     Actor = Actor;
     HttpAgent = HttpAgent;  

@@ -59,7 +59,7 @@
 }
 
 
-.control-token-explorer {
+.control-token-explorer, .control-token-holders {
 
   border-radius: 0.6em;
   border-color: transparent;
@@ -69,7 +69,7 @@
   /* id = TraBucks_TokenExplorer */
 }
 
-.control-token-explorer-table-legend{
+.control-token-explorer-table-legend, .control-token-holders-table-legend{
 
   color: white;  
   width: 100%;

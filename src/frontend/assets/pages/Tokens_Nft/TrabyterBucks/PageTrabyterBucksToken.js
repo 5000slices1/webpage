@@ -1,4 +1,5 @@
 import {PageTrabyterTokenExplorer} from "./TokenExplorer/PageTrabyterBucksTokenExplorer.js";
+import {PageTrabyterTokenHolders} from "./Holders/PageTrabyterBucksTokenHolders.js";
 import {fetchAndSetInnerHTML} from "../../../global_scripts/utils/CommonUtils.js";
 import {CommonTypes} from "../../../global_scripts/types/CommonTypes.js";
 
@@ -6,6 +7,7 @@ export class PageTrabyterBucks {
 
     //#wasInitDone = false;
     #tokenExplorerPage = new PageTrabyterTokenExplorer();
+    #tokenHoldersPage = new PageTrabyterTokenHolders();
     #frontendId = "TraBucks_";
 
     #leftNavButtonTokenExplorer;
@@ -75,8 +77,8 @@ export class PageTrabyterBucks {
         var id = button.id;
         
         button.classList.add("content-control-left-navigation-button-active");
-        console.log("button classlist");
-        console.log(button.classList);
+        // console.log("button classlist");
+        // console.log(button.classList);
         
         if (id != this.#leftNavButtonTokenInformation.id)
         {
@@ -124,6 +126,7 @@ export class PageTrabyterBucks {
         await  this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenHolders);
         this.#innerContentDiv.innerHTML = "";
         await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/Holders/PageTrabyterBucksTokenHolders.html");
+        await this.#tokenHoldersPage.Init();
 
     };
 

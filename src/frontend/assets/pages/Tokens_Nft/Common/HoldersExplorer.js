@@ -69,11 +69,7 @@ export class HoldersExplorer{
             this.#allHoldersInformation[z].Index = z;
         }
         this.#totalHoldersCount= this.#allHoldersInformation.length;
-
-         console.log("this.#totalHoldersCount: " + this.#totalHoldersCount);
-         console.log("All holders:");
-         console.log(this.#allHoldersInformation);   
- 
+          
     }
 
     

@@ -1,9 +1,9 @@
 import { HoldersExplorer } from "../../Common/HoldersExplorer.js";
-import { TrabyterBucks_Constants } from "../TrabyterBucksConstants.js";
+import { TrabyterPremiumBucks_Constants } from "../TrabyterPremiumBucksConstants.js";
 import {CommonTypes} from "../../../../global_scripts/types/CommonTypes.js";
 
-export class PageTrabyterTokenHolders {
-    #frontendId = "TraBucks_";
+export class PageTrabyterPremiumTokenHolders {
+    #frontendId = "TraPremiumBucks_";
     #holders = null;
     #holdersExplorer = null;  
     #holdersMaxItemsPerPage = 10;
@@ -21,8 +21,8 @@ export class PageTrabyterTokenHolders {
         this.#holdersId_StartIndex = 0;
         this.#holdersExplorer = new HoldersExplorer();
         await this.#holdersExplorer.Init(this.#frontendId, 
-            TrabyterBucks_Constants.LocalCanisterId,
-            TrabyterBucks_Constants.MainnetCanisterId            
+            TrabyterPremiumBucks_Constants.LocalCanisterId,
+            TrabyterPremiumBucks_Constants.MainnetCanisterId            
         );
 
         document.getElementById(this.#frontendId + "holders_rows_dropdown").onchange = null;
@@ -405,7 +405,7 @@ export class PageTrabyterTokenHolders {
                                     <p class='control-table-cell-text' style="margin-left:1em;">`+ model.Index + `</p>
                                 </td>
                                 <td style='vertical-align: top;padding-top: 0.1em;'>
-                                    <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + ` TRA</p>
+                                    <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + ` TRAPRE</p>
                                 </td>
                              
                              

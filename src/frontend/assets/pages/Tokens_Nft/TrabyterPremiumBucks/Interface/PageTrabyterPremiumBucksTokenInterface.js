@@ -1,4 +1,4 @@
-import {TrabyterBucks_Constants} from "./../TrabyterBucksConstants.js";
+import {TrabyterPremiumBucks_Constants} from "../TrabyterPremiumBucksConstants.js";
 import { TokenBalance } from "../../Common/TokenBalance.js";
 import { CommonTypes } from "../../../../global_scripts/types/CommonTypes.js";
 import { idlFactory } from "../../../../global_scripts/types/TokenInterface.js";
@@ -7,9 +7,9 @@ export class TrabyterBucksTokenInterface {
    
     async Init(){
         return;
-        console.log("TrabyterBucksTokenInterface Init");
+        console.log("TrabyterPremiumBucksTokenInterface Init");
 
-        document.getElementById("TraBucks_Interface_Burn_button").onclick = async () => 
+        document.getElementById("TraBucksPremium_Interface_Burn_button").onclick = async () => 
             {
                 await this.Burn_Tokens()
             }; 
@@ -19,7 +19,7 @@ export class TrabyterBucksTokenInterface {
     async #Get_Actor(){
         let adapter = CommonTypes.CommonIdentityProvider.GetAdapter(); //.burn({value: rawValue});
             let provider = adapter.provider;
-            let actor = provider.createActor({ canisterId: TrabyterBucks_Constants.MainnetCanisterId, 
+            let actor = provider.createActor({ canisterId: TrabyterPremiumBucks_Constants.MainnetCanisterId, 
                 interfaceFactory: idlFactory });
                 return actor;
     }
@@ -29,11 +29,11 @@ export class TrabyterBucksTokenInterface {
         return;
         console.log("Burn_Tokens");
 
-        let amount = document.getElementById("TraBucks_Interface_Burn_amount").value;
+        let amount = document.getElementById("TraBucksPremium_Interface_Burn_amount").value;
         let amountValue = Number(amount);
 
         // First we need to get the decimal places of the token
-        let decimals = TrabyterBucks_Constants.Decimals;
+        let decimals = TrabyterPremiumBucks_Constants.Decimals;
         let tokenBalance = TokenBalance.FromNumber(amountValue, decimals);
         let rawValue = tokenBalance.GetRawValue();
         console.log("rawValue: " + rawValue);   

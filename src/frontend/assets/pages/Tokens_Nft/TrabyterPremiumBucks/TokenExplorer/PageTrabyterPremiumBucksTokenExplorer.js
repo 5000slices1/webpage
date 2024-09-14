@@ -1,9 +1,9 @@
 import { TokenExplorer } from "../../Common/TokenExplorer.js";
-import { TrabyterBucks_Constants } from "../TrabyterBucksConstants.js";
+import { TrabyterPremiumBucks_Constants } from "../TrabyterPremiumBucksConstants.js";
 import {CommonTypes} from "../../../../global_scripts/types/CommonTypes.js";
 
-export class PageTrabyterTokenExplorer {
-    #frontendId = "TraBucks_";
+export class PageTrabyterPremiumTokenExplorer {
+    #frontendId = "TraPremiumBucks_";
     #transactions = null;
     #tokenExplorer = null;  
     #explorerMaxItemsPerPage = 10;
@@ -16,7 +16,7 @@ export class PageTrabyterTokenExplorer {
 
     async Init() {
 
-        console.log("Page_TrabyterBucks_Init");
+        console.log("Page_TrabyterPremiumBucks_Init");
       
 
         // Some variables should be set to default values
@@ -24,8 +24,8 @@ export class PageTrabyterTokenExplorer {
         this.#explorerTxId_StartIndex = 0;
         this.#tokenExplorer = new TokenExplorer();
         await this.#tokenExplorer.Init(this.#frontendId, 
-            TrabyterBucks_Constants.LocalCanisterId,
-            TrabyterBucks_Constants.MainnetCanisterId            
+            TrabyterPremiumBucks_Constants.LocalCanisterId,
+            TrabyterPremiumBucks_Constants.MainnetCanisterId            
         );
 
         document.getElementById(this.#frontendId + "rows_dropdown").onchange = null;
@@ -396,7 +396,7 @@ export class PageTrabyterTokenExplorer {
                                 <p class='control-table-cell-text'>` + model.TransactionType + `</p>
                             </td>
                             <td style='vertical-align: top;padding-top: 0.1em;'>
-                                <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + ` TRA</p>
+                                <p class='control-table-cell-text'>` + this.#Get_amount_string(model.Amount) + ` TRAPRE</p>
                             </td>   
                             <tr style='line-height: 0.2em;min-height: 0.2em;'>
                                 <td colspan='6'>

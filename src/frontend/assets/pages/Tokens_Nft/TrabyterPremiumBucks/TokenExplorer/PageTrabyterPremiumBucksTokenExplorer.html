@@ -19,52 +19,71 @@
 
     
 
-<div tokenExplorerContentPageId='TraBucks_PageTokenHolders' 
+<div tokenExplorerContentPageId='TraPremiumBucks_PageTokenExplorer' 
 style='display: block;width: 100%;'>
-    <table cellspacing='0' cellpadding='0' 
-    style='width: 100%; font-size: 100%;'>
+    <table cellspacing='0' cellpadding='0' style='width: 100%; font-size: 100%;'>
         <tr>
             <td>
-                <div class='content-control-div-header-text'>
-                    Trabyter Token Holders
+                <div class='content-control-div-header-text' 
+                style='width:30em;' >
+                    Token explorer TRAPRE (Trabyter-Premium Bucks)
                 </div>
             </td>
-        <tr>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        <tr>
+                        
+            <td style="height: 1em;"></td>
         </tr>
         <tr>
-            <td style='width: 45.8em;'>
-                <input type='text' class='content-control-input-text' style='width: 45.8em;'
-                    placeholder='Search by principal or index' 
-                    id="TraBucks_token_holders_input_field" />
+            <td >              
+                <input type='text' class='content-control-input-text' 
+                style='width: 45.8em;display:inline-block;vertical-align: top;'
+                    placeholder='Search by principal or transaction index' 
+                    id="TraPremiumBucks_token_explorer_input_field" />
+                
+                    <button class='control-search-button'
+                 id ="TraPremiumBucks_token_explorer_input_field_button"
+                    align="left"
+                    style="display:inline-block;
+                    vertical-align: top;
+                    margin: 0.0em 0em 0em 2em; padding: 0em 0em 0em 0m;
+                 width: 3.4em;
+                 height: 2.5em;background-image: url('../../../icons/input_search_icon.png');">
+                </button>
+                
             </td>
-            <td style='width: 2em;min-width: 1.5em'></td>
+            <!-- <td style='width: 2em;min-width: 1.5em;'></td>
             <td style='width: 4.4em;'>
 
-                <button class='control-search-button' id ="TraBucks_token_holders_input_field_button"
+                <button class='control-search-button' id ="TraPremiumBucks_token_explorer_input_field_button"
+                    align="left"
                     style="
-                 width: 3.4em; height: 2.5em;background-image: url('../../../icons/input_search_icon.png');">
+                 width: 3.4em;
+                 height: 2.5em;background-image: url('../../../icons/input_search_icon.png');">
                 </button>
             </td>
-            <td>
+            <td style="width: 100%;">
 
-            </td>
+            </td> -->
         </tr>
     </table>
     <div style='height: 5em;'></div>
     
-    <div class='control-token-holders' 
+    <div class='control-token-explorer' 
      style='height:100%;width:65em;min-width:65em;padding: 1.5em;'
-        id='TraBucks_TokenHolders'>   
-               
+        id='TraPremiumBucks_TokenExplorer'>   
+             
     </div>
 
     <p></p>
 
     <!-- Table explorer control buttons (prev page, next page, etc..) -->
     <table align="right" 
-    class="control-token-holders-table-legend"
-    id="TraBucks_TokenHolders_TableLegend"
+    class="control-token-explorer-table-legend"
+    id="TraPremiumBucks_TokenExplorer_TableLegend"
     cellspacing='0' cellpadding='0' style="margin-left: 1em;">
         <colgroup>
             
@@ -113,10 +132,10 @@ style='display: block;width: 100%;'>
             <td></td>
           
                 <td >
-                    <div id ="TraBucks_TokenHolders_RowsCount">
+                    <div id ="TraPremiumBucks_TokenExplorer_RowsCount">
                         <!-- <form> -->
                             <!-- <label for="myDropdown">choose:</label> -->
-                            <select id="TraBucks_holders_rows_dropdown" style=" height: 2em; margin: 0em; padding: 0em;
+                            <select id="TraPremiumBucks_rows_dropdown" style=" height: 2em; margin: 0em; padding: 0em;
                             text-align: right;padding-right: 0.5em;
                             color: white; background-color: transparent; border-width: 0em;
                             
@@ -135,39 +154,38 @@ style='display: block;width: 100%;'>
             <td></td>
            
                 <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                    <div id ="TraBucks_TokenHolders_Arrow"></div>                                            
+                    <div id ="TraPremiumBucks_TokenExplorer_Arrow"></div>                                            
                 </td>
           
             <td></td>                                  
                 <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                    <div id ="TraBucks_TokenHolders_FromTo"></div>                                            
+                    <div id ="TraPremiumBucks_TokenExplorer_FromTo"></div>                                            
                 </td>                                    
             <td></td>
 
             <td>
-                <button  class="control-button-left-rewind" 
-                id="TraBucks_holders_control-button-left-rewind"
+                <button  class="control-button-left-rewind" id="TraPremiumBucks_control-button-left-rewind"
                 style="width: 2em; height: 2em;margin: 0em; padding: 0em;">                            
                </button>
             </td>         
             <td></td>                           
 
             <td>
-                <button  class="control-button-left" id="TraBucks_holders_control-button-left"
+                <button  class="control-button-left" id="TraPremiumBucks_control-button-left"
                 style="width: 1em; height: 2em;margin: 0em;  padding: 0em;">                            
                </button>
             </td>
             <td></td>                           
 
             <td >
-                <button  class="control-button-right" id="TraBucks_holders_control-button-right"
+                <button  class="control-button-right" id="TraPremiumBucks_control-button-right"
                 style="width: 1em; height: 2em;margin: 0em; padding: 0em;">                            
                </button>
             </td>
             <td></td>                           
 
             <td >
-                <button  class="control-button-right-forward" id="TraBucks_holders_control-button-right-forward"
+                <button  class="control-button-right-forward" id="TraPremiumBucks_control-button-right-forward"
                 style="width: 2em; height: 2em;margin: 0em; padding: 0em;">                            
                </button>
             </td>

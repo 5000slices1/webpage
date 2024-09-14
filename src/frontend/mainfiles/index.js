@@ -58,7 +58,7 @@ async function MainNavButtonStylingUpdate(button) {
 
 // Sub navigation button clicked
 async function SubNavButtonStylingUpdate(button) {
-  console.log("subnavbuttonclicked");
+  
   var subNavigationDiv = document.getElementById("sub-navigation-div");
   var buttons = subNavigationDiv.getElementsByClassName("sub-navigation-button");
 
@@ -247,6 +247,7 @@ async function Show_Page_TokensNft_TraPremiumToken(){
 
   await fetchAndSetInnerHTML(divMainContent, 
     "../assets/pages/Tokens_Nft/TrabyterPremiumBucks/PageTrabyterPremiumBucksToken.html");
+    await CommonTypes.LogicTrabyterPremiumBucksToken.Page_TrabyterPremiumBucks_Init();
 }
 
 async function Show_Page_TokensNft_SlicesNft(){

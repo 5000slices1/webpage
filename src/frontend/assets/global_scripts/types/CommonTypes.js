@@ -5,6 +5,7 @@ import {TrabyterBucksTokenInterface} from "../../pages/Tokens_Nft/TrabyterBucks/
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
 import { Artemis } from 'artemis-web3-adapter';
+import { PageTrabyterPremiumBucks } from "../../pages/Tokens_Nft/TrabyterPremiumBucks/PageTrabyterPremiumBucksToken.js";
 
 
 
@@ -14,6 +15,7 @@ class CommonTypesModel {
     WalletTypes = createEnum(['NoWallet', 'plug', 'stoic', 'dfinity']);
     CommonIdentityProvider;
     LogicTrabyterBucksToken;
+    LogicTrabyterPremiumBucksToken;
     LogicTrabyterBucksTokenInterface;    
     Artemis = Artemis;
     Actor = Actor;
@@ -28,6 +30,7 @@ class CommonTypesModel {
     {
         this.CommonIdentityProvider = new IdentiyProvider();    
         this.LogicTrabyterBucksToken = new PageTrabyterBucks();  
+        this.LogicTrabyterPremiumBucksToken = new PageTrabyterPremiumBucks();
         this.LogicTrabyterBucksTokenInterface = new TrabyterBucksTokenInterface();
     }
 }

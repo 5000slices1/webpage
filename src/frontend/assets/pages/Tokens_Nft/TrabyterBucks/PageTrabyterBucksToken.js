@@ -108,6 +108,7 @@ export class PageTrabyterBucks {
         await this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenInformation);
         this.#innerContentDiv.innerHTML = "";
         await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/Information/PageTrabyterBucksTokenInformation.html");
+        await CommonTypes.LogicTrabyterBucksPriceFetcher.Init();
     }
 
     async Show_Page_Token_Explorer() {

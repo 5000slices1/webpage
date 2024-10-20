@@ -1,11 +1,11 @@
-import {TrabyterBucks_Constants} from "./../TrabyterBucksConstants.js";
+import { TrabyterPremiumBucks_Constants } from "../TrabyterPremiumBucksConstants.js";
 import { TokenBalance } from "../../Common/TokenBalance.js";
 import { CommonTypes } from "../../../../global_scripts/types/CommonTypes.js";
 import { idlFactory } from "../../../../global_scripts/types/TokenInterface.js";
 import { PriceFetcher,Ticker } from "../../../../global_scripts/utils/PriceFetcher.js";
 import { GetCustomDictionaryFromVariant, GetValueFromDictionary } from "../../../../global_scripts/utils/CommonUtils.js";
 
-export class PageTrabyterBucksTokenInformation{
+export class PageTrabyterPremiumBucksTokenInformation{
     
     #ticker;
     #tokenMetaData;
@@ -23,7 +23,7 @@ export class PageTrabyterBucksTokenInformation{
 
     async UpdateUIFromTokenInformation(){
 
-        var element = document.getElementById("TraBucks_TokenSymbol");
+        var element = document.getElementById("TraPremiumBucks_TokenSymbol");
         if (element == null)
         {
             
@@ -31,16 +31,16 @@ export class PageTrabyterBucksTokenInformation{
         }
         if (this.#ticker != null)
         {
-            document.getElementById("TraBucks_TokenSymbol").innerText = this.#ticker?.base_currency;
-            document.getElementById("TraBucks_Token_Price").innerText = "1 ICP = " + this.#ticker?.last_price +" TRA";
-            document.getElementById("TraBucks_Canister_Id").innerText = this.#ticker?.base_id;
+            document.getElementById("TraPremiumBucks_TokenSymbol").innerText = this.#ticker?.base_currency;
+            document.getElementById("TraPremiumBucks_Token_Price").innerText = "1 ICP = " + this.#ticker?.last_price +" TRAPRE";
+            document.getElementById("TraPremiumBucks_Canister_Id").innerText = this.#ticker?.base_id;           
         }
 
-        document.getElementById("TraBucks_SupportedTokenTypes").innerText = this.#supportedStandards;
-        document.getElementById("TraBucks_token_decimals").innerText = this.#decimals;
-        document.getElementById("TraBucks_TokenSupply").innerText = this.#totalSupply;
-        document.getElementById("TraBucks_BurnedAmount").innerText = this.#burnedAmount
-        document.getElementById("TraBucks_TokenLogo").src = this.#logoBase64;
+        document.getElementById("TraPremiumBucks_SupportedTokenTypes").innerText = this.#supportedStandards;
+        document.getElementById("TraPremiumBucks_token_decimals").innerText = this.#decimals;
+        document.getElementById("TraPremiumBucks_TokenSupply").innerText = this.#totalSupply;
+        document.getElementById("TraPremiumBucks_BurnedAmount").innerText = this.#burnedAmount
+        document.getElementById("TraPremiumBucks_TokenLogo").src = this.#logoBase64;
 
     }
 
@@ -50,10 +50,10 @@ export class PageTrabyterBucksTokenInformation{
 
     async UpdateTokenInformation(){
         
-        this.#ticker = await CommonTypes.PriceFetcher.getTicker('TRA', 'ICP');        
+        this.#ticker = await CommonTypes.PriceFetcher.getTicker('TRAPRE', 'ICP');        
 
         // Get the actor
-        let actor = await CommonTypes.TokenActorTra.GetActor();
+        let actor = await CommonTypes.TokenActorTraPremium.GetActor();
         let metadata = await actor.icrc1_metadata();     
         let metaDic = GetCustomDictionaryFromVariant(metadata);                 
         this.#decimals = Number(GetValueFromDictionary(metaDic, "icrc1:decimals"));

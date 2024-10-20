@@ -19,7 +19,7 @@ export class PageTrabyterBucks {
 
 
     constructor() {
-        console.log("PageTokens constructor");
+        console.log("Trabyter PageTokens constructor");
     }
 
     async Page_TrabyterBucks_Init() {
@@ -108,7 +108,7 @@ export class PageTrabyterBucks {
         await this.Left_Navigation_Button_Apply_Activated_Style(this.#leftNavButtonTokenInformation);
         this.#innerContentDiv.innerHTML = "";
         await fetchAndSetInnerHTML(this.#innerContentDiv, "../assets/pages/Tokens_Nft/TrabyterBucks/Information/PageTrabyterBucksTokenInformation.html");
-        await CommonTypes.LogicTrabyterBucksPriceFetcher.Init();
+        await CommonTypes.LogicTrabyterBucksTokenInformation.Init();
     }
 
     async Show_Page_Token_Explorer() {

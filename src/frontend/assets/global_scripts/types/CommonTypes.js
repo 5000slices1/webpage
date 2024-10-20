@@ -8,7 +8,10 @@ import { Artemis } from 'artemis-web3-adapter';
 import { PageTrabyterPremiumBucks } from "../../pages/Tokens_Nft/TrabyterPremiumBucks/PageTrabyterPremiumBucksToken.js";
 import { PriceFetcher } from "../utils/PriceFetcher.js";
 import { PageTrabyterBucksTokenInformation } from "../../pages/Tokens_Nft/TrabyterBucks/Information/PageTrabyterBucksTokenInformation.js";
-
+import { PageTrabyterPremiumBucksTokenInformation } from "../../pages/Tokens_Nft/TrabyterPremiumBucks/Information/PageTrabyterPremiumBucksTokenInformation.js";
+import { TokenActor } from "../utils/TokenActor.js";
+import { TrabyterBucks_Constants } from "../../pages/Tokens_Nft/TrabyterBucks/TrabyterBucksConstants.js";
+import { TrabyterPremiumBucks_Constants } from "../../pages/Tokens_Nft/TrabyterPremiumBucks/TrabyterPremiumBucksConstants.js";
 
 class CommonTypesModel {
    
@@ -16,11 +19,16 @@ class CommonTypesModel {
     CommonIdentityProvider;
     LogicTrabyterBucksToken;
     LogicTrabyterBucksTokenInterface;  
-    LogicTrabyterBucksPriceFetcher;
+    LogicTrabyterBucksTokenInformation;
 
     LogicTrabyterPremiumBucksToken;    
     LogicTrabyterPremiumBucksTokenInterface;      
-    LogicTrabyterPremiumBucksPriceFetcher;
+    //LogicTrabyterPremiumBucksPriceFetcher;
+    LogicTrabyterPremiumBucksTokenInformation;
+
+    PriceFetcher;
+    TokenActorTra;
+    TokenActorTraPremium;
 
     Artemis = Artemis;
     Actor = Actor;
@@ -31,13 +39,35 @@ class CommonTypesModel {
         
     }
 
-    Init()
+    async Init()
     {
+
         this.CommonIdentityProvider = new IdentiyProvider();    
+
+        this.TokenActorTra = new TokenActor();
+        await this.TokenActorTra.Init( TrabyterBucks_Constants.LocalCanisterId,
+            TrabyterBucks_Constants.MainnetCanisterId);
+
+        this.TokenActorTraPremium = new TokenActor();
+        await this.TokenActorTraPremium.Init( TrabyterPremiumBucks_Constants.LocalCanisterId,
+             TrabyterPremiumBucks_Constants.MainnetCanisterId);
+        
+        this.PriceFetcher = new PriceFetcher();
+        //await this.PriceFetcher.Init();
+        this.PriceFetcher.Init();
+
+
         this.LogicTrabyterBucksToken = new PageTrabyterBucks();  
-        this.LogicTrabyterPremiumBucksToken = new PageTrabyterPremiumBucks();
         this.LogicTrabyterBucksTokenInterface = new TrabyterBucksTokenInterface();
-        this.LogicTrabyterBucksPriceFetcher = new PageTrabyterBucksTokenInformation();
+        this.LogicTrabyterBucksTokenInformation = new PageTrabyterBucksTokenInformation();
+        //await this.LogicTrabyterBucksTokenInformation.Init();
+        this.LogicTrabyterBucksTokenInformation.Init();
+
+        this.LogicTrabyterPremiumBucksToken = new PageTrabyterPremiumBucks();
+        this.LogicTrabyterPremiumBucksTokenInterface = new TrabyterBucksTokenInterface();
+        this.LogicTrabyterPremiumBucksTokenInformation = new PageTrabyterPremiumBucksTokenInformation();
+        this.LogicTrabyterPremiumBucksTokenInformation.Init();
+                               
     }
 }
 

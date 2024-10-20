@@ -1,6 +1,6 @@
 class TrabyterBucks_ConstantTypesCollection{
 
-    LocalCanisterId = "bkyz2-fmaaa-aaaaa-qaaaq-cai";
+    LocalCanisterId = "be2us-64aaa-aaaaa-qaabq-cai";
     MainnetCanisterId = "obaqf-viaaa-aaaak-ak3na-cai";
     Decimals = 8;
 }

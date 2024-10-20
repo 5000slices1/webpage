@@ -22,13 +22,15 @@ export class Ticker{
 
 export class PriceFetcher {
        
+    #priceTickers;
+
     async fetchTickers() {
         const response = await fetch('https://uvevg-iyaaa-aaaak-ac27q-cai.raw.ic0.app/tickers');
-        console.log("markets: ");
+        
         let jsonObject = await response.json();
         let count = jsonObject.length;
 
-        let resultArray = new Array(count);
+        let resultArray = []; //new Array(count);
 
         for (let item of jsonObject)
         {
@@ -50,8 +52,25 @@ export class PriceFetcher {
           newItem.volume_usd_24H = item?.volume_usd_24H;    
           resultArray.push(newItem);            
         }
-             
-        return resultArray;
-    
+                     
+        return resultArray;    
     }
+
+    async Init(){
+        
+        this.#priceTickers = await this.fetchTickers();
+    }
+
+    async getTicker(baseCurrency, targetCurrency) 
+    {      
+      if (this.#priceTickers == null)
+      {
+        return;
+      }
+
+      let ticker = this.#priceTickers.find(ticker => ticker?.base_currency != null         
+        && ticker.base_currency == baseCurrency && ticker?.target_currency != null && ticker.target_currency == targetCurrency);
+      return ticker;
+    }
+
   }

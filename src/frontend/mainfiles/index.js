@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
    window.dispatchEvent( new Event('resize') );
 
-  CommonTypes.Init();
+  await CommonTypes.Init();
   // alert('hello');
   //document.domain = 'icp0.io';
   console.log("init");

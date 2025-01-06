@@ -1,0 +1,58 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/projectSettingsUpdater.xml
+/.idea.webpage.iml
+/modules.xml
+/contentModel.xml
+
+/.idea
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+
+
+
+# other folders and files
+dist/*
+.env/*
+.dfx/*
+.dfx
+.dfx/
+.vessel/*
+.mops/*
+.idea/*
+
+*.sh
+
+/.idea/
+/.vscode
+canister_ids.json
+
+/*.sh
+**/*.pem
+
+
+node_modules
+
+/.env
+/.dfx
+.dfx/local/network-id
+dist/
+/dist
+
+# dfx temporary files
+.dfx/
+.vessel/
+.mops/
+
+
+
+
+
+
+.env

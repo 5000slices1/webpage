@@ -1,0 +1,199 @@
+<html style='font-size:62.5%;'>
+    <head>
+        <link type='text/css' rel='stylesheet' href='../../css/MainPageStyles.css' />
+        <link type='text/css' rel='stylesheet' href='/src/frontend/assets/css/MainPageStyles.css' />
+    
+        <link type='text/css' rel='stylesheet' href='../../css/ContentPagesStyles.css' />
+        <link type='text/css' rel='stylesheet' href='/src/frontend/assets/css/ContentPagesStyles.css' />
+    
+        <link type='text/css' rel='stylesheet' href='../../css/CommonControls.css' />
+        <link type='text/css' rel='stylesheet' href='/src/frontend/assets/css/CommonControls.css' />
+    
+        <link type='text/css' rel='stylesheet' href='../../css/PageApps.css' />
+        <link type='text/css' rel='stylesheet' href='/src/frontend/assets/css/PageApps.css' />
+    
+        <link type='text/css' rel='stylesheet' href='/src/frontend/assets/css/Base64Images.css' />
+        <link type='text/css' rel='stylesheet' href='../../css/Base64Images.css' />
+    </head>
+    <body>
+
+    
+
+<div tokenExplorerContentPageId='TraPremiumBucks_PageTokenExplorer' 
+style='display: block;width: 100%;'>
+    <table cellspacing='0' cellpadding='0' style='width: 100%; font-size: 100%;'>
+        <tr>
+            <td>
+                <div class='content-control-div-header-text' 
+                style='width:30em;' >
+                    Token explorer TRAPRE (Trabyter-Premium Bucks)
+                </div>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        <tr>
+                        
+            <td style="height: 1em;"></td>
+        </tr>
+        <tr>
+            <td >              
+                <input type='text' class='content-control-input-text' 
+                style='width: 45.8em;display:inline-block;vertical-align: top;'
+                    placeholder='Search by principal or transaction index' 
+                    id="TraPremiumBucks_token_explorer_input_field" />
+                
+                    <button class='control-search-button'
+                 id ="TraPremiumBucks_token_explorer_input_field_button"
+                    align="left"
+                    style="display:inline-block;
+                    vertical-align: top;
+                    margin: 0.0em 0em 0em 2em; padding: 0em 0em 0em 0m;
+                 width: 3.4em;
+                 height: 2.5em;background-image: url('../../../icons/input_search_icon.png');">
+                </button>
+                
+            </td>
+            <!-- <td style='width: 2em;min-width: 1.5em;'></td>
+            <td style='width: 4.4em;'>
+
+                <button class='control-search-button' id ="TraPremiumBucks_token_explorer_input_field_button"
+                    align="left"
+                    style="
+                 width: 3.4em;
+                 height: 2.5em;background-image: url('../../../icons/input_search_icon.png');">
+                </button>
+            </td>
+            <td style="width: 100%;">
+
+            </td> -->
+        </tr>
+    </table>
+    <div style='height: 5em;'></div>
+    
+    <div class='control-token-explorer' 
+     style='height:100%;width:65em;min-width:65em;padding: 1.5em;'
+        id='TraPremiumBucks_TokenExplorer'>   
+             
+    </div>
+
+    <p></p>
+
+    <!-- Table explorer control buttons (prev page, next page, etc..) -->
+    <table align="right" 
+    class="control-token-explorer-table-legend"
+    id="TraPremiumBucks_TokenExplorer_TableLegend"
+    cellspacing='0' cellpadding='0' style="margin-left: 1em;">
+        <colgroup>
+            
+            <col style='width: auto; min-width: 0em;'>
+
+            <!-- Rows -->
+            <col style='width: 4em; min-width: 4em;'>
+            <col style='width: 1em; min-width: 1em;'>  
+            
+            <!-- 50 -->
+            <col style='width: 3em; min-width: 3em;'>
+            <col style='width: 1em; min-width: 1em;'>
+
+            <!-- Arrow -->
+            <col style='width: 5em; min-width: 5em;'>
+            <col style='width: 2em; min-width: 2em;'>
+
+            <!-- from to + entries count -->                                    
+            <col style='width: 20em; min-width: 20em;'>
+            <col style='width: 12em; min-width: 12em;'>
+
+            <!-- left forward -->                                    
+            <col style='width: 2em; min-width: 1em;'>
+            <col style='width: 2em; min-width: 2em;'>
+
+            <!-- left -->                                    
+            <col style='width: 2em; min-width: 1em;'>
+            <col style='width: 2em; min-width: 2em;'>
+
+            <!-- right -->                                    
+            <col style='width: 2em; min-width: 1em;'>
+            <col style='width: 0em; min-width: 2em;'>
+
+            <!-- right forward -->
+            
+            <col style='width: 1em; min-width: 2em;'>
+            <!-- <col style='width: auto; min-width: 0em;'> -->
+            </colgroup>
+        <tr>
+            <td></td>
+                <td style="font-size: 2em;
+                font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    Rows:
+                </td>
+           
+            <td></td>
+          
+                <td >
+                    <div id ="TraPremiumBucks_TokenExplorer_RowsCount">
+                        <!-- <form> -->
+                            <!-- <label for="myDropdown">choose:</label> -->
+                            <select id="TraPremiumBucks_rows_dropdown" style=" height: 2em; margin: 0em; padding: 0em;
+                            text-align: right;padding-right: 0.5em;
+                            color: white; background-color: transparent; border-width: 0em;
+                            
+                            font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                            "
+                            >
+                                <option value="10" style="color: black;font-size: 1.0em;" selected>10</option>
+                                <option value="20" style="color: black;font-size: 1.0em;">20</option>
+                                <option value="50" style="color: black;font-size: 1.0em;">50</option>
+                                <option value="100" style="color: black;font-size: 1.0em;">100</option>
+                                <option value="200" style="color: black;font-size: 1.0em;">200</option>
+                            </select>                                                                                           
+                    </div>                                            
+                </td>
+          
+            <td></td>
+           
+                <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    <div id ="TraPremiumBucks_TokenExplorer_Arrow"></div>                                            
+                </td>
+          
+            <td></td>                                  
+                <td style="font-size: 2em;font-weight: light;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    <div id ="TraPremiumBucks_TokenExplorer_FromTo"></div>                                            
+                </td>                                    
+            <td></td>
+
+            <td>
+                <button  class="control-button-left-rewind" id="TraPremiumBucks_control-button-left-rewind"
+                style="width: 2em; height: 2em;margin: 0em; padding: 0em;">                            
+               </button>
+            </td>         
+            <td></td>                           
+
+            <td>
+                <button  class="control-button-left" id="TraPremiumBucks_control-button-left"
+                style="width: 1em; height: 2em;margin: 0em;  padding: 0em;">                            
+               </button>
+            </td>
+            <td></td>                           
+
+            <td >
+                <button  class="control-button-right" id="TraPremiumBucks_control-button-right"
+                style="width: 1em; height: 2em;margin: 0em; padding: 0em;">                            
+               </button>
+            </td>
+            <td></td>                           
+
+            <td >
+                <button  class="control-button-right-forward" id="TraPremiumBucks_control-button-right-forward"
+                style="width: 2em; height: 2em;margin: 0em; padding: 0em;">                            
+               </button>
+            </td>
+                                    
+        </tr>
+    </table>
+    <p></p>
+    <p><br/></p>        
+</div>
+</body>
+</html>

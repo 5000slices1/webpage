@@ -1,0 +1,77 @@
+
+.div-apps-main-table {
+
+    vertical-align: top;
+    /* width: 18.0em; */
+    /* width: 100%; */
+    height: 66.3em;
+}
+
+.div-apps-maincontrol {
+
+/* box-sizing: border-box; */
+
+ 
+width: 17.3em;
+height: 45.3em;
+/* left: calc(50% - 336px/2 - 452px); */
+/* top: 4em; */
+
+background: rgba(85, 85, 123, 0.25);
+border: 0.25em solid #3E5BA8;
+box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px 1px rgba(0, 0, 0, 0.25);
+border-radius: 2.4em;
+padding: 2.0rem 2.0rem 2.0rem 2.0rem;
+}
+
+
+.div-app-icon-area-control {
+  
+width: 14.9em;
+height: 14.9em;
+background: rgba(237, 237, 243, 0.06);
+border: 0.3em solid #3E5BA8;
+border-radius: 0.8em;
+padding: 1em 1em 1em 1em;
+
+}
+
+.div-app-big-label-style-and-letter-spacing {
+
+    font-size:larger; 
+    font-weight: bold; 
+    letter-spacing: 0.02em;
+    color:white; 
+    line-height: normal
+}
+
+.div-app-big-label-style {
+
+    font-size:larger; 
+    font-weight: bold; 
+    line-height: 1.3em;
+    color:rgba(255, 255, 255, 0.70); 
+}
+
+.div-app-button-open-app-enabled { 
+width: 100%;
+height: 2.3em;
+background: #548FE8;
+border: 0.15em solid #1C72F3;
+border-radius: 0.8em;
+
+font-style: normal;
+font-weight: bold; 
+font-size: larger; 
+display: block;
+align-items: center;
+text-align: center;
+letter-spacing: 0.03em;
+/* Button Default Text color */
+color: #083881;
+
+}
+
+ 
+
+

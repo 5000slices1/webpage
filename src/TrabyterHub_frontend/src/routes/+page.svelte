@@ -3,18 +3,20 @@
 </script>
 
 <div>
-    <table cellspacing="0" cellpadding="0" style="height: 100%;width: 100%;">
+    <table
+        cellspacing="0"
+        cellpadding="0"
+        style="width: calc(100% - 1em); height: calc(100% - 10em);"
+    >
         <tbody>
             <tr>
                 <!-- #region main page content area -->
-                <td style="width:100%;height:100%; ">
-                    <div style="height: 100%;width:100%; ">
-                        <!-- <svg width="70.6em" height="65.1em" viewBox="0 0 70.6em 65.1em" fill="none" xmlns="http://www.w3.org/2000/svg"
-    style="display:flexbox;"
-    > -->
+                <td>
+                    <div>
                         <svg
-                            width="142.0em"
-                            height="65.1em"
+                            style="display:flexbox;"
+                            viewBox="0 0 1280 640"
+                            version="1.1"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -53,7 +55,7 @@
 
                                 <foreignobject
                                     x="50.0em"
-                                    y="2.0em"
+                                    y="1.0em"
                                     width="22em"
                                     height="24em"
                                     style="line-height: 0.9em;"
@@ -64,7 +66,7 @@
                                         alt="Staking App Tree Logo"
                                     />
                                     <p
-                                        style="font-size: 1.0em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
+                                        style="font-size: 1.4em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
                                     >
                                         To stake or not to stake ?
                                     </p>
@@ -72,7 +74,7 @@
 
                                 <foreignobject
                                     x="50.0em"
-                                    y="22.0em"
+                                    y="21.0em"
                                     width="22em"
                                     height="24em"
                                     style="line-height: 0.9em;"
@@ -83,7 +85,7 @@
                                         alt="Nft Market App Tree Logo"
                                     />
                                     <p
-                                        style="font-size: 1.0em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
+                                        style="font-size: 1.4em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
                                     >
                                         Bundled Nft buy - And buy more...
                                     </p>

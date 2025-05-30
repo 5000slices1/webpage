@@ -1,23 +1,40 @@
 {
-    "canisters": {    
-      "web3_frontend": {        
-        "frontend": {
-          "entrypoint": "src/frontend/mainfiles/index.html"
-        },
-        "source": [
-          "src/frontend/assets",
-          "dist/frontend/"
-        ],
-        "type": "assets"
-      }     
+  "canisters": {
+    "TrabyterHub_backend": {
+      "declarations": {
+        "node_compatibility": true
+      },
+      "main": "src/TrabyterHub_backend/main.mo",
+      "type": "motoko"
     },
-    "defaults": {
-      "build": {
-        "_args_comment": "--max-stable-pages=524288 -> 32 GB  [524288 = 32 GB / 64Kb(each page size) ] -> (524288 * 65536) = 34359738368 bytes = 33554432 kb = 32768 MB = 32 GB",
-        "args": "--max-stable-pages=524288", 
-        "packtool": "mops sources"
-      }
+    "TrabyterHub_frontend": {
+      "dependencies": [
+        "TrabyterHub_backend"
+      ],
+      "source": [
+        "src/TrabyterHub_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "TrabyterHub_frontend"
     },
-    "output_env_file": ".env",
-    "version": 1
+    "internet_identity": {
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "frontend": {},
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
 }

@@ -1,0 +1,30 @@
+{
+  "name": "TrabyterHub_frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "npm i && dfx canister create TrabyterHub_backend && dfx generate TrabyterHub_backend && dfx deploy",
+    "start": "vite --port 3000",
+    "prebuild": "dfx generate",
+    "build": "vite build",
+    "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
+  },
+ "dependencies": {
+    "@dfinity/agent": "^2.2.0",
+    "@dfinity/candid": "^2.2.0",
+    "@dfinity/principal": "^2.2.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.15.1",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "dotenv": "^16.4.7",
+    "sass": "^1.83.1",
+    "svelte": "^5.16.1",
+    "svelte-check": "^4.1.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vite-plugin-environment": "^1.1.3"
+  }
+}

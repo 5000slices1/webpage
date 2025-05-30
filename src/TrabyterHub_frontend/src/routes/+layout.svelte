@@ -44,6 +44,7 @@
             {text: 'Trabyter Premium', href: '/TrabyterPremium'},
             {text: 'NFTS', href: '/nfts'},
         ];
+        MainNavButtonStylingUpdate('navButtonHome');
     }
 
     onMount(async () => {
@@ -95,25 +96,47 @@
         };
     }
 
-    function navigateToHomePage() {
+    // Main navigation button clicked
+    function MainNavButtonStylingUpdate(id: string) {
+        //button.classList.add('main-header-button-selected');
+        //var id = button.getAttribute('id');
+
+        // set other buttons to not selected
+        //var divMainMenu = document.getElementById("divMainMenu");
+        var buttons = document.getElementsByClassName('main-header-button');
+        for (var i = 0; i < buttons.length; i++) {
+            var currentId = buttons[i].getAttribute('id');
+            if (currentId != id) {
+                buttons[i].classList.remove('main-header-button-selected');
+            } else {
+                buttons[i].classList.add('main-header-button-selected');
+            }
+        }
+    }
+
+    function navigateToHomePageClicked() {
         console.log('navigateToHomePage');
         navigationSettings.navigationIsVisible = false;
+        MainNavButtonStylingUpdate('navButtonHome');
         navigateToUrl('/?canisterId=' + canisterId);
     }
 
-    function navigateToAppsPage() {
+    function navigateToAppsPageClicked() {
         navigationSettings.navigationIsVisible = false;
+        MainNavButtonStylingUpdate('navButtonApps');
         navigateToUrl('/?canisterId=' + canisterId);
         //navigateToUrl('/pages/deposit?canisterId=' + canisterId);
     }
 
-    function navigateToTokensNftPage() {
+    function navigateToTokensNftPageClicked() {
         navigationSettings.navigationIsVisible = true;
+        MainNavButtonStylingUpdate('navButtonNfts');
         navigateToUrl('/?canisterId=' + canisterId);
         //navigateToUrl('/pages/information?canisterId=' + canisterId);
     }
-    function navigateToNewsPage() {
+    function navigateToNewsPageClicked() {
         navigationSettings.navigationIsVisible = false;
+        MainNavButtonStylingUpdate('navButtonNews');
         navigateToUrl('/?canisterId=' + canisterId);
         //navigateToUrl('/pages/stakingpool?canisterId=' + canisterId);
     }
@@ -186,8 +209,9 @@
                                                 <td>
                                                     <button
                                                         class="main-header-button"
+                                                        id="navButtonHome"
                                                         onclick={() =>
-                                                            navigateToHomePage()}
+                                                            navigateToHomePageClicked()}
                                                         >Home</button
                                                     >
                                                 </td>
@@ -197,9 +221,9 @@
                                                 <td>
                                                     <button
                                                         class="main-header-button"
-                                                        id="navButtonDeposit"
+                                                        id="navButtonApps"
                                                         onclick={() =>
-                                                            navigateToAppsPage()}
+                                                            navigateToAppsPageClicked()}
                                                         >Apps</button
                                                     >
                                                 </td>
@@ -210,9 +234,9 @@
                                                 <td>
                                                     <button
                                                         class="main-header-button"
-                                                        id="navButtonInformation"
+                                                        id="navButtonNfts"
                                                         onclick={() =>
-                                                            navigateToTokensNftPage()}
+                                                            navigateToTokensNftPageClicked()}
                                                         >Tokens / NFT</button
                                                     >
                                                 </td>
@@ -225,8 +249,9 @@
                                                 <td>
                                                     <button
                                                         class="main-header-button"
+                                                        id="navButtonNews"
                                                         onclick={() =>
-                                                            navigateToNewsPage()}
+                                                            navigateToNewsPageClicked()}
                                                         >News</button
                                                     >
                                                 </td>

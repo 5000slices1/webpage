@@ -88,8 +88,10 @@
 }
 
 .walletLoginButton {
-    width: 16em;
-    border: 0.3em solid rgba(90, 11, 54, 0.8);
+    width: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: 0.3rem solid rgba(90, 11, 54, 0.8);
 }
 
 .main-header-button:hover,
@@ -117,15 +119,15 @@
     position: absolute;
 
     text-align: end;
-    margin-left: -1rem;
-    margin-top: 1.2em;
-    padding-bottom: 2em;
+    margin-left: -2.4rem;
+    margin-top: 1.14rem;
+    padding-bottom: 2rem;
     background-color: #55557b;
-    height: 8rem;
-    padding-top: 1em;
-    width: 13.2rem;
-    border-bottom-left-radius: 1.8em;
-    border-bottom-right-radius: 1.8em;
+    height: 5rem;
+    padding-top: 1rem;
+    width: 12rem;
+    border-bottom-left-radius: 1.4rem;
+    border-bottom-right-radius: 1.4rem;
     /* box-shadow: 0 0.4em 0.6em rgba(255, 254, 254, 0.25), inset 0.4em 0.3em 0.6em rgba(255, 251, 251, 0.25); */
     box-shadow:
         0 0.2em 0.3em rgba(255, 254, 254, 0.25),
@@ -135,7 +137,7 @@
 .button-dropdownmenu {
     /* float: left; */
     height: 2.5rem;
-    width: 10rem;
+    width: 9rem;
 
     margin: 0.2rem 2rem 0.4rem 1.7rem;
     cursor: pointer;
@@ -284,22 +286,47 @@ ul.social_icon li a:hover {
     transition: ease-in all 0.2s;
 }
 
+.content-control-div,
+.content-control-left-navigation {
+    width: 100%;
+    border-radius: 0.6em;
+
+    background-color: rgba(85, 85, 123, 0.2);
+    /* background-color: yellow; */
+
+    box-shadow:
+        0 0.1em 0.2em rgba(255, 254, 254, 0.25),
+        inset 0.1em 0.15em 0.2em rgba(255, 251, 251, 0.25),
+        0.2em 0em 0.3em rgba(255, 254, 254, 0.25),
+        inset 0.2em -0.15em 0.3em rgba(255, 251, 251, 0.25);
+    /* Top, right, left, bottom */
+    /* box-shadow: inset 0 0.1em 0.01em 0.01em rgba(255, 251, 251, 0.05),
+    inset 0.1em 0.1em 0.01em 0.01em rgba(255, 251, 251, 0.05),
+    inset -0.1em 0.1em 0.01em 0.01em rgba(255, 251, 251, 0.05),
+    inset 0.1em -0.2em 0.01em 0.01em rgba(255, 251, 251, 0.05);  */
+
+    /* box-shadow: inset 0 0.1em 0.01em 0.01em rgba(0, 0, 0, 0.05),
+    inset 0.1em 0.1em 0.01em 0.01em rgba(0, 0, 0, 0.05),
+    inset -0.1em 0.1em 0.01em 0.01em rgba(0, 0, 0, 0.05),
+    inset 0.1em -0.2em 0.01em 0.01em rgba(0, 0, 0, 0.05); */
+}
+
 .content-control-div-header-text {
     font-size: 2.5em;
     font-weight: bold;
     color: rgba(228, 235, 255, 1);
     font-family: 'Montserrat', sans-serif;
     text-align: left;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    letter-spacing: 0.072em;
-    -webkit-text-stroke: 0.057em #060606;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.072rem;
+    -webkit-text-stroke: 0.057rem #060606;
     paint-order: stroke fill;
 }
 
 .inner-content-control-spacing {
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-top: 2em;
-    padding-bottom: 2em;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }

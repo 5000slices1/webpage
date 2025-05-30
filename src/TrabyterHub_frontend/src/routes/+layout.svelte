@@ -25,6 +25,7 @@
     const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
     let data = $props();
     let navItems: NavigationItem[] = [];
+    let buttonHorizontalSpacing: string = '0.8rem';
 
     let navigationSettings: NavigationSettings = $state({
         buttonHeightStyleValue: '3.0rem',
@@ -179,7 +180,7 @@
                                                     </div>
                                                 </td>
                                                 <td
-                                                    style="width: 0.6em; min-width: 0.6em;"
+                                                    style="width: 0.0em; min-width: 0.0em;"
                                                 >
                                                 </td>
                                                 <td>
@@ -191,7 +192,7 @@
                                                     >
                                                 </td>
                                                 <td
-                                                    style="width: 1.6em; min-width: 1.6em;"
+                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
                                                 ></td>
                                                 <td>
                                                     <button
@@ -203,9 +204,8 @@
                                                     >
                                                 </td>
 
-                                                <!-- svelte-ignore element_invalid_self_closing_tag -->
                                                 <td
-                                                    style="width: 1.6em; min-width: 1.6em;"
+                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
                                                 ></td>
                                                 <td>
                                                     <button
@@ -218,7 +218,7 @@
                                                 </td>
 
                                                 <td
-                                                    style="width: 1.6em; min-width: 1.6em;"
+                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
                                                 >
                                                 </td>
 
@@ -231,7 +231,7 @@
                                                     >
                                                 </td>
                                                 <td
-                                                    style="width: 1.6em; min-width: 1.6em;"
+                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
                                                 >
                                                 </td>
                                                 <td>
@@ -321,10 +321,17 @@
                     <tr style="height: 100%;vertical-align: top;">
                         <td>
                             <div
+                                class="content-control-div"
                                 id="divMainContent"
                                 style="width: 100%; height: 100%; margin-top: 0.4em;"
                             >
-                                {@render data.children()}
+                                <div
+                                    class="inner-content-control-spacing"
+                                    id="TraBucks_Inner_Content_Div"
+                                    style="width: auto;"
+                                >
+                                    {@render data.children()}
+                                </div>
                             </div>
                         </td>
                     </tr>

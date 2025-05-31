@@ -1,3 +1,5 @@
+import {writable} from 'svelte/store';
+
 import {IdentityProvider} from './identity/IdentityProvider';
 
 class InternalMainClass {
@@ -22,4 +24,7 @@ class InternalMainClass {
     }
 }
 
-export const MainClass = new InternalMainClass();
+// In Svelte, to make MainClass persistent for the whole session, you can use a Svelte store.
+// Here's how you can export it as a writable store:
+
+export const MainClass = writable(new InternalMainClass());

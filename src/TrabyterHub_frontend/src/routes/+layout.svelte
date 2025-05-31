@@ -1,12 +1,11 @@
 <script lang="ts">
     //import adapter from '@sveltejs/adapter-static';
-    import {browser} from '$app/environment';
+    import {browser, version} from '$app/environment';
     import {onMount} from 'svelte';
     import {MainClass} from '../lib/javascript/Logic/MainClass';
     import {ModelWalletTypes} from '$lib/javascript/Abstractions/Identity/ModelWalletTypes';
-    import {version} from '$app/environment';
     import './../app.css';
-    import {goto as navigateToUrl} from '$app/navigation';
+    import {goto} from '$app/navigation';
 
     import SubNavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
     import type {
@@ -14,60 +13,114 @@
         NavigationSettings,
     } from '$lib/../routes/components/navigation/subnavigation.svelte';
 
-    //import {page} from '$app/state';
-    //import {Artemis} from './../artemis-web3-adapter/src/index.js';
-
-    //export let data: any;
     import IconTrabyter from '/icons/TraByterLogo.png';
-    //import Logo2 from '/logo2.svg';
-    //import {Console} from 'console';
-
+    import Subnavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
     const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
     let data = $props();
-    let navItems: NavigationItem[] = [];
-    let buttonHorizontalSpacing: string = '0.8rem';
 
-    let navigationSettings: NavigationSettings = $state({
+    let headerButtonsHorizontalSpacing: string = '0.8rem';
+    let sunNavigationItems: NavigationItem[] = $state([]);
+    let subNavigationSettings: NavigationSettings = $state({
         buttonHeightStyleValue: '3.0rem',
         navigationIsVisible: false,
     });
+
+    let subNavigation: Subnavigation;
 
     if (browser) {
         console.log(window.innerWidth);
         console.log('Svelte version: ' + version);
         console.log('TrabyterHub Frontend canister ID: ' + canisterId);
 
-        // Define navigation items for this page
-        navItems = [
-            {text: 'Overview', href: '/home'},
-            {text: 'Trabyter Bucks', href: '/TrabyterBucks'},
-            {text: 'Trabyter Premium', href: '/TrabyterPremium'},
-            {text: 'NFTS', href: '/nfts'},
-        ];
+        // Initialize the main navigation button styling
         MainNavButtonStylingUpdate('navButtonHome');
     }
 
     onMount(async () => {
         console.log('the component has mounted');
-        console.log('start init');
         if (browser) {
-            if (MainClass.IsInitDone()) {
+            if ($MainClass.IsInitDone()) {
+                console.log('init already');
                 return;
             }
-            await MainClass.InitAsync();
+            console.log('start init');
+            await $MainClass.InitAsync();
+            console.log('end init');
         }
         console.log('start done');
     });
 
+    async function ShowSubNavigationNftsItems() {
+        // first make it invisible
+        subNavigationSettings.navigationIsVisible = false;
+
+        // Adjust the height of the buttons
+        subNavigationSettings.buttonHeightStyleValue = '3.0rem';
+
+        // Now adjust the items
+        sunNavigationItems = [
+            {
+                text: 'Overview',
+                href: '/pages/tokensNft/overview',
+                styleWidth: '8.0rem',
+            },
+            {
+                text: 'Trabyter Bucks',
+                href: '/pages/tokensNft/trabyterbucks',
+                styleWidth: '8.0rem',
+            },
+            {
+                text: 'Trabyter Premium',
+                href: '/pages/tokensNft/trabyterpremium',
+                styleWidth: '8.0rem',
+            },
+            {text: 'NFTS', href: '/pages/tokensNft/nfts', styleWidth: '8.0rem'},
+        ];
+
+        // first navigate to the default page
+        await subNavigation.NavigateTo('/pages/tokensNft/overview');
+
+        // Now make it visible
+        subNavigationSettings.navigationIsVisible = true;
+    }
+
+    async function ShowSubNavigationNewsItems() {
+        // first make it invisible
+        subNavigationSettings.navigationIsVisible = false;
+
+        // Adjust the height of the buttons
+        subNavigationSettings.buttonHeightStyleValue = '3.0rem';
+
+        // Now adjust the items
+        sunNavigationItems = [
+            {
+                text: 'News on youtube',
+                href: '/pages/news/youtubeNews',
+                styleWidth: '12.0rem',
+            },
+            {
+                text: 'News about development state',
+                href: '/pages/news/developingStateNews',
+                styleWidth: '12.0rem',
+            },
+        ];
+
+        // first navigate to the default page
+        await subNavigation.NavigateTo('/pages/news/youtubeNews');
+
+        // Now make it visible
+        subNavigationSettings.navigationIsVisible = true;
+    }
+
     async function WalletLoginPlug() {
         if (browser) {
-            await MainClass.IdentityProvider.Login(ModelWalletTypes.plug);
+            await $MainClass.IdentityProvider.Login(ModelWalletTypes.plug);
         }
     }
 
     async function WalletLogout() {
         if (browser) {
-            await MainClass.IdentityProvider.Logout();
+            await $MainClass.IdentityProvider.Logout();
         }
     }
 
@@ -98,11 +151,7 @@
 
     // Main navigation button clicked
     function MainNavButtonStylingUpdate(id: string) {
-        //button.classList.add('main-header-button-selected');
-        //var id = button.getAttribute('id');
-
         // set other buttons to not selected
-        //var divMainMenu = document.getElementById("divMainMenu");
         var buttons = document.getElementsByClassName('main-header-button');
         for (var i = 0; i < buttons.length; i++) {
             var currentId = buttons[i].getAttribute('id');
@@ -114,31 +163,35 @@
         }
     }
 
-    function navigateToHomePageClicked() {
+    async function navigateToHomePageClicked() {
         console.log('navigateToHomePage');
-        navigationSettings.navigationIsVisible = false;
+        subNavigationSettings.navigationIsVisible = false;
         MainNavButtonStylingUpdate('navButtonHome');
-        navigateToUrl('/?canisterId=' + canisterId);
+        await navigateToUrl('/');
     }
 
-    function navigateToAppsPageClicked() {
-        navigationSettings.navigationIsVisible = false;
+    async function navigateToAppsPageClicked() {
+        subNavigationSettings.navigationIsVisible = false;
         MainNavButtonStylingUpdate('navButtonApps');
-        navigateToUrl('/?canisterId=' + canisterId);
-        //navigateToUrl('/pages/deposit?canisterId=' + canisterId);
+        let url = '/pages/apps';
+        await navigateToUrl(url);
     }
 
-    function navigateToTokensNftPageClicked() {
-        navigationSettings.navigationIsVisible = true;
+    async function navigateToTokensNftPageClicked() {
+        await ShowSubNavigationNftsItems();
         MainNavButtonStylingUpdate('navButtonNfts');
-        navigateToUrl('/?canisterId=' + canisterId);
-        //navigateToUrl('/pages/information?canisterId=' + canisterId);
     }
-    function navigateToNewsPageClicked() {
-        navigationSettings.navigationIsVisible = false;
+    async function navigateToNewsPageClicked() {
+        await await ShowSubNavigationNewsItems();
         MainNavButtonStylingUpdate('navButtonNews');
-        navigateToUrl('/?canisterId=' + canisterId);
-        //navigateToUrl('/pages/stakingpool?canisterId=' + canisterId);
+    }
+
+    async function navigateToUrl(url: string) {
+        await goto(url, {
+            replaceState: true,
+        });
+        // This is a workaround to avoid the issue with the browser history
+        window.history.replaceState(history.state, '', '/');
     }
 </script>
 
@@ -210,39 +263,39 @@
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonHome"
-                                                        onclick={() =>
-                                                            navigateToHomePageClicked()}
+                                                        onclick={async () =>
+                                                            await navigateToHomePageClicked()}
                                                         >Home</button
                                                     >
                                                 </td>
                                                 <td
-                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
+                                                    style="width: {headerButtonsHorizontalSpacing}; min-width: {headerButtonsHorizontalSpacing};"
                                                 ></td>
                                                 <td>
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonApps"
-                                                        onclick={() =>
-                                                            navigateToAppsPageClicked()}
+                                                        onclick={async () =>
+                                                            await navigateToAppsPageClicked()}
                                                         >Apps</button
                                                     >
                                                 </td>
 
                                                 <td
-                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
+                                                    style="width: {headerButtonsHorizontalSpacing}; min-width: {headerButtonsHorizontalSpacing};"
                                                 ></td>
                                                 <td>
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonNfts"
-                                                        onclick={() =>
-                                                            navigateToTokensNftPageClicked()}
+                                                        onclick={async () =>
+                                                            await navigateToTokensNftPageClicked()}
                                                         >Tokens / NFT</button
                                                     >
                                                 </td>
 
                                                 <td
-                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
+                                                    style="width: {headerButtonsHorizontalSpacing}; min-width: {headerButtonsHorizontalSpacing};"
                                                 >
                                                 </td>
 
@@ -250,13 +303,13 @@
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonNews"
-                                                        onclick={() =>
-                                                            navigateToNewsPageClicked()}
+                                                        onclick={async () =>
+                                                            await navigateToNewsPageClicked()}
                                                         >News</button
                                                     >
                                                 </td>
                                                 <td
-                                                    style="width: {buttonHorizontalSpacing}; min-width: {buttonHorizontalSpacing};"
+                                                    style="width: {headerButtonsHorizontalSpacing}; min-width: {headerButtonsHorizontalSpacing};"
                                                 >
                                                 </td>
                                                 <td>
@@ -334,8 +387,9 @@
                                 <!-- submenu -->
 
                                 <SubNavigation
-                                    navigationItems={navItems}
-                                    {navigationSettings}
+                                    bind:this={subNavigation}
+                                    navigationItems={sunNavigationItems}
+                                    navigationSettings={subNavigationSettings}
                                 />
 
                                 <div></div>
@@ -392,6 +446,7 @@
                                             <li>
                                                 <a
                                                     target="_blank"
+                                                    aria-label="Facebook"
                                                     href="https://www.facebook.com/mysliceinfo"
                                                     ><i class="fa fa-facebook-f"
                                                     ></i></a
@@ -400,6 +455,7 @@
                                             <li>
                                                 <a
                                                     target="_blank"
+                                                    aria-label="Twitter"
                                                     href="https://x.com/trabyter_apps"
                                                     ><i class="fa fa-twitter"
                                                     ></i></a
@@ -408,6 +464,7 @@
                                             <li>
                                                 <a
                                                     target="_blank"
+                                                    aria-label="YouTube"
                                                     href="https://www.youtube.com/channel/UCErWBRjdOWo_hmHNqb4yxDg"
                                                     ><i
                                                         class="fa fa-youtube-play"
@@ -418,6 +475,7 @@
                                             <li>
                                                 <a
                                                     target="_blank"
+                                                    aria-label="GitHub"
                                                     href="https://github.com/5000slices1?tab=repositories"
                                                     ><i
                                                         class="fa fa-github"
@@ -428,6 +486,7 @@
                                             <li>
                                                 <a
                                                     target="_blank"
+                                                    aria-label="Telegram"
                                                     href="https://t.me/mysliceinfo"
                                                     ><i
                                                         class="fa fa-telegram"
@@ -438,6 +497,7 @@
                                             <li>
                                                 <a
                                                     target="_blank"
+                                                    aria-label="Instagram"
                                                     href="https://www.instagram.com/5000slices"
                                                     ><i
                                                         class="fa fa-instagram"

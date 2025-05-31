@@ -1,13 +1,11 @@
 <script lang="ts">
-    let mainTextFontSize: string = '1.8em';
+    let mainTextFontSize: string = '1.6em';
 </script>
 
-<div>
-    <table
-        cellspacing="0"
-        cellpadding="0"
-        style="width: calc(100% - 1em); height: calc(100% - 10em);"
-    >
+<div
+    style="width: 100%; height:100%; max-width:1400px; max-height:calc(100% - 23em); ;"
+>
+    <table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
         <tbody>
             <tr>
                 <!-- #region main page content area -->

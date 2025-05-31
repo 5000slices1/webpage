@@ -3,6 +3,7 @@
     export interface NavigationItem {
         text: string;
         href: string;
+        styleWidth?: string; // Optional width property
     }
     export interface NavigationSettings {
         buttonHeightStyleValue: string;
@@ -12,19 +13,36 @@
 
 <script lang="ts">
     import {get} from 'svelte/store';
+    import {goto} from '$app/navigation';
 
     //   // Define the type for navigation items
     //   export interface NavigationItem {
     //     text: string;
     //     href: string;
     //   }
+    const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
 
+    let selectedHref = $state<string>('');
     // Props to accept navigation items from parent components
-    export let navigationItems: NavigationItem[] = [];
-    export let navigationSettings: NavigationSettings = {
-        buttonHeightStyleValue: '3.0rem',
-        navigationIsVisible: true,
-    };
+    const {
+        navigationItems = [],
+        navigationSettings = {
+            buttonHeightStyleValue: '3.0rem',
+            navigationIsVisible: true,
+        },
+    } = $props<{
+        navigationItems?: NavigationItem[];
+        navigationSettings?: NavigationSettings;
+    }>();
+
+    export async function NavigateTo(url: string) {
+        selectedHref = url;
+        await goto(url, {
+            replaceState: true,
+        });
+        // This is a workaround to avoid the issue with the browser history
+        window.history.replaceState(history.state, '', '/');
+    }
 </script>
 
 <!-- Render the navigation items as links -->
@@ -51,11 +69,18 @@
                                 "
                         >
                             <button
-                                class="sub-navigation-button"
+                                class="sub-navigation-button {selectedHref ===
+                                item.href
+                                    ? 'sub-navigation-button-selected'
+                                    : ''}"
                                 type="button"
                                 style:height={navigationSettings.buttonHeightStyleValue}
-                                on:click={() => {
-                                    window.location.href = item.href;
+                                id={item.href}
+                                style:width={item.styleWidth
+                                    ? item.styleWidth
+                                    : 'auto'}
+                                onclick={async () => {
+                                    await NavigateTo(item.href);
                                 }}
                             >
                                 {item.text}<br />
@@ -78,20 +103,13 @@
         /* display: none; */
         display: block;
 
-        /* position:absolute; */
-        /* top:10.5em; */
-
         margin-top: 0.65rem;
         border-top-left-radius: 0em;
         border-top-right-radius: 0em;
-        /* border-bottom-left-radius: 1.2em;
-        border-bottom-right-radius: 1.2em; */
         box-shadow:
             0 0.2rem 0.2rem rgba(255, 254, 254, 0.25),
             inset 0.1rem 0.2rem 0.3rem rgba(255, 251, 251, 0.25);
         background-color: #55557b;
-        /* height: 4.7em;
-        width: 45em; */
         color: white;
     }
 
@@ -108,9 +126,6 @@
         color: rgba(84, 143, 232, 1);
         /* height: 3.0em; */
         height: auto;
-
-        /* margin-top: 0.5rem;
-        margin-bottom: 0.5rem; */
 
         display: inline-block;
         position: relative;

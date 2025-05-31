@@ -386,13 +386,13 @@
 
                                 <!-- submenu -->
 
-                                <SubNavigation
-                                    bind:this={subNavigation}
-                                    navigationItems={sunNavigationItems}
-                                    navigationSettings={subNavigationSettings}
-                                />
-
-                                <div></div>
+                                <div style="color: white;">
+                                    <SubNavigation
+                                        bind:this={subNavigation}
+                                        navigationItems={sunNavigationItems}
+                                        navigationSettings={subNavigationSettings}
+                                    />
+                                </div>
                             </header>
                         </td>
                     </tr>

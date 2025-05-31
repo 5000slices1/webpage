@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
     // Define the type for navigation items
     export interface NavigationItem {
         text: string;
@@ -15,14 +15,8 @@
     import {get} from 'svelte/store';
     import {goto} from '$app/navigation';
 
-    //   // Define the type for navigation items
-    //   export interface NavigationItem {
-    //     text: string;
-    //     href: string;
-    //   }
-    const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
-
     let selectedHref = $state<string>('');
+
     // Props to accept navigation items from parent components
     const {
         navigationItems = [],
@@ -138,36 +132,9 @@
         transition-duration: 0.5s;
     }
 
-    .sub-navigation-button-vertical-line {
-        width: 0.4rem;
-        margin-left: 0.8rem;
-        background-color: #0e0f2c;
-        height: 5rem;
-    }
-
-    .sub-navigation-button-horizontal-line {
-        width: 8.4rem;
-        margin-left: 0.9rem;
-        background-color: transparent;
-        height: 0.3rem;
-        display: block;
-    }
-
-    .sub-navigation-button-horizontal-line-selected {
-        display: block;
-        background-color: rgba(255, 255, 255, 0.8);
-        transition-duration: 0.5s;
-    }
-
     .sub-navigation-button-selected {
         color: rgba(255, 255, 255, 0.8);
         transition-duration: 0.5s;
-    }
-
-    .sub-navigation-table {
-        width: 50rem;
-        padding-top: -2rem;
-        padding-left: 0rem;
     }
 
     /* #endregion Sub navigation */

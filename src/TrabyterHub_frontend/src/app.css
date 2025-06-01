@@ -13,7 +13,7 @@
 
 .main-body-content {
     height: 100%;
-    margin: 0em 0.4em 0em 0.4em;
+    margin: 0rem 0.4rem 0rem 0.4rem;
     /* margin: 1.2em 3.2em 0.4em 3.2em; */
     /* left: 0.5rm; */
 }
@@ -49,15 +49,15 @@
 }
 
 .main-header-image {
-    margin-left: 1.5em;
-    margin-top: 0.2em;
+    margin-left: 1.5rem;
+    margin-top: 0.2rem;
     vertical-align: middle;
 }
 
 .main-header td:last-child {
     width: 100%;
     text-align: end;
-    padding-right: 1em;
+    padding-right: 1rem;
 }
 
 /* #region header buttons */
@@ -68,7 +68,7 @@
 
     background-color: rgba(84, 143, 232, 0.4);
     color: rgba(255, 255, 255, 0.9);
-    border: 0.3em solid rgba(6, 42, 97, 0.8);
+    border: 0.3rem solid rgba(6, 42, 97, 0.8);
 
     font-size: 0.7rem;
     font-weight: bold;
@@ -80,7 +80,7 @@
 
     transition-duration: 0.4s;
     height: 2.9rem;
-    border-radius: 1.8em;
+    border-radius: 1.8rem;
 
     box-shadow:
         0 0.2em 0.3em rgba(255, 254, 254, 0.05),
@@ -159,91 +159,38 @@
 
 /* #endregion Wallet login control */
 
-/* Sub navigation */
+/* #region control spacings */
 
-/* .sub-navigation-div {
-
-    display: block;
-    margin-top: 1em;
-    border-top-left-radius: 0em;
-    border-top-right-radius: 0em;
-    border-bottom-left-radius: 1.2em;
-    border-bottom-right-radius: 1.2em;
-    box-shadow:
-        0 0.2em 0.2em rgba(255, 254, 254, 0.25),
-        inset 0.1em 0.2em 0.3em rgba(255, 251, 251, 0.25);
-    background-color: #55557b;
-    height: 4.7em;
-    width: 45em;
-    color: white;
-}
-
-.sub-navigation-button {
+.content-control-div {
     width: 100%;
-    background-color: transparent;
-    border: transparent;
-    font-size: 1.3em;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    font-family: 'Montserrat', sans-serif;
+    border-radius: 0.6rem;
 
-    color: rgba(84, 143, 232, 1);
-    height: auto;
+    background-color: rgba(85, 85, 123, 0.2);
+    /* background-color: yellow; */
 
-    display: inline-block;
-    position: relative;
-    letter-spacing: 0.072em;
-    -webkit-text-stroke: 0.057em #060606;
-    paint-order: stroke fill;
-}
-.sub-navigation-button:hover {
-    color: rgba(255, 255, 255, 0.8);
-    transition-duration: 0.5s;
+    box-shadow:
+        0 0.1rem 0.2rem rgba(255, 254, 254, 0.25),
+        inset 0.1rem 0.15rem 0.2rem rgba(255, 251, 251, 0.25),
+        0.2rem 0rem 0.3rem rgba(255, 254, 254, 0.25),
+        inset 0.2rem -0.15rem 0.3rem rgba(255, 251, 251, 0.25);
 }
 
-.sub-navigation-button-vertical-line {
-    width: 0.4em;
-    margin-left: 0.8em;
-    background-color: #0e0f2c;
-    height: 5em;
+.inner-content-control-spacing {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
-
-.sub-navigation-button-horizontal-line {
-    width: 8.4em;
-    margin-left: 0.9em;
-    background-color: transparent;
-    height: 0.3em;
-    display: block;
-}
-
-.sub-navigation-button-horizontal-line-selected {
-    display: block;
-    background-color: rgba(255, 255, 255, 0.8);
-    transition-duration: 0.5s;
-}
-
-.sub-navigation-button-selected {
-    color: rgba(255, 255, 255, 0.8);
-    transition-duration: 0.5s;
-}
-
-.sub-navigation-table {
-    width: 50em;
-    padding-top: -2em;
-    padding-left: 0em;
-} */
-
-/* #endregion Sub navigation */
+/* #endregion control spacings */
 
 footer {
     background-color: #14143a;
 
     /* padding: 0.5em, 0.5em, 0.5em, 0.5em; */
 
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    padding-top: 0.6em;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.6rem;
 
     color: #ffffff;
     border: 1px solid #000000;
@@ -252,19 +199,19 @@ footer {
         0 1px 2px rgba(0, 0, 0, 0.25);
     z-index: 10;
     position: block;
-    bottom: 0em;
+    bottom: 0rem;
     left: 0;
 }
 
 ul.social_icon {
     float: center;
-    padding-top: 0.1em;
+    padding-top: 0.1rem;
 }
 
 ul.social_icon li {
     display: inline-block;
-    padding-right: 0.5em;
-    padding-left: 1em;
+    padding-right: 0.5rem;
+    padding-left: 1rem;
 }
 
 ul.social_icon li:last-child {
@@ -275,9 +222,9 @@ ul.social_icon li a {
     color: #fefeff;
     display: inline-block;
     text-align: center;
-    line-height: 0.5em;
+    line-height: 0.5rem;
     border-radius: 100%;
-    font-size: 1em;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -289,16 +236,16 @@ ul.social_icon li a:hover {
 .content-control-div,
 .content-control-left-navigation {
     width: 100%;
-    border-radius: 0.6em;
+    border-radius: 0.6rem;
 
     background-color: rgba(85, 85, 123, 0.2);
     /* background-color: yellow; */
 
     box-shadow:
-        0 0.1em 0.2em rgba(255, 254, 254, 0.25),
-        inset 0.1em 0.15em 0.2em rgba(255, 251, 251, 0.25),
-        0.2em 0em 0.3em rgba(255, 254, 254, 0.25),
-        inset 0.2em -0.15em 0.3em rgba(255, 251, 251, 0.25);
+        0 0.1rem 0.2rem rgba(255, 254, 254, 0.25),
+        inset 0.1rem 0.15rem 0.2rem rgba(255, 251, 251, 0.25),
+        0.2rem 0rem 0.3rem rgba(255, 254, 254, 0.25),
+        inset 0.2rem -0.15rem 0.3rem rgba(255, 251, 251, 0.25);
     /* Top, right, left, bottom */
     /* box-shadow: inset 0 0.1em 0.01em 0.01em rgba(255, 251, 251, 0.05),
     inset 0.1em 0.1em 0.01em 0.01em rgba(255, 251, 251, 0.05),
@@ -312,7 +259,7 @@ ul.social_icon li a:hover {
 }
 
 .content-control-div-header-text {
-    font-size: 2.5em;
+    font-size: 2.5rem;
     font-weight: bold;
     color: rgba(228, 235, 255, 1);
     font-family: 'Montserrat', sans-serif;

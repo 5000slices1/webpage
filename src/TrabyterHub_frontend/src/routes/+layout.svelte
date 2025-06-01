@@ -7,25 +7,24 @@
     import './../app.css';
     import {goto} from '$app/navigation';
 
-    import SubNavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
     import type {
-        NavigationItem,
-        NavigationSettings,
+        SubNavigationItem,
+        SubNavigationSettings,
     } from '$lib/../routes/components/navigation/subnavigation.svelte';
 
     import IconTrabyter from '/icons/TraByterLogo.png';
-    import Subnavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
+    import SubNavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
     const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
     let data = $props();
 
     let headerButtonsHorizontalSpacing: string = '0.8rem';
-    let sunNavigationItems: NavigationItem[] = $state([]);
-    let subNavigationSettings: NavigationSettings = $state({
+    let subNavigationItems: SubNavigationItem[] = $state([]);
+    let subNavigationSettings: SubNavigationSettings = $state({
         buttonHeightStyleValue: '3.0rem',
         navigationIsVisible: false,
     });
 
-    let subNavigation: Subnavigation;
+    let subNavigation: SubNavigation;
 
     if (browser) {
         console.log(window.innerWidth);
@@ -58,7 +57,7 @@
         subNavigationSettings.buttonHeightStyleValue = '3.0rem';
 
         // Now adjust the items
-        sunNavigationItems = [
+        subNavigationItems = [
             {
                 text: 'Overview',
                 href: '/pages/tokensNft/overview',
@@ -92,7 +91,7 @@
         subNavigationSettings.buttonHeightStyleValue = '3.0rem';
 
         // Now adjust the items
-        sunNavigationItems = [
+        subNavigationItems = [
             {
                 text: 'News on youtube',
                 href: '/pages/news/youtubeNews',
@@ -389,7 +388,7 @@
                                 <div style="color: white;">
                                     <SubNavigation
                                         bind:this={subNavigation}
-                                        navigationItems={sunNavigationItems}
+                                        navigationItems={subNavigationItems}
                                         navigationSettings={subNavigationSettings}
                                     />
                                 </div>
@@ -399,19 +398,7 @@
 
                     <tr style="height: 100%;vertical-align: top;">
                         <td>
-                            <div
-                                class="content-control-div"
-                                id="divMainContent"
-                                style="width: 100%; height: 100%; margin-top: 0.4em;"
-                            >
-                                <div
-                                    class="inner-content-control-spacing"
-                                    id="TraBucks_Inner_Content_Div"
-                                    style="width: auto;"
-                                >
-                                    {@render data.children()}
-                                </div>
-                            </div>
+                            {@render data.children()}
                         </td>
                     </tr>
                     <tr>

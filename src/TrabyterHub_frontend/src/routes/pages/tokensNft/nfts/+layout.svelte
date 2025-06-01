@@ -3,4 +3,11 @@
 </script>
 
 <header>This is my NFTs header</header>
-{@render data.children()}
+<div
+    class="content-control-div"
+    style="width: 100%; height: 100%; margin-top: 0.4em;"
+>
+    <div class="inner-content-control-spacing" style="width: auto;">
+        {@render data.children()}
+    </div>
+</div>

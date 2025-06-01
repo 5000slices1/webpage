@@ -1,11 +1,11 @@
 <script lang="ts" module>
     // Define the type for navigation items
-    export interface NavigationItem {
+    export interface SubNavigationItem {
         text: string;
         href: string;
         styleWidth?: string; // Optional width property
     }
-    export interface NavigationSettings {
+    export interface SubNavigationSettings {
         buttonHeightStyleValue: string;
         navigationIsVisible: boolean;
     }
@@ -25,8 +25,8 @@
             navigationIsVisible: true,
         },
     } = $props<{
-        navigationItems?: NavigationItem[];
-        navigationSettings?: NavigationSettings;
+        navigationItems?: SubNavigationItem[];
+        navigationSettings?: SubNavigationSettings;
     }>();
 
     export async function NavigateTo(url: string) {

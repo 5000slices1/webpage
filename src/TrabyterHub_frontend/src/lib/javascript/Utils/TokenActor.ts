@@ -22,9 +22,6 @@ export class TokenActor {
         if (this.#actor == null) {
             throw new Error('Actor is not initialized');
         }
-        console.log('TokenActor.GetActor: ' + canisterId);
-        console.log('TokenActor.GetActor actor:');
-        console.log(this.#actor);
         return this.#actor;
     }
 

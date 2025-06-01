@@ -40,7 +40,7 @@
     import {onMount} from 'svelte';
     import {TokenActor} from '$lib/javascript/Utils/TokenActor';
     import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
-
+    console.log('TokenInformation component initialized');
     import {
         GetCustomDictionaryFromVariant,
         GetResultFromVariant,
@@ -56,9 +56,19 @@
     let ticker: Ticker | undefined = $state(undefined);
 
     let tokenInfo: TokenInfo | undefined = $state(undefined);
+    let wasInitialized: boolean = false;
+
+    console.log('was initialized:', wasInitialized);
 
     onMount(async () => {
-        await initTokenInformation();
+        console.log('was initialized:', wasInitialized);
+
+        if (wasInitialized) {
+            await updateTokenInformation();
+        } else {
+            await initTokenInformation();
+            wasInitialized = true;
+        }
     });
 
     const fetchTickers = async (): Promise<Ticker[]> => {
@@ -118,6 +128,35 @@
         return ticker;
     };
 
+    const updateTokenInformation = async () => {
+        await updateTicker();
+        if (ticker == null || tokenInfo == null) {
+            console.error(
+                'Ticker or tokenInfo is null, cannot update information.',
+            );
+            return;
+        }
+        let tokenActor = new TokenActor();
+        let actor = await tokenActor.GetActor(settings.tokenCanisterId);
+        const [burnedAmountRaw, totalSupplyRaw] = await Promise.all([
+            actor.get_burned_amount(),
+            actor.icrc1_total_supply(),
+        ]);
+
+        let totalSupply = new TokenBalance(
+            BigInt(totalSupplyRaw as string),
+            tokenInfo?.tokenDecimals,
+        ).GetValue();
+        let burnedAmount = new TokenBalance(
+            BigInt(burnedAmountRaw as string),
+            tokenInfo?.tokenDecimals,
+        ).GetValue();
+
+        tokenInfo.burnedAmount = burnedAmount;
+        tokenInfo.tokenSupply = totalSupply;
+        tokenInfo.tokenPrice = ticker?.last_price || 'N/A';
+    };
+
     const initTokenInformation = async () => {
         await updateTicker();
 
@@ -125,48 +164,47 @@
         let actor = await tokenActor.GetActor(settings.tokenCanisterId);
 
         if (actor) {
-            let metadata = await actor.icrc1_metadata();
-            console.log('Metadata:', metadata);
+            const [burnedAmountRaw, metadata, tokenStandards, totalSupplyRaw] =
+                await Promise.all([
+                    actor.get_burned_amount(),
+                    actor.icrc1_metadata(),
+                    actor.icrc1_supported_standards(),
+                    actor.icrc1_total_supply(),
+                ]);
+
             let decimals: number = 8;
             let logoBase64: string | undefined = undefined;
-
+            let name: string = '';
             if (metadata) {
                 let metaDic = GetCustomDictionaryFromVariant(metadata);
                 decimals = Number(
                     GetValueFromDictionary(metaDic, 'icrc1:decimals'),
                 );
                 logoBase64 = GetValueFromDictionary(metaDic, 'icrc1:logo');
+                name = GetValueFromDictionary(metaDic, 'icrc1:name');
             } else {
                 console.error('Metadata is null or undefined.');
             }
 
-            let totalSupplyRaw = BigInt(
-                (await actor.icrc1_total_supply()) as string,
-            );
             let totalSupply = new TokenBalance(
-                totalSupplyRaw,
+                BigInt(totalSupplyRaw as string),
                 decimals,
             ).GetValue();
 
-            let tokenStandards: any = await actor.icrc1_supported_standards();
             var tokenStandardsString = '';
-            for (let item of tokenStandards) {
-                console.log(item);
+            for (let item of tokenStandards as any) {
                 let objectEntries = Object.entries(item);
                 let standardValue = objectEntries[1][1];
                 tokenStandardsString += standardValue + ' ';
             }
             let supportedStandards = tokenStandardsString;
 
-            let burnedAmountRaw = BigInt(
-                (await actor.get_burned_amount()) as string,
-            );
             let burnedAmount = new TokenBalance(
-                burnedAmountRaw,
+                BigInt(burnedAmountRaw as string),
                 decimals,
             ).GetValue();
             tokenInfo = {
-                tokenName: ticker?.ticker_name || 'Unknown Token',
+                tokenName: name || 'Unknown Token',
                 tokenSymbol: ticker?.base_currency || 'Unknown Symbol',
                 tokenLogo: logoBase64
                     ? //? `data:image/png;base64,${logoBase64}`

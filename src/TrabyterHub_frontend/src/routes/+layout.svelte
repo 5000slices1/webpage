@@ -25,6 +25,7 @@
     });
 
     let subNavigation: SubNavigation;
+    console.log('Home layout page loaded');
 
     if (browser) {
         console.log(window.innerWidth);

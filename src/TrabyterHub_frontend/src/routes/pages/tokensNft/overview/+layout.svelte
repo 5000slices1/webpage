@@ -1,5 +1,6 @@
 <script lang="ts">
     let data = $props();
+    console.log('NFTs overview page loaded');
 </script>
 
 <header>This is my NFTs overview header</header>

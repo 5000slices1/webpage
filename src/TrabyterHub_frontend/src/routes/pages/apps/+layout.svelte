@@ -1,5 +1,6 @@
 <script lang="ts">
     let data = $props();
+    console.log('apps page layout loaded');
 </script>
 
 <header>This is my apps header</header>

@@ -33,7 +33,9 @@
     let verticalNavigation: Verticalnavigation;
 </script>
 
-<div style="height: 100%;width: 100%;min-height: 100%;">
+<div
+    style="height: 100%;width: 100%;margin-top: 1.5rem;max-height:calc(100% - 2em);"
+>
     <table
         cellspacing="0"
         cellpadding="0"

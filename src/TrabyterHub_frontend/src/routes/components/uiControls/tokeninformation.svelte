@@ -269,9 +269,10 @@
 </script>
 
 <div>
-    <p style="font-size: large;color: white;">
+    <p style="font-size: large;color: white;margin-left: 1rem;">
         Token information for {tokenInfo?.tokenSymbol} Token:
     </p>
+
     <table style="border-spacing: 1rem;">
         <colgroup>
             <col style="width: 20rem;" />

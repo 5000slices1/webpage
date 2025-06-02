@@ -2,8 +2,7 @@
     import {onMount} from 'svelte';
     import TokenInformation from '$lib/../routes/components/uiControls/tokeninformation.svelte';
     import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
-    import {TrabyterBucks_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
-    console.log('Trabyter Bucks Token Information page loaded');
+    import {TrabyterPremium_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
     onMount(async () => {
         //ticker = await PriceFetcher.getTicker('TRA', 'ICP');
         //document.title = 'Trabyter Bucks Token Information';
@@ -12,8 +11,8 @@
 
 <TokenInformation
     settings={{
-        baseCurrency: 'TRA',
+        baseCurrency: 'TRAPRE',
         targetCurrency: 'ICP',
-        tokenCanisterId: TrabyterBucks_CanisterId,
+        tokenCanisterId: TrabyterPremium_CanisterId,
     } as TokenInformationSettings}
 />

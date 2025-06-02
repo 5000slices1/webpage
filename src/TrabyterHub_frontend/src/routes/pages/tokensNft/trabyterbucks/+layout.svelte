@@ -33,7 +33,6 @@
     let verticalNavigation: Verticalnavigation;
 </script>
 
-<header>This is my Trabyter Bucks header</header>
 <div style="height: 100%;width: 100%;min-height: 100%;">
     <table
         cellspacing="0"

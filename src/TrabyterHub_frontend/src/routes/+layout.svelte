@@ -2,7 +2,7 @@
     //import adapter from '@sveltejs/adapter-static';
     import {browser, version} from '$app/environment';
     import {onMount} from 'svelte';
-    import {MainClass} from '../lib/javascript/Logic/MainClass';
+    import {MainClass} from '$lib/javascript/Logic/MainClass';
     import {ModelWalletTypes} from '$lib/javascript/Abstractions/Identity/ModelWalletTypes';
     import './../app.css';
     import {goto} from '$app/navigation';
@@ -17,6 +17,7 @@
     const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
     let data = $props();
 
+    $MainClass.counter = 3;
     let headerButtonsHorizontalSpacing: string = '0.8rem';
     let subNavigationItems: SubNavigationItem[] = $state([]);
     let subNavigationSettings: SubNavigationSettings = $state({

@@ -27,6 +27,8 @@
         tokenDecimals: number;
         tokenSupply: number;
         burnedAmount: number;
+        base_currency: string;
+        wasUpdated: boolean;
     }
 
     export interface TokenInformationSettings {
@@ -40,7 +42,7 @@
     import {onMount} from 'svelte';
     import {TokenActor} from '$lib/javascript/Utils/TokenActor';
     import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
-    console.log('TokenInformation component initialized');
+
     import {
         GetCustomDictionaryFromVariant,
         GetResultFromVariant,
@@ -48,26 +50,46 @@
     } from '$lib/javascript/Utils/CommonUtils';
 
     let tickers: Ticker[] = $state([]);
-    let settings: TokenInformationSettings = $state({
-        baseCurrency: 'TRA',
-        targetCurrency: 'ICP',
-        tokenCanisterId: 'obaqf-viaaa-aaaak-ak3na-cai', // Example canister ID for TRA token
-    });
-    let ticker: Ticker | undefined = $state(undefined);
+
+    let {
+        settings = {
+            baseCurrency: '',
+            targetCurrency: '',
+            tokenCanisterId: '',
+        } as TokenInformationSettings,
+    } = $props<{settings?: TokenInformationSettings}>();
 
     let tokenInfo: TokenInfo | undefined = $state(undefined);
-    let wasInitialized: boolean = false;
 
-    console.log('was initialized:', wasInitialized);
+    console.log('settings', settings);
 
     onMount(async () => {
-        console.log('was initialized:', wasInitialized);
+        console.log('On mount: settings', settings);
+        // Ensure base_currency is set before proceeding
+        if (settings.base_currency == '') {
+            return;
+        }
+        // Check if tokenInfo is already stored in session storage
 
-        if (wasInitialized) {
+        if (typeof window === 'undefined') {
+            console.error(
+                'Session storage is not available in this environment.',
+            );
+            return;
+        }
+
+        let key = 'tokenInfo' + settings.baseCurrency;
+        console.log('key', key);
+        const storedTokenInfo = sessionStorage.getItem(key);
+
+        if (storedTokenInfo) {
+            tokenInfo = JSON.parse(storedTokenInfo) as TokenInfo;
+        }
+
+        if (tokenInfo && tokenInfo.wasUpdated) {
             await updateTokenInformation();
         } else {
             await initTokenInformation();
-            wasInitialized = true;
         }
     });
 
@@ -110,26 +132,8 @@
         return [];
     };
 
-    const getTicker = async (
-        baseCurrency: string,
-        targetCurrency: string,
-    ): Promise<Ticker | undefined> => {
-        if (tickers == null) {
-            return undefined;
-        }
-
-        let ticker = tickers.find(
-            (ticker) =>
-                ticker?.base_currency != null &&
-                ticker.base_currency == baseCurrency &&
-                ticker?.target_currency != null &&
-                ticker.target_currency == targetCurrency,
-        );
-        return ticker;
-    };
-
     const updateTokenInformation = async () => {
-        await updateTicker();
+        let ticker = await getTicker();
         if (ticker == null || tokenInfo == null) {
             console.error(
                 'Ticker or tokenInfo is null, cannot update information.',
@@ -154,11 +158,18 @@
 
         tokenInfo.burnedAmount = burnedAmount;
         tokenInfo.tokenSupply = totalSupply;
-        tokenInfo.tokenPrice = ticker?.last_price || 'N/A';
+        tokenInfo.tokenPrice = ticker?.last_price || '';
+        tokenInfo.base_currency = ticker?.base_currency || '';
+        tokenInfo.wasUpdated = true;
+        // Store tokenInfo in browser session storage
+        if (typeof window !== 'undefined' && tokenInfo) {
+            let key = 'tokenInfo' + settings.baseCurrency;
+            sessionStorage.setItem(key, JSON.stringify(tokenInfo));
+        }
     };
 
     const initTokenInformation = async () => {
-        await updateTicker();
+        let ticker = await getTicker();
 
         let tokenActor = new TokenActor();
         let actor = await tokenActor.GetActor(settings.tokenCanisterId);
@@ -216,23 +227,48 @@
                 tokenDecimals: decimals,
                 tokenSupply: totalSupply,
                 burnedAmount: burnedAmount,
+                base_currency: ticker?.base_currency || '',
+                wasUpdated: true, // Initially set to false, will be updated later
             };
         } else {
             console.error('Actor is null, cannot fetch metadata.');
+            return;
+        }
+
+        // Store tokenInfo in browser session storage
+        if (typeof window !== 'undefined' && tokenInfo) {
+            let key = 'tokenInfo' + settings.baseCurrency;
+
+            sessionStorage.setItem(key, JSON.stringify(tokenInfo));
         }
     };
-    const updateTicker = async () => {
+
+    const getTicker = async (): Promise<Ticker | undefined> => {
         tickers = await fetchTickers();
-        ticker = await getTicker(
-            settings.baseCurrency,
-            settings.targetCurrency,
+
+        if (tickers == null) {
+            return undefined;
+        }
+
+        let ticker = tickers.find(
+            (ticker) =>
+                ticker?.base_currency != null &&
+                ticker.base_currency == settings.baseCurrency &&
+                ticker?.target_currency != null &&
+                ticker.target_currency == settings.targetCurrency,
         );
+
+        if (ticker == null) {
+            console.error(
+                `Ticker not found for base currency: ${settings.baseCurrency} and target currency: ${settings.targetCurrency}`,
+            );
+            return undefined;
+        }
+        return ticker;
     };
 </script>
 
 <div>
-    <br />
-    <br />
     <p style="font-size: large;color: white;">
         Token information for {tokenInfo?.tokenSymbol} Token:
     </p>
@@ -248,25 +284,30 @@
             </tr>
             <tr>
                 <td style="color: white;">Token Symbol:</td>
-                <td style="color: white;">{ticker?.base_currency}</td>
+                <td style="color: white;">{tokenInfo?.base_currency}</td>
             </tr>
             <tr>
                 <td style="color: white;">Logo:</td>
                 <td style="color: white;">
-                    <img
-                        id="TraBucks_TokenLogo"
-                        width="50"
-                        height="50"
-                        alt="TRA Token Logo"
-                        src={tokenInfo?.tokenLogo
-                            ? `${tokenInfo.tokenLogo}`
-                            : ''}
-                    />
+                    {#if tokenInfo?.tokenLogo}
+                        <img
+                            id="TraBucks_TokenLogo"
+                            width="50"
+                            height="50"
+                            alt="TRA Token Logo"
+                            src={tokenInfo.tokenLogo}
+                        />
+                    {/if}
                 </td>
             </tr>
             <tr>
                 <td style="color: white;">Price on IcpSwap:</td>
-                <td style="color: white;">{ticker?.last_price}</td>
+                <td style="color: white;">
+                    {#if tokenInfo?.tokenPrice}
+                        1 ICP = {tokenInfo?.tokenPrice}
+                        {tokenInfo?.base_currency}
+                    {/if}
+                </td>
             </tr>
             <tr>
                 <td style="color: white;">Supported Types:</td>

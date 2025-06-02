@@ -5,9 +5,10 @@ import {IdentityProvider} from './identity/IdentityProvider';
 class InternalMainClass {
     #init_done: boolean = false;
     IdentityProvider: IdentityProvider;
-
+    counter: number = 0;
     constructor() {
         this.IdentityProvider = new IdentityProvider();
+        this.counter = 0;
     }
 
     async InitAsync() {

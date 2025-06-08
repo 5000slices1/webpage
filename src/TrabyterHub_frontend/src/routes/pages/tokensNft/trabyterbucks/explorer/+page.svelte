@@ -1,5 +1,13 @@
 <script lang="ts">
-    console.log('Deposit page loaded');
+    import TrabyterTokenExplorer from '../../../../components/uiControls/TrabyterTokenExplorer.svelte';
+
 </script>
 
-<p style="color:white;">This is page Nfts. Coming Soon.</p>
+<TrabyterTokenExplorer
+    settings={{
+        tokenCanisterId: 'r7inp-6aaaa-aaaaa-aaabq-cai', // TrabyterBucks_CanisterId
+        tokenName: 'Trabyter Bucks',
+        tokenSymbol: 'TRA',
+        tokenDecimals: 8,
+    }}
+></TrabyterTokenExplorer>

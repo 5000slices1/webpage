@@ -1,4 +1,5 @@
 <script lang="ts" module>
+    // Define the structure of a Ticker object, which represents data about a cryptocurrency ticker.
     export interface Ticker {
         ticker_id: string;
         ticker_name: string;
@@ -17,6 +18,7 @@
         liquidity_in_usd: string;
     }
 
+    // Define the structure of TokenInfo, which holds detailed information about a token.
     export interface TokenInfo {
         tokenName: string;
         tokenSymbol: string;
@@ -28,9 +30,10 @@
         tokenSupply: number;
         burnedAmount: number;
         base_currency: string;
-        wasUpdated: boolean;
+        wasUpdated: boolean; // Indicates whether the token information was recently updated.
     }
 
+    // Define settings for token information, including base and target currencies and the token's canister ID.
     export interface TokenInformationSettings {
         baseCurrency: string;
         targetCurrency: string;
@@ -49,8 +52,10 @@
         GetValueFromDictionary,
     } from '$lib/javascript/Utils/CommonUtils';
 
+    // State variable to hold an array of tickers fetched from the API.
     let tickers: Ticker[] = $state([]);
 
+    // Props passed to the component, with default settings for token information.
     let {
         settings = {
             baseCurrency: '',
@@ -59,18 +64,19 @@
         } as TokenInformationSettings,
     } = $props<{settings?: TokenInformationSettings}>();
 
+    // State variable to hold detailed information about the token.
     let tokenInfo: TokenInfo | undefined = $state(undefined);
 
     console.log('settings', settings);
 
+    // Lifecycle hook to initialize token information when the component is mounted.
     onMount(async () => {
-        console.log('On mount: settings', settings);
         // Ensure base_currency is set before proceeding
         if (settings.base_currency == '') {
             return;
         }
-        // Check if tokenInfo is already stored in session storage
 
+        // Check if tokenInfo is already stored in session storage
         if (typeof window === 'undefined') {
             console.error(
                 'Session storage is not available in this environment.',
@@ -78,14 +84,17 @@
             return;
         }
 
+        // Generate a unique key for session storage based on the base currency.
         let key = 'tokenInfo' + settings.baseCurrency;
         console.log('key', key);
         const storedTokenInfo = sessionStorage.getItem(key);
 
+        // If token information exists in session storage, use it.
         if (storedTokenInfo) {
             tokenInfo = JSON.parse(storedTokenInfo) as TokenInfo;
         }
 
+        // If token information was recently updated, refresh it; otherwise, initialize it.
         if (tokenInfo && tokenInfo.wasUpdated) {
             await updateTokenInformation();
         } else {
@@ -93,6 +102,7 @@
         }
     });
 
+    // Fetch tickers from the API and parse the response into an array of Ticker objects.
     const fetchTickers = async (): Promise<Ticker[]> => {
         const response = await fetch(
             'https://uvevg-iyaaa-aaaak-ac27q-cai.raw.ic0.app/tickers',
@@ -132,6 +142,7 @@
         return [];
     };
 
+    // Update token information by fetching the latest data from the actor and ticker.
     const updateTokenInformation = async () => {
         let ticker = await getTicker();
         if (ticker == null || tokenInfo == null) {
@@ -140,13 +151,18 @@
             );
             return;
         }
+
+        // Create a TokenActor instance to interact with the token canister.
         let tokenActor = new TokenActor();
         let actor = await tokenActor.GetActor(settings.tokenCanisterId);
+
+        // Fetch burned amount and total supply from the actor.
         const [burnedAmountRaw, totalSupplyRaw] = await Promise.all([
             actor.get_burned_amount(),
             actor.icrc1_total_supply(),
         ]);
 
+        // Convert raw values into human-readable formats using TokenBalance utility.
         let totalSupply = new TokenBalance(
             BigInt(totalSupplyRaw as string),
             tokenInfo?.tokenDecimals,
@@ -156,21 +172,25 @@
             tokenInfo?.tokenDecimals,
         ).GetValue();
 
+        // Update token information with the latest data.
         tokenInfo.burnedAmount = burnedAmount;
         tokenInfo.tokenSupply = totalSupply;
         tokenInfo.tokenPrice = ticker?.last_price || '';
         tokenInfo.base_currency = ticker?.base_currency || '';
         tokenInfo.wasUpdated = true;
-        // Store tokenInfo in browser session storage
+
+        // Store updated token information in session storage.
         if (typeof window !== 'undefined' && tokenInfo) {
             let key = 'tokenInfo' + settings.baseCurrency;
             sessionStorage.setItem(key, JSON.stringify(tokenInfo));
         }
     };
 
+    // Initialize token information by fetching metadata, supported standards, and other details.
     const initTokenInformation = async () => {
         let ticker = await getTicker();
 
+        // Create a TokenActor instance to interact with the token canister.
         let tokenActor = new TokenActor();
         let actor = await tokenActor.GetActor(settings.tokenCanisterId);
 
@@ -183,6 +203,7 @@
                     actor.icrc1_total_supply(),
                 ]);
 
+            // Extract metadata details such as decimals, logo, and name.
             let decimals: number = 8;
             let logoBase64: string | undefined = undefined;
             let name: string = '';
@@ -197,11 +218,13 @@
                 console.error('Metadata is null or undefined.');
             }
 
+            // Convert raw values into human-readable formats using TokenBalance utility.
             let totalSupply = new TokenBalance(
                 BigInt(totalSupplyRaw as string),
                 decimals,
             ).GetValue();
 
+            // Extract supported token standards.
             var tokenStandardsString = '';
             for (let item of tokenStandards as any) {
                 let objectEntries = Object.entries(item);
@@ -214,13 +237,12 @@
                 BigInt(burnedAmountRaw as string),
                 decimals,
             ).GetValue();
+
+            // Initialize token information object.
             tokenInfo = {
                 tokenName: name || 'Unknown Token',
                 tokenSymbol: ticker?.base_currency || 'Unknown Symbol',
-                tokenLogo: logoBase64
-                    ? //? `data:image/png;base64,${logoBase64}`
-                      logoBase64
-                    : '',
+                tokenLogo: logoBase64 ? logoBase64 : '',
                 tokenPrice: ticker?.last_price || 'N/A',
                 supportedTokenTypes: supportedStandards,
                 canisterId: settings.tokenCanisterId,
@@ -235,7 +257,7 @@
             return;
         }
 
-        // Store tokenInfo in browser session storage
+        // Store initialized token information in session storage.
         if (typeof window !== 'undefined' && tokenInfo) {
             let key = 'tokenInfo' + settings.baseCurrency;
 
@@ -243,6 +265,7 @@
         }
     };
 
+    // Find the ticker that matches the base and target currencies specified in settings.
     const getTicker = async (): Promise<Ticker | undefined> => {
         tickers = await fetchTickers();
 

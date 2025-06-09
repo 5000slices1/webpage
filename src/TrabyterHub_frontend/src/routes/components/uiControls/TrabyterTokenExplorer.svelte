@@ -9,6 +9,7 @@
 
 <script lang="ts">
     import {onMount} from 'svelte';
+    import {fade} from 'svelte/transition';
     import {TokenActor} from '$lib/javascript/Utils/TokenActor';
     import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
     import {
@@ -201,7 +202,11 @@
         </h2>
         <div class="token-list">
             {#each tokenExplorerItems as items, index}
-                <div class="token-item">
+                <div
+                    class="token-item"
+                    in:fade={{duration: 300}}
+                    out:fade={{duration: 300}}
+                >
                     <div style="display: flex; gap: 1rem;">
                         <p style="width: 3.5rem;">Txid:</p>
                         <p style="width: 4rem;">{items.txIndex}</p>
@@ -210,15 +215,6 @@
                         <p style="width: 3.5rem;">Date:</p>
                         <p>
                             {items.DateTimeString}
-                            <!-- {items.timestamp.toLocaleString('en-US', {
-                                month: '2-digit',
-                                day: '2-digit',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit',
-                                hour12: true,
-                            })} -->
                         </p>
                     </div>
                     <div style="height: 0.5rem;"></div>

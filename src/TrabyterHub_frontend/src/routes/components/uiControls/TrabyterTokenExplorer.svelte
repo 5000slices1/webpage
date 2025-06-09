@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
     export interface TokenExplorerSettings {
         tokenCanisterId: string;
         tokenName: string;
@@ -19,6 +19,7 @@
     import {onMount} from 'svelte';
     import {TokenActor} from '$lib/javascript/Utils/TokenActor';
     import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
+    import {TrabyterTokenExplorer} from '$lib/javascript/Logic/explorer/TrabyterTokenExplorer';
 
     import {
         GetCustomDictionaryFromVariant,
@@ -26,7 +27,7 @@
         GetValueFromDictionary,
     } from '$lib/javascript/Utils/CommonUtils';
 
-    let rowsPerPage = 10;
+    let rowsPerPage: string = $state('10');
     let currentIndex = 0;
 
     // Props passed to the component, with default settings for token information.
@@ -38,6 +39,8 @@
             tokenDecimals: 8,
         } as TokenExplorerSettings,
     } = $props<{settings?: TokenExplorerSettings}>();
+
+    let tokenExplorer: TrabyterTokenExplorer;
 
     var testArr: TokenTransferedInforamtion[] = [
         {
@@ -83,6 +86,45 @@
             txid: '87654321',
         },
     ];
+
+    onMount(async () => {
+        // Fetch transactions from the token canister.
+        try {
+            if (tokenExplorer === undefined || tokenExplorer === null) {
+                tokenExplorer = new TrabyterTokenExplorer(
+                    settings.tokenCanisterId,
+                );
+                await tokenExplorer.InitializeAsync();
+                console.log(
+                    `Token Explorer initialized with canister ID: ${settings.tokenCanisterId}`,
+                );
+
+                console.log(
+                    `Token Explorer initialized with canister ID: ${settings.tokenCanisterId}`,
+                );
+
+                let txCount = await tokenExplorer.TransactionsCountAsync();
+                console.log(`Transaction count: ${txCount}`);
+            }
+
+            // const transactions = await tokenExplorer.GetTransactionsAsync(
+            //     currentIndex,
+            //     rowsPerPage,
+            // );
+            // console.log(`Fetched ${transactions.length} transactions.`);
+            // testArr = transactions.map((tx) => ({
+            //     from: GetValueFromDictionary(tx.from),
+            //     to: GetValueFromDictionary(tx.to),
+            //     amount: GetResultFromVariant(tx.amount),
+            //     timestamp: new Date(
+            //         GetCustomDictionaryFromVariant(tx.timestamp),
+            //     ),
+            //     txid: tx.txid,
+            // }));
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        }
+    });
 </script>
 
 <div>
@@ -137,6 +179,18 @@
             <label for="rows" style="color: white;">Rows:</label>
             <select
                 id="rows"
+                onchange={(e: Event) => {
+                    const target = e.target as HTMLSelectElement;
+                    if (
+                        !target ||
+                        target.value === undefined ||
+                        target.value === null
+                    ) {
+                        return;
+                    }
+
+                    rowsPerPage = target.value;
+                }}
                 bind:value={rowsPerPage}
                 style="border-radius: 1px;height:1.5rem; width: 3.0rem; color: black;
                 background-color: white; border: 1px solid rgba(84, 143, 232, 0.3);"
@@ -194,7 +248,7 @@
         border-radius: 8px;
         background-color: #f9f9f9;
         box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1);
-        margin: 1rem;
+        margin: 0rem;
         border-radius: 1.2rem;
     }
 

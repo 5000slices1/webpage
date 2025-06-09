@@ -12,10 +12,13 @@ const config = {
             pages: 'dist',
             assets: 'dist',
             fallback: undefined,
-            precompress: false,
+            precompress: true,
             strict: true,
         }),
     },
+    // compilerOptions: {
+    //     runes: true, // Enable rune support for Svelte components
+    // },
 };
 
 export default config;

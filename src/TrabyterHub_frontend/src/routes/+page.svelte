@@ -1,6 +1,5 @@
 <script lang="ts">
     let mainTextFontSize: string = '1.6em';
-    console.log('Home page svelte loaded');
 </script>
 
 <div

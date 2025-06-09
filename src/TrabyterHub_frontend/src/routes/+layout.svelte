@@ -6,6 +6,9 @@
     import {ModelWalletTypes} from '$lib/javascript/Abstractions/Identity/ModelWalletTypes';
     import './../app.css';
     import {goto} from '$app/navigation';
+    import TokenInformation from '$lib/../routes/components/uiControls/tokeninformation.svelte';
+    import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
+    import {TrabyterBucks_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
 
     import type {
         SubNavigationItem,
@@ -46,6 +49,7 @@
             }
             console.log('start init');
             await $MainClass.InitAsync();
+
             console.log('end init');
         }
         console.log('start done');

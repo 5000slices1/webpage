@@ -200,12 +200,11 @@
     }
 </script>
 
+<head>
+    <link rel="stylesheet" href="/font-awesome.min.css" />
+</head>
 <div class="main-html-content" style="margin: 0 0 0 0; padding: 0 0 0 0;">
     <main class="main-body-content">
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        />
         <div
             style="min-height: calc(100vh - 2.1em);
                    height:  calc(100vh - 2.1em);

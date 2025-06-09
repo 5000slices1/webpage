@@ -67,11 +67,17 @@
                                             height="24em"
                                             style="line-height: 0.9em;"
                                         >
-                                            <img
-                                                src="/images/StakingAppTreeLogo.png"
-                                                style="width: 22em;height:15em;opacity: 0.85;"
-                                                alt="Staking App Tree Logo"
-                                            />
+                                            <picture>
+                                                <source
+                                                    srcset="/images/StakingAppTreeLogo.avif"
+                                                    type="image/avif"
+                                                />
+                                                <img
+                                                    src="/images/StakingAppTreeLogo.png"
+                                                    style="width: 22em;height:15em;opacity: 0.85;"
+                                                    alt="Staking App Tree Logo"
+                                                />
+                                            </picture>
                                             <p
                                                 style="font-size: 1.4em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
                                             >
@@ -86,11 +92,18 @@
                                             height="24em"
                                             style="line-height: 0.9em;"
                                         >
-                                            <img
-                                                src="/images/NftMarketAppBuyLogo.png"
-                                                style="width: 19em;height:15em;opacity: 0.85;"
-                                                alt="Nft Market App Tree Logo"
-                                            />
+                                            <picture>
+                                                <source
+                                                    srcset="/images/NftMarketAppBuyLogo.avif"
+                                                    type="image/avif"
+                                                />
+                                                <img
+                                                    src="/images/NftMarketAppBuyLogo.png"
+                                                    style="width: 19em;height:15em;opacity: 0.85;"
+                                                    alt="Nft Market App Tree Logo"
+                                                />
+                                            </picture>
+
                                             <p
                                                 style="font-size: 1.4em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
                                             >

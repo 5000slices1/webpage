@@ -3,6 +3,7 @@ import {
     TrabyterBucks_CanisterId,
     TrabyterPremium_CanisterId,
 } from '$lib/javascript/Abstractions/constants/globalConstants.js';
+import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService';
 import {writable} from 'svelte/store';
 
 import {IdentityProvider} from './identity/IdentityProvider';
@@ -25,6 +26,7 @@ class InternalMainClass {
         await this.IdentityProvider.Init();
         this.#init_done = true;
         console.log('GlobalTypes.InitAsync done');
+        await this.PrefetchSomeDataInBackgroundAsync();
     }
 
     IsInitDone() {
@@ -37,15 +39,31 @@ class InternalMainClass {
         // This is just a placeholder for now
         console.log('Prefetching some data in background...');
         // Simulate a delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const prefetchData = async () => {
+            var traTokenService = new TokenInformationService();
+            var traPremiumTokenService = new TokenInformationService();
+            const traSettings: TokenInformationSettings = {
+                baseCurrency: 'TRA',
+                targetCurrency: 'ICP',
+                tokenCanisterId: TrabyterBucks_CanisterId,
+            };
+            const traPremium: TokenInformationSettings = {
+                baseCurrency: 'TRAPRE',
+                targetCurrency: 'ICP',
+                tokenCanisterId: TrabyterPremium_CanisterId,
+            };
 
-        let trabyterSettings: TokenInformationSettings = {
-            baseCurrency: 'TRA',
-            targetCurrency: 'ICP',
-            tokenCanisterId: TrabyterBucks_CanisterId,
+            await Promise.all([
+                traTokenService.initTokenInformationAsync(traSettings),
+                traPremiumTokenService.initTokenInformationAsync(traPremium),
+            ]);
         };
 
-        //await tokenInfo.InitAsync();,
+        // Run the prefetchData function in the background
+        prefetchData().catch((error) => {
+            console.error('Error while prefetching data:', error);
+        });
+
         console.log('Data prefetched.');
     }
 }

@@ -63,7 +63,7 @@
                     <td align="center">
                         <button
                             class="content-control-left-navigation-button"
-                            type="submit"
+                            type="button"
                             id={item.href}
                             aria-label={item.text}
                             class:content-control-left-navigation-button-active={selectedHref ===

@@ -267,6 +267,7 @@
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonHome"
+                                                        type="button"
                                                         onclick={async () =>
                                                             await navigateToHomePageClicked()}
                                                         >Home</button
@@ -279,6 +280,7 @@
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonApps"
+                                                        type="button"
                                                         onclick={async () =>
                                                             await navigateToAppsPageClicked()}
                                                         >Apps</button
@@ -292,6 +294,7 @@
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonNfts"
+                                                        type="button"
                                                         onclick={async () =>
                                                             await navigateToTokensNftPageClicked()}
                                                         >Tokens / NFT</button
@@ -307,6 +310,7 @@
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonNews"
+                                                        type="button"
                                                         onclick={async () =>
                                                             await navigateToNewsPageClicked()}
                                                         >News</button
@@ -321,7 +325,7 @@
                                                     <div class="dropdown">
                                                         <button
                                                             id="buttonWalletDropDown"
-                                                            type="submit"
+                                                            type="button"
                                                             class="walletLoginButton"
                                                             onclick={OnButtonWalletDropDownClicked}
                                                             >Wallet Connection</button
@@ -340,7 +344,7 @@
                                                                         <td>
                                                                             <button
                                                                                 id="loginPlug"
-                                                                                type="submit"
+                                                                                type="button"
                                                                                 class="button-dropdownmenu"
                                                                                 onclick={WalletLoginPlug}
                                                                             >
@@ -365,7 +369,7 @@
                                                                         <td>
                                                                             <button
                                                                                 id="logout"
-                                                                                type="submit"
+                                                                                type="button"
                                                                                 class="button-dropdownmenu"
                                                                                 onclick={WalletLogout}
                                                                             >

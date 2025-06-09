@@ -5,21 +5,17 @@
         tokenSymbol: string;
         tokenDecimals: number;
     }
-
-    export interface TokenTransferedInforamtion {
-        from: string;
-        to: string;
-        amount: number;
-        timestamp: Date;
-        txid: string;
-    }
 </script>
 
 <script lang="ts">
     import {onMount} from 'svelte';
     import {TokenActor} from '$lib/javascript/Utils/TokenActor';
     import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
-    import {TrabyterTokenExplorer} from '$lib/javascript/Logic/explorer/TrabyterTokenExplorer';
+    import {
+        TokenExplorerResponse,
+        TokenExplorerService,
+        type TokenExplorerItem,
+    } from '$lib/javascript/Services/TokenExplorerService';
 
     import {
         GetCustomDictionaryFromVariant,
@@ -28,7 +24,7 @@
     } from '$lib/javascript/Utils/CommonUtils';
 
     let rowsPerPage: string = $state('10');
-    let currentIndex = 0;
+    //let currentIndex = 0;
 
     // Props passed to the component, with default settings for token information.
     let {
@@ -40,58 +36,64 @@
         } as TokenExplorerSettings,
     } = $props<{settings?: TokenExplorerSettings}>();
 
-    let tokenExplorer: TrabyterTokenExplorer;
+    let tokenExplorer: TokenExplorerService;
 
-    var testArr: TokenTransferedInforamtion[] = [
-        {
-            from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-            to: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-            amount: 100.0,
-            timestamp: new Date(),
-            txid: '890',
-        },
-        {
-            from: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-            to: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-            amount: 50.0,
-            timestamp: new Date(),
-            txid: '321',
-        },
-        {
-            from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-            to: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-            amount: 200.0,
-            timestamp: new Date(),
-            txid: '2334455',
-        },
-        {
-            from: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-            to: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-            amount: 75.0,
-            timestamp: new Date(),
-            txid: '9',
-        },
-        {
-            from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-            to: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-            amount: 300.003,
-            timestamp: new Date(),
-            txid: '234567890',
-        },
-        {
-            from: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-            to: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-            amount: 150.0,
-            timestamp: new Date(),
-            txid: '87654321',
-        },
-    ];
+    let currentPageIndex: number = $state(0);
+    // State variables to hold the token explorer items and response.
+    var tokenExplorerItems: TokenExplorerItem[] = $state([]);
+    var tokenExplorerResponse: TokenExplorerResponse | undefined =
+        $state(undefined);
+
+    // var testArr: TokenExplorerItem[] = [
+    //     {
+    //         from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
+    //         to: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
+    //         amount: 100.0,
+    //         timestamp: new Date(),
+    //         txid: '890',
+    //     },
+    //     {
+    //         from: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
+    //         to: 'r7inp-6aaaa-aaaaa-aaabq-cai',
+    //         amount: 50.0,
+    //         timestamp: new Date(),
+    //         txid: '321',
+    //     },
+    //     {
+    //         from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
+    //         to: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
+    //         amount: 200.0,
+    //         timestamp: new Date(),
+    //         txid: '2334455',
+    //     },
+    //     {
+    //         from: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
+    //         to: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
+    //         amount: 75.0,
+    //         timestamp: new Date(),
+    //         txid: '9',
+    //     },
+    //     {
+    //         from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
+    //         to: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
+    //         amount: 300.003,
+    //         timestamp: new Date(),
+    //         txid: '234567890',
+    //     },
+    //     {
+    //         from: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
+    //         to: 'r7inp-6aaaa-aaaaa-aaabq-cai',
+    //         amount: 150.0,
+    //         timestamp: new Date(),
+    //         txid: '87654321',
+    //     },
+    // ];
 
     onMount(async () => {
         // Fetch transactions from the token canister.
         try {
             if (tokenExplorer === undefined || tokenExplorer === null) {
-                tokenExplorer = new TrabyterTokenExplorer(
+                tokenExplorer = new TokenExplorerService(
                     settings.tokenCanisterId,
                 );
                 await tokenExplorer.InitializeAsync();
@@ -103,28 +105,90 @@
                     `Token Explorer initialized with canister ID: ${settings.tokenCanisterId}`,
                 );
 
-                let txCount = await tokenExplorer.TransactionsCountAsync();
-                console.log(`Transaction count: ${txCount}`);
+                // let txCount = await tokenExplorer.TotalTxCountAsync();
+                // console.log(`Transaction count: ${txCount}`);
+                await updateUi();
             }
-
-            // const transactions = await tokenExplorer.GetTransactionsAsync(
-            //     currentIndex,
-            //     rowsPerPage,
-            // );
-            // console.log(`Fetched ${transactions.length} transactions.`);
-            // testArr = transactions.map((tx) => ({
-            //     from: GetValueFromDictionary(tx.from),
-            //     to: GetValueFromDictionary(tx.to),
-            //     amount: GetResultFromVariant(tx.amount),
-            //     timestamp: new Date(
-            //         GetCustomDictionaryFromVariant(tx.timestamp),
-            //     ),
-            //     txid: tx.txid,
-            // }));
         } catch (error) {
             console.error('Error fetching transactions:', error);
         }
     });
+
+    async function updateUi() {
+        // Clear the current items before fetching new ones.
+        tokenExplorerItems = [];
+        if (
+            tokenExplorerResponse === undefined ||
+            tokenExplorerResponse.items === undefined
+        ) {
+            await fetchTransactions();
+        }
+
+        if (
+            tokenExplorerResponse === undefined ||
+            tokenExplorerResponse.items === undefined
+        ) {
+            console.warn('Token Explorer items are undefined.');
+            return;
+        }
+
+        var maxItemsPerPage = Number(rowsPerPage);
+        let items: TokenExplorerItem[] = [];
+        if (
+            tokenExplorerItems === undefined ||
+            tokenExplorerItems === null ||
+            tokenExplorerItems.length === 0
+        ) {
+            var startArrayIndex: number = 0;
+            var lastArrayIndex: number = Math.min(
+                maxItemsPerPage,
+                tokenExplorerResponse.items.length,
+            );
+            tokenExplorerItems = tokenExplorerResponse.items.slice(
+                startArrayIndex,
+                lastArrayIndex,
+            );
+            return;
+        }
+    }
+
+    // Function to fetch transactions and update the state.
+    async function fetchTransactions() {
+        try {
+            if (tokenExplorer === undefined || tokenExplorer === null) {
+                tokenExplorer = new TokenExplorerService(
+                    settings.tokenCanisterId,
+                );
+                await tokenExplorer.InitializeAsync();
+            }
+
+            var totalCountTx = await tokenExplorer.TotalTxCountAsync();
+            var lastTxIndex: number = Math.max(Number(totalCountTx) - 1, 0);
+            var maxItemsPerPage = Number(rowsPerPage);
+            var searchTxStart: number = lastTxIndex - maxItemsPerPage + 1;
+            searchTxStart = Math.max(searchTxStart, 0);
+
+            const response =
+                await tokenExplorer.GetTransactionsByStartTxIdAsync(
+                    searchTxStart,
+                    maxItemsPerPage,
+                );
+
+            console.log('Token Explorer Response:', response);
+
+            if (response === undefined || response?.hasError == true) {
+                console.error(
+                    'Error fetching transactions:',
+                    response?.errorMessage,
+                );
+                return;
+            }
+
+            tokenExplorerResponse = response;
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        }
+    }
 </script>
 
 <div>
@@ -136,16 +200,17 @@
             Token Explorer - {settings.tokenSymbol} ({settings.tokenName})
         </h2>
         <div class="token-list">
-            {#each testArr as items, index}
+            {#each tokenExplorerItems as items, index}
                 <div class="token-item">
                     <div style="display: flex; gap: 1rem;">
                         <p style="width: 3.5rem;">Txid:</p>
-                        <p style="width: 4rem;">{items.txid}</p>
+                        <p style="width: 4rem;">{items.txIndex}</p>
                     </div>
                     <div style="display: flex; gap: 1rem;">
                         <p style="width: 3.5rem;">Date:</p>
                         <p>
-                            {items.timestamp.toLocaleString('en-US', {
+                            {items.DateTimeString}
+                            <!-- {items.timestamp.toLocaleString('en-US', {
                                 month: '2-digit',
                                 day: '2-digit',
                                 year: 'numeric',
@@ -153,22 +218,25 @@
                                 minute: '2-digit',
                                 second: '2-digit',
                                 hour12: true,
-                            })}
+                            })} -->
                         </p>
                     </div>
                     <div style="height: 0.5rem;"></div>
 
                     <div style="display: flex; gap: 1rem;">
-                        <p style="width: 3.5rem;">Transfer:</p>
-                        <p>{items.amount} {settings.tokenSymbol}</p>
+                        <p style="width: 3.5rem;">
+                            {items.TransactionType.charAt(0).toUpperCase() +
+                                items.TransactionType.slice(1).toLowerCase()}:
+                        </p>
+                        <p>{items.Amount} {settings.tokenSymbol}</p>
                     </div>
                     <div style="display: flex; gap: 1rem;">
                         <p style="width: 3.5rem;">From:</p>
-                        <p>{items.from}</p>
+                        <p>{items.From}</p>
                     </div>
                     <div style="display: flex; gap: 1rem;">
                         <p style="width: 3.5rem;">To:</p>
-                        <p>{items.to}</p>
+                        <p>{items.To}</p>
                     </div>
                 </div>
             {/each}

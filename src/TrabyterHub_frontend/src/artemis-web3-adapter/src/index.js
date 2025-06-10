@@ -11,6 +11,7 @@ const HOSTURL = 'https://icp0.io';
 const ICP_DECIMAL = 10 ** 8;
 const NNS_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 const localStorageKey = 'dfinityWallet';
+const isDebug = false;
 
 export const Artemis = class Artemis {
     accountId = false;
@@ -31,14 +32,18 @@ export const Artemis = class Artemis {
     }
     async connect(wallet, connectObj = {whitelist: [], host: HOSTURL}) {
         connectObj = this._cleanUpConnObj(connectObj);
-        console.log('wallet');
-        console.log(wallet);
+        if (isDebug) {
+            console.log('wallet');
+            console.log(wallet);
+        }
         if (!wallet) return false;
         try {
-            console.log('wallets');
-            console.log(this.wallets);
-            console.log('window.ic');
-            console.log(window.ic);
+            if (isDebug) {
+                console.log('wallets');
+                console.log(this.wallets);
+                console.log('window.ic');
+                console.log(window.ic);
+            }
             var selectedWallet = this.wallets.find((o) => o.id == wallet);
             if (!selectedWallet) return false;
             if (wallet == 'plug') {
@@ -47,7 +52,6 @@ export const Artemis = class Artemis {
                     selectedWallet.adapter.readyState != 'Loadable'
                 ) {
                     if (window.ic?.plug) {
-                        console.log('6');
                         selectedWallet.adapter.readyState = 'Installed';
                     }
                 }

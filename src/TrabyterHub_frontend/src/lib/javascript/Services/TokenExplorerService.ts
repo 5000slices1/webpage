@@ -20,29 +20,14 @@ export class TokenExplorerResponse {
     totalCount: number = 0;
     firstTx: number = 0;
     lastTx: number = 0;
-    //firstPageNumber: number = 0;
-    //lastPageNumber: number = 0;
-    //currentPageNumber: number = 0;
-    //hasNextPage: boolean = false;
-    //hasPreviousPage: boolean = false;
     errorMessage: string | null = null;
     hasError: boolean = false;
-}
-
-export enum TokenExplorerSearchMode {
-    SearchByTxId = 'SearchByTxId',
-    SearchByPrincipal = 'SearchByPrincipal',
 }
 
 // Settings for the Token Explorer
 export class TokenExplorerSettings {
     canisterId: string = ''; // The canister ID of the token canister
     decimals: number = 8; // The number of decimals for the token, default is 8
-
-    // In the Ui page this is the Rows per page
-    //maxItemsCount: number = 10; // The maximum number of items to return in a single request
-    //searchMode: TokenExplorerSearchMode = TokenExplorerSearchMode.SearchByTxId; // The search mode to use, default is SearchByTxId
-    //searchValue: string = ''; // The value to search for, can be a transaction ID or a principal ID
 }
 
 export class TokenExplorerService {

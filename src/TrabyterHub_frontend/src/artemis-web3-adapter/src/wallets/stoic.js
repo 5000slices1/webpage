@@ -1,31 +1,44 @@
-import { StoicIdentity } from '../libs/stoicidentity';
-import { Actor, HttpAgent } from '@dfinity/agent';
+import {StoicIdentity} from '../libs/stoicidentity';
+import {Actor, HttpAgent} from '@dfinity/agent';
 
 export const stoic = {
-    readyState: "Loadable", url: 'https://www.stoicwallet.com/',
-    connectWallet: async function (connectObj = { whitelist: [], host: '' }) {
+    readyState: 'Loadable',
+    url: 'https://www.stoicwallet.com/',
+    connectWallet: async function (connectObj = {whitelist: [], host: ''}) {
         var identity = await StoicIdentity.load();
 
-        console.log(identity);
+        //console.log(identity);
 
-        
-        if (!identity) { identity = await StoicIdentity.connect(); }
+        if (!identity) {
+            identity = await StoicIdentity.connect();
+        }
         let getAcnts = await identity.accounts();
         getAcnts = JSON.parse(getAcnts);
 
-        this.agent =  HttpAgent.createSync({ identity, host: connectObj.host });
+        this.agent = HttpAgent.createSync({identity, host: connectObj.host});
 
-        this.createActor = async function (connObj = { canisterId: '', interfaceFactory: false }) {
+        this.createActor = async function (
+            connObj = {canisterId: '', interfaceFactory: false},
+        ) {
             if (!connObj.canisterId || !connObj.interfaceFactory) return false;
-            return await Actor.createActor(connObj.interfaceFactory, { agent: this.agent, canisterId: connObj.canisterId });
+            return await Actor.createActor(connObj.interfaceFactory, {
+                agent: this.agent,
+                canisterId: connObj.canisterId,
+            });
         };
         this.createAgent = function () {
-            return  HttpAgent.createSync({ identity, host: connectObj.host });
+            return HttpAgent.createSync({identity, host: connectObj.host});
         };
-        this.getPrincipal = function () { return identity.getPrincipal() }
+        this.getPrincipal = function () {
+            return identity.getPrincipal();
+        };
         this.disConnectWallet = async function () {
             await StoicIdentity.disconnect();
-        }
-        return { stoicAccounts: getAcnts, accountId: getAcnts[0].address, principalId: identity._principal.toString() }
-    }
+        };
+        return {
+            stoicAccounts: getAcnts,
+            accountId: getAcnts[0].address,
+            principalId: identity._principal.toString(),
+        };
+    },
 };

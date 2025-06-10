@@ -4,6 +4,7 @@
         VerticalNavigationItem,
         VerticalNavigationSettings,
     } from '$lib/../routes/components/navigation/verticalnavigation.svelte';
+    import {onMount} from 'svelte';
     let data = $props();
 
     let verticalNavigationItems: VerticalNavigationItem[] = [
@@ -31,6 +32,18 @@
         navigationIsVisible: true,
     };
     let verticalNavigation: Verticalnavigation;
+    let initDone: boolean = false;
+
+    onMount(async () => {
+        // Ensure the vertical navigation is initialized
+        if (verticalNavigation && !initDone) {
+            initDone = true;
+            // Navigate to the default page if not already set
+            await verticalNavigation.NavigateTo(
+                '/pages/tokensNft/trabyterpremium/info',
+            );
+        }
+    });
 </script>
 
 <div

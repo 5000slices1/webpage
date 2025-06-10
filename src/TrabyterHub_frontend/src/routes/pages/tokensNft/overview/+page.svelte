@@ -1,5 +1,4 @@
 <script lang="ts">
-    console.log('Deposit page loaded');
 </script>
 
 <table

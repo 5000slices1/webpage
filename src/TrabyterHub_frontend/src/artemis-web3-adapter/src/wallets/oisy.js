@@ -12,10 +12,10 @@ export const oisyWallet = {
         return new Promise(async (resolve, reject) => {
             const wallet = await IcpWallet.connect({
                 url: 'https://staging.oisy.com/sign'
-                
+
               });
 
-              console.log(wallet);
+              //console.log(wallet);
         });
     }
 }

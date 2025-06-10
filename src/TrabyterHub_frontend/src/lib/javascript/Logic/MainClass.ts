@@ -3,13 +3,18 @@ import {
     TrabyterBucks_CanisterId,
     TrabyterPremium_CanisterId,
 } from '$lib/javascript/Abstractions/constants/globalConstants.js';
+import {
+    TokenExplorerItem,
+    TokenExplorerResponse,
+    TokenExplorerService,
+    type,
+} from '$lib/javascript/Services/TokenExplorerService';
 import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService';
 import {writable} from 'svelte/store';
 
 import {IdentityProvider} from './identity/IdentityProvider';
 
 import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
-
 class InternalMainClass {
     #init_done: boolean = false;
     IdentityProvider: IdentityProvider;
@@ -37,7 +42,7 @@ class InternalMainClass {
         // This method can be used to prefetch some data in the background
         // For example, you can call some API or load some data that is needed later
         // This is just a placeholder for now
-        console.log('Prefetching some data in background...');
+        //console.log('Prefetching some data in background...');
         // Simulate a delay
         const prefetchData = async () => {
             var traTokenService = new TokenInformationService();
@@ -57,6 +62,94 @@ class InternalMainClass {
                 traTokenService.initTokenInformationAsync(traSettings),
                 traPremiumTokenService.initTokenInformationAsync(traPremium),
             ]);
+
+            return;
+
+            console.log('Debug 1');
+
+            var trabyterExplorerService = new TokenExplorerService(
+                TrabyterBucks_CanisterId,
+            );
+            var trabyterPremiumExplorerService = new TokenExplorerService(
+                TrabyterPremium_CanisterId,
+            );
+
+            console.log('Debug 2');
+
+            await Promise.all([
+                trabyterExplorerService.InitializeAsync(),
+                trabyterPremiumExplorerService.InitializeAsync(),
+            ]);
+
+            console.log('Debug 3');
+
+            let [traLastTx, traPremiumLastTx] = await Promise.all([
+                trabyterExplorerService.TotalTxCountAsync(),
+                trabyterPremiumExplorerService.TotalTxCountAsync(),
+            ]);
+
+            let numberTralastTx: number = Number(traLastTx) - Number(1);
+            let numberTraPremiumLastTx: number =
+                Number(traPremiumLastTx) - Number(1);
+
+            console.log('Debug 4');
+
+            const [traPremiumExplorerResponse, traExplorerResponse] =
+                await Promise.all([
+                    trabyterPremiumExplorerService.GetTransactionsByStartTxIdAsync(
+                        numberTraPremiumLastTx - 5,
+                        5,
+                    ),
+                    trabyterExplorerService.GetTransactionsByStartTxIdAsync(
+                        numberTralastTx - 5,
+                        5,
+                    ),
+                ]);
+
+            console.log('Debug 5');
+            if (
+                traExplorerResponse != null &&
+                traExplorerResponse.hasError == false
+            ) {
+                console.log('TRA Explorer Response:');
+                console.log(traExplorerResponse);
+
+                var firstKey: string =
+                    'ExplorerResponse' + TrabyterBucks_CanisterId;
+                var secondKey: string =
+                    'ExplorerResponseLastTx' + TrabyterBucks_CanisterId;
+
+                console.log('First Key: ' + firstKey);
+                console.log('Second Key: ' + secondKey);
+                // Store into session storage
+                sessionStorage.setItem(
+                    firstKey,
+                    JSON.stringify(traExplorerResponse),
+                );
+                sessionStorage.setItem(
+                    secondKey,
+                    JSON.stringify(numberTralastTx),
+                );
+            }
+
+            console.log('Debug 6');
+            if (
+                traPremiumExplorerResponse != null &&
+                traPremiumExplorerResponse.hasError == false
+            ) {
+                console.log('TRAPRE Explorer Response:');
+                console.log(traPremiumExplorerResponse);
+
+                // Store into session storage
+                sessionStorage.setItem(
+                    'ExplorerResponse' + TrabyterPremium_CanisterId,
+                    JSON.stringify(traPremiumExplorerResponse),
+                );
+                sessionStorage.setItem(
+                    'ExplorerResponseLastTx' + TrabyterPremium_CanisterId,
+                    JSON.stringify(numberTraPremiumLastTx),
+                );
+            }
         };
 
         // Run the prefetchData function in the background
@@ -64,7 +157,7 @@ class InternalMainClass {
             console.error('Error while prefetching data:', error);
         });
 
-        console.log('Data prefetched.');
+        //console.log('Data prefetched.');
     }
 }
 

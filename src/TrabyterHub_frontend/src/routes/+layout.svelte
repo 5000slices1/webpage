@@ -29,30 +29,19 @@
     });
 
     let subNavigation: SubNavigation;
-    console.log('Home layout page loaded');
 
     if (browser) {
-        console.log(window.innerWidth);
-        console.log('Svelte version: ' + version);
-        console.log('TrabyterHub Frontend canister ID: ' + canisterId);
-
         // Initialize the main navigation button styling
         MainNavButtonStylingUpdate('navButtonHome');
     }
 
     onMount(async () => {
-        console.log('the component has mounted');
         if (browser) {
             if ($MainClass.IsInitDone()) {
-                console.log('init already');
                 return;
             }
-            console.log('start init');
             await $MainClass.InitAsync();
-
-            console.log('end init');
         }
-        console.log('start done');
     });
 
     async function ShowSubNavigationNftsItems() {
@@ -130,7 +119,6 @@
     }
 
     async function OnButtonWalletDropDownClicked() {
-        console.log('OnButtonWalletDropDownClicked');
         if (browser) {
             const element = document.getElementById('dropDownWalletMenu');
             if (element) {
@@ -169,7 +157,6 @@
     }
 
     async function navigateToHomePageClicked() {
-        console.log('navigateToHomePage');
         subNavigationSettings.navigationIsVisible = false;
         MainNavButtonStylingUpdate('navButtonHome');
         await navigateToUrl('/');

@@ -1,23 +1,14 @@
 import {browser} from '$app/environment';
 
-console.log('if browser check');
 if (browser) {
-    console.log('if window check');
-    console.log('1');
     if (window && window.ic && window.ic.plug) {
-        console.log('2');
         window.ic.plug.init();
     }
 
     console.log('3');
     if (window) {
-        console.log('4');
-        console.log('window');
-        console.log(window);
 
-        console.log('5');
         if (window.ic?.plug) {
-            console.log('6a');
             window.ic.plug.readyState = 'Installed';
         }
         //});
@@ -34,8 +25,7 @@ export const plug = {
     readyState: 'NotDetected',
     url: 'https://plugwallet.ooo/',
     connectWallet: async function (connectObj = {whitelist: [], host: ''}) {
-        console.log('connect method window:');
-        console.log(window);
+
         if (!window.ic.plug) {
             this.readyState = 'NotDetected';
             window.open('https://plugwallet.ooo/');

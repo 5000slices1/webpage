@@ -1,6 +1,6 @@
 <script lang="ts">
     let data = $props();
-    console.log('apps page layout loaded');
+
 </script>
 
 <div

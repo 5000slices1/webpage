@@ -51,7 +51,7 @@ export class TokenActor {
                 this.#actor = actor;
             });
         } else {
-            console.log('Using production replica for TokenActor');
+            //console.log('Using production replica for TokenActor');
 
             let host = 'https://ic0.app';
             try {

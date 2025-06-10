@@ -1,5 +1,4 @@
 <script lang="ts">
-    console.log('apps page loaded');
     import {MainClass} from '$lib/javascript/Logic/MainClass';
 </script>
 

@@ -12,6 +12,7 @@
     import {fade} from 'svelte/transition';
     import {TokenActor} from '$lib/javascript/Utils/TokenActor';
     import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
+    import {TokenExplorerSearchMode} from '$lib/javascript/Abstractions/explorer/searchMode';
     import {
         TokenExplorerResponse,
         TokenExplorerService,
@@ -24,71 +25,35 @@
         GetValueFromDictionary,
     } from '$lib/javascript/Utils/CommonUtils';
 
-    let rowsPerPage: string = $state('10');
-    //let currentIndex = 0;
-
     // Props passed to the component, with default settings for token information.
     let {
         settings = {
-            tokenCanisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-            tokenName: 'Trabyter Token',
-            tokenSymbol: 'TRBY',
+            tokenCanisterId: '',
+            tokenName: '',
+            tokenSymbol: '',
             tokenDecimals: 8,
         } as TokenExplorerSettings,
     } = $props<{settings?: TokenExplorerSettings}>();
 
     let tokenExplorer: TokenExplorerService;
 
-    let currentPageIndex: number = $state(0);
+    let rowsPerPage: string = $state('5');
+    let searchMode: TokenExplorerSearchMode = $state(
+        TokenExplorerSearchMode.SearchByTxId,
+    );
+
+    let pageShownMaxTxId: number = $state(0);
+    let pageShownMinTxId: number = $state(0);
+    let searchTxValue: number = $state(-1);
+
+    let totalLastTxIndex: number = $state(0);
+    let goToFirstPagePossible: boolean = $state(false);
+    let goToLastPagePossible: boolean = $state(false);
+
     // State variables to hold the token explorer items and response.
     var tokenExplorerItems: TokenExplorerItem[] = $state([]);
     var tokenExplorerResponse: TokenExplorerResponse | undefined =
         $state(undefined);
-
-    // var testArr: TokenExplorerItem[] = [
-    //     {
-    //         from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-    //         to: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-    //         amount: 100.0,
-    //         timestamp: new Date(),
-    //         txid: '890',
-    //     },
-    //     {
-    //         from: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-    //         to: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-    //         amount: 50.0,
-    //         timestamp: new Date(),
-    //         txid: '321',
-    //     },
-    //     {
-    //         from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-    //         to: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-    //         amount: 200.0,
-    //         timestamp: new Date(),
-    //         txid: '2334455',
-    //     },
-    //     {
-    //         from: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-    //         to: 'cwlbj-ovgqo-5bvt2-77eld-wenkb-gyyh5-gjrcx-i5hvc-k4w5c-xcheb-nqe',
-    //         amount: 75.0,
-    //         timestamp: new Date(),
-    //         txid: '9',
-    //     },
-    //     {
-    //         from: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-    //         to: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-    //         amount: 300.003,
-    //         timestamp: new Date(),
-    //         txid: '234567890',
-    //     },
-    //     {
-    //         from: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
-    //         to: 'r7inp-6aaaa-aaaaa-aaabq-cai',
-    //         amount: 150.0,
-    //         timestamp: new Date(),
-    //         txid: '87654321',
-    //     },
-    // ];
 
     onMount(async () => {
         // Fetch transactions from the token canister.
@@ -98,16 +63,46 @@
                     settings.tokenCanisterId,
                 );
                 await tokenExplorer.InitializeAsync();
-                console.log(
-                    `Token Explorer initialized with canister ID: ${settings.tokenCanisterId}`,
-                );
 
-                console.log(
-                    `Token Explorer initialized with canister ID: ${settings.tokenCanisterId}`,
-                );
+                if (false) {
+                    var keyExplorerResponse =
+                        'ExplorerResponse' + settings.tokenCanisterId;
+                    var keyExplorerLastTxIndex =
+                        'ExplorerResponseLastTx' + settings.tokenCanisterId;
 
-                // let txCount = await tokenExplorer.TotalTxCountAsync();
-                // console.log(`Transaction count: ${txCount}`);
+                    console.log('keyExplorerResponse:', keyExplorerResponse);
+                    console.log(
+                        'keyExplorerLastTxIndex:',
+                        keyExplorerLastTxIndex,
+                    );
+                    // Check if we have cached response in local storage.
+                    if (typeof window !== 'undefined') {
+                        console.log(
+                            'Checking localStorage for cached response',
+                        );
+                        // Try to get the cached response from local storage.
+                        const cachedResponse =
+                            localStorage.getItem(keyExplorerResponse);
+                        const secondCachedResponse = localStorage.getItem(
+                            keyExplorerLastTxIndex,
+                        );
+                        console.log(
+                            'Cached response:',
+                            cachedResponse,
+                            secondCachedResponse,
+                        );
+                        if (cachedResponse && secondCachedResponse) {
+                            tokenExplorerResponse = JSON.parse(cachedResponse);
+                            totalLastTxIndex = Number(secondCachedResponse);
+                            searchTxValue = totalLastTxIndex;
+                            console.log(
+                                'Using cached response:',
+                                tokenExplorerResponse,
+                            );
+                        }
+                    }
+                }
+
                 await updateUi();
             }
         } catch (error) {
@@ -115,12 +110,126 @@
         }
     });
 
-    async function updateUi() {
+    async function navigateToFirstPage() {
+        if (goToFirstPagePossible) {
+            if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
+                searchTxValue = totalLastTxIndex;
+            } else if (
+                searchMode === TokenExplorerSearchMode.SearchByPrincipal
+            ) {
+                // Handle navigation for SearchByPrincipal mode if needed.
+            } else {
+                console.warn('Unknown search mode:', searchMode);
+            }
+            await updateUi();
+        }
+    }
+
+    async function navigateToPreviousPage() {
+        if (goToFirstPagePossible) {
+            if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
+                searchTxValue = pageShownMaxTxId + Number(rowsPerPage);
+                if (searchTxValue > totalLastTxIndex) {
+                    searchTxValue = totalLastTxIndex;
+                }
+            } else if (
+                searchMode === TokenExplorerSearchMode.SearchByPrincipal
+            ) {
+                // Handle navigation for SearchByPrincipal mode if needed.
+            } else {
+                console.warn('Unknown search mode:', searchMode);
+            }
+            await updateUi();
+        }
+    }
+
+    async function navigateToNextPage() {
+        console.log('navigateToNextPage called');
+        if (goToLastPagePossible) {
+            if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
+                console.log('searchTxValue before:', searchTxValue);
+                searchTxValue = pageShownMinTxId - 1;
+                if (searchTxValue < 0) {
+                    searchTxValue = 0;
+                }
+                console.log('searchTxValue after:', searchTxValue);
+            } else if (
+                searchMode === TokenExplorerSearchMode.SearchByPrincipal
+            ) {
+                // Handle navigation for SearchByPrincipal mode if needed.
+            } else {
+                console.warn('Unknown search mode:', searchMode);
+            }
+            await updateUi();
+        }
+    }
+
+    async function navigateToLastPage() {
+        if (goToLastPagePossible) {
+            if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
+                searchTxValue = 0;
+            } else if (
+                searchMode === TokenExplorerSearchMode.SearchByPrincipal
+            ) {
+                // Handle navigation for SearchByPrincipal mode if needed.
+            } else {
+                console.warn('Unknown search mode:', searchMode);
+            }
+            await updateUi();
+        }
+    }
+
+    async function UpdateNavigationInformation() {
+        if (
+            tokenExplorerResponse === undefined ||
+            tokenExplorerResponse.items === undefined ||
+            tokenExplorerItems === undefined ||
+            tokenExplorerItems === null ||
+            tokenExplorerItems.length === 0
+        ) {
+            goToFirstPagePossible = false;
+            goToLastPagePossible = false;
+            //goToNextPagePossible = false;
+            //goToPreviousPagePossible = false;
+            return;
+        }
+
+        // In searchmode 'searchByTxId' the 'tokenExplorerResponse.items' array has same count as 'tokenExplorerItems'.
+        if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
+            // Calculate the min and max txid shown on the current page.
+            // The first item in the array has the highest txIndex (most recent).
+            pageShownMaxTxId = tokenExplorerItems[0].txIndex;
+            pageShownMinTxId =
+                tokenExplorerItems[tokenExplorerItems.length - 1].txIndex;
+
+            // Determine if navigation buttons should be enabled.
+            goToFirstPagePossible = pageShownMaxTxId < totalLastTxIndex;
+            goToLastPagePossible = pageShownMinTxId > 0;
+        } else if (searchMode == TokenExplorerSearchMode.SearchByPrincipal) {
+            // In searchmode 'searchByPrincipal' the 'tokenExplorerResponse.items' array can
+            // have higher count as 'tokenExplorerItems'.
+
+            // Calculate the min and max txid from tokenExplorerResponse.items
+            let cachedMaxTxId: number = tokenExplorerResponse.items[0].txIndex;
+            let cachedMinTxId: number =
+                tokenExplorerResponse.items[
+                    tokenExplorerResponse.items.length - 1
+                ].txIndex;
+
+            goToFirstPagePossible = pageShownMaxTxId < cachedMaxTxId;
+            goToLastPagePossible = cachedMinTxId > cachedMinTxId;
+        } else {
+            console.warn('Unknown search mode:', searchMode);
+        }
+    }
+
+    async function updateUi(fetchRequired: boolean = false) {
         // Clear the current items before fetching new ones.
         tokenExplorerItems = [];
         if (
             tokenExplorerResponse === undefined ||
-            tokenExplorerResponse.items === undefined
+            tokenExplorerResponse.items === undefined ||
+            fetchRequired
         ) {
             await fetchTransactions();
         }
@@ -130,27 +239,45 @@
             tokenExplorerResponse.items === undefined
         ) {
             console.warn('Token Explorer items are undefined.');
-            return;
-        }
+        } else {
+            if (searchMode == TokenExplorerSearchMode.SearchByTxId) {
+                var cachedMaxTxId: number =
+                    tokenExplorerResponse.items[0].txIndex;
 
-        var maxItemsPerPage = Number(rowsPerPage);
-        let items: TokenExplorerItem[] = [];
-        if (
-            tokenExplorerItems === undefined ||
-            tokenExplorerItems === null ||
-            tokenExplorerItems.length === 0
-        ) {
-            var startArrayIndex: number = 0;
-            var lastArrayIndex: number = Math.min(
-                maxItemsPerPage,
-                tokenExplorerResponse.items.length,
-            );
-            tokenExplorerItems = tokenExplorerResponse.items.slice(
-                startArrayIndex,
-                lastArrayIndex,
-            );
-            return;
+                if (searchTxValue != cachedMaxTxId) {
+                    await fetchTransactions();
+                }
+
+                tokenExplorerItems = tokenExplorerResponse?.items;
+            } else if (
+                searchMode == TokenExplorerSearchMode.SearchByPrincipal
+            ) {
+            } else {
+                console.warn('Unknown search mode:', searchMode);
+            }
         }
+        await UpdateNavigationInformation();
+
+        //var maxItemsPerPage = Number(rowsPerPage);
+
+        // On first time load, we fetch the last transactions.
+        // if (
+        //     tokenExplorerItems === undefined ||
+        //     tokenExplorerItems === null ||
+        //     tokenExplorerItems.length === 0
+        // ) {
+        //     var startArrayIndex: number = 0;
+        //     var lastArrayIndex: number = Math.min(
+        //         maxItemsPerPage,
+        //         tokenExplorerResponse.items.length,
+        //     );
+        //     tokenExplorerItems = tokenExplorerResponse.items.slice(
+        //         startArrayIndex,
+        //         lastArrayIndex,
+        //     );
+        //     await UpdateNavigationInformation();
+        //     return;
+        // }
     }
 
     // Function to fetch transactions and update the state.
@@ -163,29 +290,37 @@
                 await tokenExplorer.InitializeAsync();
             }
 
-            var totalCountTx = await tokenExplorer.TotalTxCountAsync();
-            var lastTxIndex: number = Math.max(Number(totalCountTx) - 1, 0);
-            var maxItemsPerPage = Number(rowsPerPage);
-            var searchTxStart: number = lastTxIndex - maxItemsPerPage + 1;
-            searchTxStart = Math.max(searchTxStart, 0);
+            if (searchMode == TokenExplorerSearchMode.SearchByTxId) {
+                var totalCountTx = await tokenExplorer.TotalTxCountAsync();
+                totalLastTxIndex = Math.max(Number(totalCountTx) - 1, 0);
 
-            const response =
-                await tokenExplorer.GetTransactionsByStartTxIdAsync(
-                    searchTxStart,
-                    maxItemsPerPage,
+                var maxItemsPerPage = Number(rowsPerPage);
+
+                if (searchTxValue == -1) {
+                    searchTxValue = totalLastTxIndex;
+                }
+
+                let searchValueToUse: number = Math.max(
+                    searchTxValue - maxItemsPerPage + 1,
+                    0,
                 );
 
-            console.log('Token Explorer Response:', response);
+                const response =
+                    await tokenExplorer.GetTransactionsByStartTxIdAsync(
+                        searchValueToUse,
+                        maxItemsPerPage,
+                    );
 
-            if (response === undefined || response?.hasError == true) {
-                console.error(
-                    'Error fetching transactions:',
-                    response?.errorMessage,
-                );
-                return;
+                if (response === undefined || response?.hasError == true) {
+                    console.error(
+                        'Error fetching transactions:',
+                        response?.errorMessage,
+                    );
+                    return;
+                }
+
+                tokenExplorerResponse = response;
             }
-
-            tokenExplorerResponse = response;
         } catch (error) {
             console.error('Error fetching transactions:', error);
         }
@@ -200,6 +335,97 @@
         <h2 style="color: white; font-weight:bold">
             Token Explorer - {settings.tokenSymbol} ({settings.tokenName})
         </h2>
+
+        <div
+            style="margin-top: 0.0rem;margin-bottom:1.0rem; margin-left:0.0rem"
+        >
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <label for="rows" style="color: white;">Rows:</label>
+                <select
+                    id="rows"
+                    onchange={async (e: Event) => {
+                        const target = e.target as HTMLSelectElement;
+                        if (
+                            !target ||
+                            target.value === undefined ||
+                            target.value === null
+                        ) {
+                            return;
+                        }
+
+                        rowsPerPage = target.value;
+                        await updateUi(true);
+                    }}
+                    bind:value={rowsPerPage}
+                    style="border-radius: 1px;height:1.5rem; width: 3.0rem; color: black;
+                background-color: white; border: 1px solid rgba(84, 143, 232, 0.3);"
+                >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+                <div style="width: 0.5rem;"></div>
+                <p style="color: white;width: 1.5rem;">Txid:</p>
+                <p style="color: white; width: 4.0rem; text-align: right;">
+                    {pageShownMaxTxId}
+                </p>
+                <p style="color: white; width: 0.5rem; text-align: center;">
+                    -
+                </p>
+                <p style="color: white;width: 4.0rem;">{pageShownMinTxId}</p>
+                <div style="width: 2.5rem;"></div>
+
+                <button
+                    class="tokenexplorer-navigation-rewind-button"
+                    style="
+                background: url({goToFirstPagePossible
+                        ? '/icons/navigation/left_rewind_highlight.png'
+                        : '/icons/navigation/left_rewind.png'});
+                background-repeat: no-repeat; background-position: center; background-size: cover;"
+                    aria-label="left rewind"
+                    disabled={!goToFirstPagePossible}
+                    onclick={async () => await navigateToFirstPage()}
+                >
+                </button>
+                <button
+                    class="tokenexplorer-navigation-button"
+                    style="background: url({goToFirstPagePossible
+                        ? '/icons/navigation/left_highlight.png'
+                        : '/icons/navigation/left.png'});
+                background-repeat: no-repeat; background-position: center; background-size: cover;"
+                    aria-label="left"
+                    disabled={!goToFirstPagePossible}
+                    onclick={async () => await navigateToPreviousPage()}
+                >
+                </button>
+                <button
+                    class="tokenexplorer-navigation-button"
+                    style=" background: url({goToLastPagePossible
+                        ? '/icons/navigation/right_highlight.png'
+                        : '/icons/navigation/right.png'});
+                background-repeat: no-repeat; background-position: center; background-size: cover;"
+                    aria-label="right"
+                    disabled={!goToLastPagePossible}
+                    onclick={async () => await navigateToNextPage()}
+                >
+                </button>
+                <button
+                    class="tokenexplorer-navigation-rewind-button"
+                    style=" background: url({goToLastPagePossible
+                        ? '/icons/navigation/right_forward_highlight.png'
+                        : '/icons/navigation/right_forward.png'});
+                background-repeat: no-repeat; background-position: center; background-size: cover;"
+                    aria-label="right forward"
+                    disabled={!goToLastPagePossible}
+                    onclick={async () => await navigateToLastPage()}
+                >
+                </button>
+            </div>
+        </div>
+
         <div class="token-list">
             {#each tokenExplorerItems as items, index}
                 <div
@@ -236,71 +462,6 @@
                     </div>
                 </div>
             {/each}
-        </div>
-    </div>
-    <div style="margin-top: 1rem;margin-left:2.0rem">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <label for="rows" style="color: white;">Rows:</label>
-            <select
-                id="rows"
-                onchange={(e: Event) => {
-                    const target = e.target as HTMLSelectElement;
-                    if (
-                        !target ||
-                        target.value === undefined ||
-                        target.value === null
-                    ) {
-                        return;
-                    }
-
-                    rowsPerPage = target.value;
-                }}
-                bind:value={rowsPerPage}
-                style="border-radius: 1px;height:1.5rem; width: 3.0rem; color: black;
-                background-color: white; border: 1px solid rgba(84, 143, 232, 0.3);"
-            >
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-            </select>
-            <div style="width: 0.5rem;"></div>
-            <p style="color: white;width: 1.5rem;">Txid:</p>
-            <p style="color: white; width: 4.0rem; text-align: right;">
-                27777777
-            </p>
-            <p style="color: white; width: 0.5rem; text-align: center;">-</p>
-            <p style="color: white;width: 4.0rem;">7555555</p>
-            <div style="width: 2.5rem;"></div>
-
-            <button
-                class="tokenexplorer-navigation-rewind-button"
-                style="
-                background: url('/icons/navigation/left_rewind.png');
-                background-repeat: no-repeat; background-position: center; background-size: cover;"
-                aria-label="left rewind"
-            >
-            </button>
-            <button
-                class="tokenexplorer-navigation-button"
-                style="background: url('/icons/navigation/left.png');
-                background-repeat: no-repeat; background-position: center; background-size: cover;"
-                aria-label="left"
-            >
-            </button>
-            <button
-                class="tokenexplorer-navigation-button"
-                style="background: url('/icons/navigation/right.png'); background-repeat: no-repeat; background-position: center; background-size: cover;"
-                aria-label="right"
-            >
-            </button>
-            <button
-                class="tokenexplorer-navigation-rewind-button"
-                style="background: url('/icons/navigation/right_forward.png'); background-repeat: no-repeat; background-position: center; background-size: cover;"
-                aria-label="right forward"
-            >
-            </button>
         </div>
     </div>
 </div>

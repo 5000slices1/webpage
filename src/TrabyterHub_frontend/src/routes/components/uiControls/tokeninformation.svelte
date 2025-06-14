@@ -68,9 +68,7 @@
 
         // Check if tokenInfo is already stored in session storage
         if (typeof window === 'undefined') {
-            console.error(
-                'Session storage is not available in this environment.',
-            );
+            console.error('Session storage is not available in this environment.');
             return;
         }
 
@@ -86,20 +84,13 @@
 
         // If token information was recently updated, refresh it; otherwise, initialize it.
         if (tokenInfo && tokenInfo.wasUpdated) {
-            tokenInfo =
-                (await tokenService.updateTokenInformationAsync(
-                    settings,
-                    tokenInfo,
-                )) ?? tokenInfo;
+            tokenInfo = (await tokenService.updateTokenInformationAsync(settings, tokenInfo)) ?? tokenInfo;
         } else {
-            tokenInfo =
-                (await tokenService.initTokenInformationAsync(settings)) ??
-                tokenInfo;
+            tokenInfo = (await tokenService.initTokenInformationAsync(settings)) ?? tokenInfo;
         }
     });
 </script>
 
-initTokenInformationAsync
 <div>
     <p style="font-size: large;color: white;margin-left: 1rem;">
         Token information for {tokenInfo?.tokenSymbol} Token:

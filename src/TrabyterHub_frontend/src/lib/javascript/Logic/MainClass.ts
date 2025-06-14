@@ -45,111 +45,21 @@ class InternalMainClass {
         //console.log('Prefetching some data in background...');
         // Simulate a delay
         const prefetchData = async () => {
-            var traTokenService = new TokenInformationService();
-            var traPremiumTokenService = new TokenInformationService();
-            const traSettings: TokenInformationSettings = {
-                baseCurrency: 'TRA',
-                targetCurrency: 'ICP',
-                tokenCanisterId: TrabyterBucks_CanisterId,
-            };
-            const traPremium: TokenInformationSettings = {
-                baseCurrency: 'TRAPRE',
-                targetCurrency: 'ICP',
-                tokenCanisterId: TrabyterPremium_CanisterId,
-            };
-
-            await Promise.all([
-                traTokenService.initTokenInformationAsync(traSettings),
-                traPremiumTokenService.initTokenInformationAsync(traPremium),
-            ]);
-
-            return;
-
-            console.log('Debug 1');
-
-            var trabyterExplorerService = new TokenExplorerService(
-                TrabyterBucks_CanisterId,
-            );
-            var trabyterPremiumExplorerService = new TokenExplorerService(
-                TrabyterPremium_CanisterId,
-            );
-
-            console.log('Debug 2');
-
-            await Promise.all([
-                trabyterExplorerService.InitializeAsync(),
-                trabyterPremiumExplorerService.InitializeAsync(),
-            ]);
-
-            console.log('Debug 3');
-
-            let [traLastTx, traPremiumLastTx] = await Promise.all([
-                trabyterExplorerService.TotalTxCountAsync(),
-                trabyterPremiumExplorerService.TotalTxCountAsync(),
-            ]);
-
-            let numberTralastTx: number = Number(traLastTx) - Number(1);
-            let numberTraPremiumLastTx: number =
-                Number(traPremiumLastTx) - Number(1);
-
-            console.log('Debug 4');
-
-            const [traPremiumExplorerResponse, traExplorerResponse] =
-                await Promise.all([
-                    trabyterPremiumExplorerService.GetTransactionsByStartTxIdAsync(
-                        numberTraPremiumLastTx - 5,
-                        5,
-                    ),
-                    trabyterExplorerService.GetTransactionsByStartTxIdAsync(
-                        numberTralastTx - 5,
-                        5,
-                    ),
-                ]);
-
-            console.log('Debug 5');
-            if (
-                traExplorerResponse != null &&
-                traExplorerResponse.hasError == false
-            ) {
-                console.log('TRA Explorer Response:');
-                console.log(traExplorerResponse);
-
-                var firstKey: string =
-                    'ExplorerResponse' + TrabyterBucks_CanisterId;
-                var secondKey: string =
-                    'ExplorerResponseLastTx' + TrabyterBucks_CanisterId;
-
-                console.log('First Key: ' + firstKey);
-                console.log('Second Key: ' + secondKey);
-                // Store into session storage
-                sessionStorage.setItem(
-                    firstKey,
-                    JSON.stringify(traExplorerResponse),
+            if (typeof window === 'undefined' || !window.sessionStorage) {
+                console.warn(
+                    'Session storage is not available. Prefetching will not store data.',
                 );
-                sessionStorage.setItem(
-                    secondKey,
-                    JSON.stringify(numberTralastTx),
-                );
+                return;
             }
 
-            console.log('Debug 6');
-            if (
-                traPremiumExplorerResponse != null &&
-                traPremiumExplorerResponse.hasError == false
-            ) {
-                console.log('TRAPRE Explorer Response:');
-                console.log(traPremiumExplorerResponse);
+            await Promise.all([
+                this.fetchDataTokenInfoAsync(),
+                this.fetchDataTokenExplorerAsync(),
+            ]);
 
-                // Store into session storage
-                sessionStorage.setItem(
-                    'ExplorerResponse' + TrabyterPremium_CanisterId,
-                    JSON.stringify(traPremiumExplorerResponse),
-                );
-                sessionStorage.setItem(
-                    'ExplorerResponseLastTx' + TrabyterPremium_CanisterId,
-                    JSON.stringify(numberTraPremiumLastTx),
-                );
-            }
+            console.log(
+                'Prefetching data done. TRA and TRAPRE token information and explorer data are stored in session storage.',
+            );
         };
 
         // Run the prefetchData function in the background
@@ -158,6 +68,105 @@ class InternalMainClass {
         });
 
         //console.log('Data prefetched.');
+    }
+
+    private async fetchDataTokenExplorerAsync() {
+        var trabyterExplorerService = new TokenExplorerService(
+            TrabyterBucks_CanisterId,
+        );
+        var trabyterPremiumExplorerService = new TokenExplorerService(
+            TrabyterPremium_CanisterId,
+        );
+
+        await Promise.all([
+            trabyterExplorerService.InitializeAsync(),
+            trabyterPremiumExplorerService.InitializeAsync(),
+        ]);
+
+        let [traLastTx, traPremiumLastTx] = await Promise.all([
+            trabyterExplorerService.TotalTxCountAsync(),
+            trabyterPremiumExplorerService.TotalTxCountAsync(),
+        ]);
+
+        let numberTralastTx: number = Number(traLastTx) - Number(1);
+        let numberTraPremiumLastTx: number =
+            Number(traPremiumLastTx) - Number(1);
+
+        const [traPremiumExplorerResponse, traExplorerResponse] =
+            await Promise.all([
+                trabyterPremiumExplorerService.GetTransactionsByStartTxIdAsync(
+                    numberTraPremiumLastTx - 4,
+                    5,
+                ),
+                trabyterExplorerService.GetTransactionsByStartTxIdAsync(
+                    numberTralastTx - 4,
+                    5,
+                ),
+            ]);
+
+        if (
+            traExplorerResponse != null &&
+            traExplorerResponse.hasError == false
+        ) {
+            var firstKey: string =
+                'ExplorerResponse_' + TrabyterBucks_CanisterId;
+            var secondKey: string =
+                'ExplorerResponseLastTx_' + TrabyterBucks_CanisterId;
+
+            // Store into session storage
+            try {
+                const serializableResponse =
+                    JSON.stringify(traExplorerResponse);
+                sessionStorage.setItem(firstKey, serializableResponse);
+            } catch (error) {
+                console.error(
+                    'Failed to serialize traExplorerResponse:',
+                    error,
+                );
+            }
+            try {
+                const numberTralastTxString = JSON.stringify(numberTralastTx);
+                sessionStorage.setItem(secondKey, numberTralastTxString);
+            } catch (error) {
+                console.error('Failed to serialize numberTralastTx:', error);
+            }
+        }
+
+        if (
+            traPremiumExplorerResponse != null &&
+            traPremiumExplorerResponse.hasError == false
+        ) {
+            // Store into session storage
+            sessionStorage.setItem(
+                'ExplorerResponse_' + TrabyterPremium_CanisterId,
+                JSON.stringify(traPremiumExplorerResponse),
+            );
+            sessionStorage.setItem(
+                'ExplorerResponseLastTx_' + TrabyterPremium_CanisterId,
+                JSON.stringify(numberTraPremiumLastTx),
+            );
+        }
+    }
+
+    private async fetchDataTokenInfoAsync() {
+        var traTokenService = new TokenInformationService();
+        var traPremiumTokenService = new TokenInformationService();
+
+        const traSettings: TokenInformationSettings = {
+            baseCurrency: 'TRA',
+            targetCurrency: 'ICP',
+            tokenCanisterId: TrabyterBucks_CanisterId,
+        };
+        const traPremium: TokenInformationSettings = {
+            baseCurrency: 'TRAPRE',
+            targetCurrency: 'ICP',
+            tokenCanisterId: TrabyterPremium_CanisterId,
+        };
+
+        await Promise.all([
+            traTokenService.initTokenInformationAsync(traSettings),
+            traPremiumTokenService.initTokenInformationAsync(traPremium),
+        ]);
     }
 }
 

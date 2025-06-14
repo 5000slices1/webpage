@@ -5,9 +5,8 @@ if (browser) {
         window.ic.plug.init();
     }
 
-    console.log('3');
+    //console.log('3');
     if (window) {
-
         if (window.ic?.plug) {
             window.ic.plug.readyState = 'Installed';
         }
@@ -25,7 +24,6 @@ export const plug = {
     readyState: 'NotDetected',
     url: 'https://plugwallet.ooo/',
     connectWallet: async function (connectObj = {whitelist: [], host: ''}) {
-
         if (!window.ic.plug) {
             this.readyState = 'NotDetected';
             window.open('https://plugwallet.ooo/');

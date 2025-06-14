@@ -107,9 +107,12 @@ export class TokenInformationService {
     async initTokenInformationAsync(
         settings: TokenInformationSettings,
     ): Promise<TokenInfo | undefined> {
-        let ticker = await this.getTickerAsync(settings);
         let tokenActor = new TokenActor();
-        let actor = await tokenActor.GetActor(settings.tokenCanisterId);
+
+        const [ticker, actor] = await Promise.all([
+            this.getTickerAsync(settings),
+            tokenActor.GetActor(settings.tokenCanisterId),
+        ]);
 
         if (actor) {
             const [burnedAmountRaw, metadata, tokenStandards, totalSupplyRaw] =

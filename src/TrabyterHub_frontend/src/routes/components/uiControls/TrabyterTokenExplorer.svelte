@@ -64,53 +64,60 @@
                 );
                 await tokenExplorer.InitializeAsync();
 
-                if (false) {
-                    var keyExplorerResponse =
-                        'ExplorerResponse' + settings.tokenCanisterId;
-                    var keyExplorerLastTxIndex =
-                        'ExplorerResponseLastTx' + settings.tokenCanisterId;
+                let dataFromSessionStorageWasUsed: boolean = false;
 
-                    console.log('keyExplorerResponse:', keyExplorerResponse);
-                    console.log(
-                        'keyExplorerLastTxIndex:',
+                if (typeof window !== 'undefined') {
+                    var keyExplorerResponse =
+                        'ExplorerResponse_' + settings.tokenCanisterId;
+                    var keyExplorerLastTxIndex =
+                        'ExplorerResponseLastTx_' + settings.tokenCanisterId;
+
+                    const cachedResponse =
+                        sessionStorage.getItem(keyExplorerResponse);
+                    const secondCachedResponse = sessionStorage.getItem(
                         keyExplorerLastTxIndex,
                     );
-                    // Check if we have cached response in local storage.
-                    if (typeof window !== 'undefined') {
-                        console.log(
-                            'Checking localStorage for cached response',
-                        );
-                        // Try to get the cached response from local storage.
-                        const cachedResponse =
-                            localStorage.getItem(keyExplorerResponse);
-                        const secondCachedResponse = localStorage.getItem(
-                            keyExplorerLastTxIndex,
-                        );
-                        console.log(
-                            'Cached response:',
+
+                    if (cachedResponse && secondCachedResponse) {
+                        tokenExplorerResponse = JSON.parse(
                             cachedResponse,
-                            secondCachedResponse,
-                        );
-                        if (cachedResponse && secondCachedResponse) {
-                            tokenExplorerResponse = JSON.parse(cachedResponse);
-                            totalLastTxIndex = Number(secondCachedResponse);
-                            searchTxValue = totalLastTxIndex;
-                            console.log(
-                                'Using cached response:',
-                                tokenExplorerResponse,
-                            );
-                        }
+                        ) as TokenExplorerResponse;
+                        searchTxValue = Number(secondCachedResponse) as number;
+                        dataFromSessionStorageWasUsed = true;
+                        await updateUi();
                     }
                 }
-
-                await updateUi();
+                if (dataFromSessionStorageWasUsed) {
+                    // There might be already new transactions available,
+                    // Therefore these additional lines of code here.
+                    var totalCountTx = await tokenExplorer.TotalTxCountAsync();
+                    totalLastTxIndex = Math.max(Number(totalCountTx) - 1, 0);
+                    await UpdateNavigationInformation();
+                } else {
+                    await updateUi();
+                }
             }
         } catch (error) {
             console.error('Error fetching transactions:', error);
         }
     });
 
-    async function navigateToFirstPage() {
+    async function UpdateCurrentLastTxIndex() {
+        if (tokenExplorerResponse === undefined) {
+            console.warn('Token Explorer response is undefined.');
+            return;
+        }
+
+        if (
+            tokenExplorerResponse.items === undefined ||
+            tokenExplorerResponse.items.length === 0
+        ) {
+            console.warn('Token Explorer items are empty.');
+            return;
+        }
+    }
+
+    async function navigateToFirstPage(): Promise<void> {
         if (goToFirstPagePossible) {
             if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
                 searchTxValue = totalLastTxIndex;
@@ -144,15 +151,12 @@
     }
 
     async function navigateToNextPage() {
-        console.log('navigateToNextPage called');
         if (goToLastPagePossible) {
             if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
-                console.log('searchTxValue before:', searchTxValue);
                 searchTxValue = pageShownMinTxId - 1;
                 if (searchTxValue < 0) {
                     searchTxValue = 0;
                 }
-                console.log('searchTxValue after:', searchTxValue);
             } else if (
                 searchMode === TokenExplorerSearchMode.SearchByPrincipal
             ) {
@@ -189,8 +193,6 @@
         ) {
             goToFirstPagePossible = false;
             goToLastPagePossible = false;
-            //goToNextPagePossible = false;
-            //goToPreviousPagePossible = false;
             return;
         }
 
@@ -226,6 +228,7 @@
     async function updateUi(fetchRequired: boolean = false) {
         // Clear the current items before fetching new ones.
         tokenExplorerItems = [];
+
         if (
             tokenExplorerResponse === undefined ||
             tokenExplorerResponse.items === undefined ||
@@ -257,27 +260,6 @@
             }
         }
         await UpdateNavigationInformation();
-
-        //var maxItemsPerPage = Number(rowsPerPage);
-
-        // On first time load, we fetch the last transactions.
-        // if (
-        //     tokenExplorerItems === undefined ||
-        //     tokenExplorerItems === null ||
-        //     tokenExplorerItems.length === 0
-        // ) {
-        //     var startArrayIndex: number = 0;
-        //     var lastArrayIndex: number = Math.min(
-        //         maxItemsPerPage,
-        //         tokenExplorerResponse.items.length,
-        //     );
-        //     tokenExplorerItems = tokenExplorerResponse.items.slice(
-        //         startArrayIndex,
-        //         lastArrayIndex,
-        //     );
-        //     await UpdateNavigationInformation();
-        //     return;
-        // }
     }
 
     // Function to fetch transactions and update the state.

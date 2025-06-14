@@ -76,7 +76,7 @@
 
         // Generate a unique key for session storage based on the base currency.
         let key = 'tokenInfo' + settings.baseCurrency;
-        console.log('key', key);
+        //console.log('key', key);
         const storedTokenInfo = sessionStorage.getItem(key);
 
         // If token information exists in session storage, use it.

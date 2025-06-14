@@ -41,17 +41,14 @@ export class TokenExplorerService {
 
     async InitializeAsync() {
         let tokenActor = new TokenActor();
-        this.#actor = await tokenActor.GetActor(
-            this.#tokenExplorerSettings.canisterId,
-        );
+        this.#actor = await tokenActor.GetActor(this.#tokenExplorerSettings.canisterId);
     }
 
     async GetTransactionsByStartTxIdAsync(
         startTxId: number,
         maxItemsCount: number = 10,
     ): Promise<TokenExplorerResponse | undefined> {
-        var result: TokenExplorerResponse | undefined =
-            new TokenExplorerResponse();
+        var result: TokenExplorerResponse | undefined = new TokenExplorerResponse();
 
         if (this.#actor == null) {
             result.hasError = true;
@@ -61,24 +58,12 @@ export class TokenExplorerService {
 
         try {
             let maxLength = maxItemsCount;
-            let transactions = await this.#actor.get_transactions_by_index(
-                startTxId,
-                maxLength,
-            );
-            var convertedTransactions =
-                await this.#ConvertTransactionResponseIntoOwnArray(
-                    transactions,
-                );
-            result.items = convertedTransactions.sort(
-                (a, b) => b.txIndex - a.txIndex,
-            );
+            let transactions = await this.#actor.get_transactions_by_index(startTxId, maxLength);
+            var convertedTransactions = await this.#ConvertTransactionResponseIntoOwnArray(transactions);
+            result.items = convertedTransactions.sort((a, b) => b.txIndex - a.txIndex);
             result.totalCount = convertedTransactions.length;
-            result.firstTx = Math.max(
-                ...convertedTransactions.map((tx) => tx.txIndex),
-            );
-            result.lastTx = Math.min(
-                ...convertedTransactions.map((tx) => tx.txIndex),
-            );
+            result.firstTx = Math.max(...convertedTransactions.map((tx) => tx.txIndex));
+            result.lastTx = Math.min(...convertedTransactions.map((tx) => tx.txIndex));
         } catch (error) {
             result.hasError = true;
             result.errorMessage = `Error while getting transactions: ${error}`;
@@ -95,9 +80,7 @@ export class TokenExplorerService {
     }
 
     // #region Helpers methods
-    async #ConvertTransactionResponseIntoOwnArray(
-        transactionsResponse: any[],
-    ): Promise<TokenExplorerItem[]> {
+    async #ConvertTransactionResponseIntoOwnArray(transactionsResponse: any[]): Promise<TokenExplorerItem[]> {
         const transactions = new Array(transactionsResponse.length);
 
         //Now we need to convert
@@ -108,30 +91,19 @@ export class TokenExplorerService {
 
             switch (model.TransactionType.toLowerCase()) {
                 case 'mint':
-                    this.#Update_ModelItem_common_values(
-                        model,
-                        transaction.mint[0],
-                    );
+                    this.#Update_ModelItem_common_values(model, transaction.mint[0]);
                     break;
                 case 'burn':
-                    this.#Update_ModelItem_common_values(
-                        model,
-                        transaction.burn[0],
-                    );
+                    this.#Update_ModelItem_common_values(model, transaction.burn[0]);
                     break;
                 case 'transfer':
-                    this.#Update_ModelItem_common_values(
-                        model,
-                        transaction.transfer[0],
-                    );
+                    this.#Update_ModelItem_common_values(model, transaction.transfer[0]);
                     break;
                 default:
                     continue;
             }
 
-            model.DateTimeString = this.#TimeTicksNanoseconds_To_DateTimeString(
-                transaction.timestamp,
-            );
+            model.DateTimeString = this.#TimeTicksNanoseconds_To_DateTimeString(transaction.timestamp);
             model.txIndex = Number(transaction.index);
             transactions[i] = model;
         }
@@ -143,17 +115,12 @@ export class TokenExplorerService {
             return '';
         }
         let timeTicksNanoSeconds = Number(ticksNanoSeconds);
-        let timeTicksMilliSeconds = Math.trunc(
-            Number(timeTicksNanoSeconds / 1000000),
-        );
+        let timeTicksMilliSeconds = Math.trunc(Number(timeTicksNanoSeconds / 1000000));
         let date = new Date(Number(timeTicksMilliSeconds));
         return date.toLocaleString();
     }
 
-    #Update_ModelItem_common_values(
-        model: TokenExplorerItem,
-        transaction: any,
-    ) {
+    #Update_ModelItem_common_values(model: TokenExplorerItem, transaction: any) {
         let rawAmount = transaction?.amount;
         let rawTo = transaction?.to?.owner;
         let rawFrom = transaction?.from?.owner;
@@ -161,13 +128,11 @@ export class TokenExplorerService {
         let decimals = this.#tokenExplorerSettings.decimals;
 
         if (rawAmount != null) {
-            model.Amount = new TokenBalance(
-                BigInt(rawAmount),
-                Number(decimals),
-            )?.GetValue();
+            model.Amount = new TokenBalance(BigInt(rawAmount), Number(decimals))?.GetValue();
         } else {
             model.Amount = 0;
         }
+        model.Amount = parseFloat(model.Amount.toFixed(3));
 
         if (rawTo != null) {
             model.To = Principal.fromHex(rawTo?.toHex())?.toText();

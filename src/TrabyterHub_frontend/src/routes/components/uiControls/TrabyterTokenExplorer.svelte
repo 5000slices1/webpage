@@ -10,20 +10,12 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import {fade} from 'svelte/transition';
-    import {TokenActor} from '$lib/javascript/Utils/TokenActor';
-    import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
     import {TokenExplorerSearchMode} from '$lib/javascript/Abstractions/explorer/searchMode';
     import {
         TokenExplorerResponse,
         TokenExplorerService,
         type TokenExplorerItem,
     } from '$lib/javascript/Services/TokenExplorerService';
-
-    import {
-        GetCustomDictionaryFromVariant,
-        GetResultFromVariant,
-        GetValueFromDictionary,
-    } from '$lib/javascript/Utils/CommonUtils';
 
     // Props passed to the component, with default settings for token information.
     let {
@@ -38,9 +30,7 @@
     let tokenExplorer: TokenExplorerService;
 
     let rowsPerPage: string = $state('5');
-    let searchMode: TokenExplorerSearchMode = $state(
-        TokenExplorerSearchMode.SearchByTxId,
-    );
+    let searchMode: TokenExplorerSearchMode = $state(TokenExplorerSearchMode.SearchByTxId);
 
     let pageShownMaxTxId: number = $state(0);
     let pageShownMinTxId: number = $state(0);
@@ -52,36 +42,26 @@
 
     // State variables to hold the token explorer items and response.
     var tokenExplorerItems: TokenExplorerItem[] = $state([]);
-    var tokenExplorerResponse: TokenExplorerResponse | undefined =
-        $state(undefined);
+    var tokenExplorerResponse: TokenExplorerResponse | undefined = $state(undefined);
 
     onMount(async () => {
         // Fetch transactions from the token canister.
         try {
             if (tokenExplorer === undefined || tokenExplorer === null) {
-                tokenExplorer = new TokenExplorerService(
-                    settings.tokenCanisterId,
-                );
+                tokenExplorer = new TokenExplorerService(settings.tokenCanisterId);
                 await tokenExplorer.InitializeAsync();
 
                 let dataFromSessionStorageWasUsed: boolean = false;
 
                 if (typeof window !== 'undefined') {
-                    var keyExplorerResponse =
-                        'ExplorerResponse_' + settings.tokenCanisterId;
-                    var keyExplorerLastTxIndex =
-                        'ExplorerResponseLastTx_' + settings.tokenCanisterId;
+                    var keyExplorerResponse = 'ExplorerResponse_' + settings.tokenCanisterId;
+                    var keyExplorerLastTxIndex = 'ExplorerResponseLastTx_' + settings.tokenCanisterId;
 
-                    const cachedResponse =
-                        sessionStorage.getItem(keyExplorerResponse);
-                    const secondCachedResponse = sessionStorage.getItem(
-                        keyExplorerLastTxIndex,
-                    );
+                    const cachedResponse = sessionStorage.getItem(keyExplorerResponse);
+                    const secondCachedResponse = sessionStorage.getItem(keyExplorerLastTxIndex);
 
                     if (cachedResponse && secondCachedResponse) {
-                        tokenExplorerResponse = JSON.parse(
-                            cachedResponse,
-                        ) as TokenExplorerResponse;
+                        tokenExplorerResponse = JSON.parse(cachedResponse) as TokenExplorerResponse;
                         searchTxValue = Number(secondCachedResponse) as number;
                         dataFromSessionStorageWasUsed = true;
                         await updateUi();
@@ -108,10 +88,7 @@
             return;
         }
 
-        if (
-            tokenExplorerResponse.items === undefined ||
-            tokenExplorerResponse.items.length === 0
-        ) {
+        if (tokenExplorerResponse.items === undefined || tokenExplorerResponse.items.length === 0) {
             console.warn('Token Explorer items are empty.');
             return;
         }
@@ -121,9 +98,7 @@
         if (goToFirstPagePossible) {
             if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
                 searchTxValue = totalLastTxIndex;
-            } else if (
-                searchMode === TokenExplorerSearchMode.SearchByPrincipal
-            ) {
+            } else if (searchMode === TokenExplorerSearchMode.SearchByPrincipal) {
                 // Handle navigation for SearchByPrincipal mode if needed.
             } else {
                 console.warn('Unknown search mode:', searchMode);
@@ -139,9 +114,7 @@
                 if (searchTxValue > totalLastTxIndex) {
                     searchTxValue = totalLastTxIndex;
                 }
-            } else if (
-                searchMode === TokenExplorerSearchMode.SearchByPrincipal
-            ) {
+            } else if (searchMode === TokenExplorerSearchMode.SearchByPrincipal) {
                 // Handle navigation for SearchByPrincipal mode if needed.
             } else {
                 console.warn('Unknown search mode:', searchMode);
@@ -157,9 +130,7 @@
                 if (searchTxValue < 0) {
                     searchTxValue = 0;
                 }
-            } else if (
-                searchMode === TokenExplorerSearchMode.SearchByPrincipal
-            ) {
+            } else if (searchMode === TokenExplorerSearchMode.SearchByPrincipal) {
                 // Handle navigation for SearchByPrincipal mode if needed.
             } else {
                 console.warn('Unknown search mode:', searchMode);
@@ -172,9 +143,7 @@
         if (goToLastPagePossible) {
             if (searchMode === TokenExplorerSearchMode.SearchByTxId) {
                 searchTxValue = 0;
-            } else if (
-                searchMode === TokenExplorerSearchMode.SearchByPrincipal
-            ) {
+            } else if (searchMode === TokenExplorerSearchMode.SearchByPrincipal) {
                 // Handle navigation for SearchByPrincipal mode if needed.
             } else {
                 console.warn('Unknown search mode:', searchMode);
@@ -201,8 +170,7 @@
             // Calculate the min and max txid shown on the current page.
             // The first item in the array has the highest txIndex (most recent).
             pageShownMaxTxId = tokenExplorerItems[0].txIndex;
-            pageShownMinTxId =
-                tokenExplorerItems[tokenExplorerItems.length - 1].txIndex;
+            pageShownMinTxId = tokenExplorerItems[tokenExplorerItems.length - 1].txIndex;
 
             // Determine if navigation buttons should be enabled.
             goToFirstPagePossible = pageShownMaxTxId < totalLastTxIndex;
@@ -213,10 +181,7 @@
 
             // Calculate the min and max txid from tokenExplorerResponse.items
             let cachedMaxTxId: number = tokenExplorerResponse.items[0].txIndex;
-            let cachedMinTxId: number =
-                tokenExplorerResponse.items[
-                    tokenExplorerResponse.items.length - 1
-                ].txIndex;
+            let cachedMinTxId: number = tokenExplorerResponse.items[tokenExplorerResponse.items.length - 1].txIndex;
 
             goToFirstPagePossible = pageShownMaxTxId < cachedMaxTxId;
             goToLastPagePossible = cachedMinTxId > cachedMinTxId;
@@ -229,32 +194,22 @@
         // Clear the current items before fetching new ones.
         tokenExplorerItems = [];
 
-        if (
-            tokenExplorerResponse === undefined ||
-            tokenExplorerResponse.items === undefined ||
-            fetchRequired
-        ) {
+        if (tokenExplorerResponse === undefined || tokenExplorerResponse.items === undefined || fetchRequired) {
             await fetchTransactions();
         }
 
-        if (
-            tokenExplorerResponse === undefined ||
-            tokenExplorerResponse.items === undefined
-        ) {
+        if (tokenExplorerResponse === undefined || tokenExplorerResponse.items === undefined) {
             console.warn('Token Explorer items are undefined.');
         } else {
             if (searchMode == TokenExplorerSearchMode.SearchByTxId) {
-                var cachedMaxTxId: number =
-                    tokenExplorerResponse.items[0].txIndex;
+                var cachedMaxTxId: number = tokenExplorerResponse.items[0].txIndex;
 
                 if (searchTxValue != cachedMaxTxId) {
                     await fetchTransactions();
                 }
 
                 tokenExplorerItems = tokenExplorerResponse?.items;
-            } else if (
-                searchMode == TokenExplorerSearchMode.SearchByPrincipal
-            ) {
+            } else if (searchMode == TokenExplorerSearchMode.SearchByPrincipal) {
             } else {
                 console.warn('Unknown search mode:', searchMode);
             }
@@ -266,9 +221,7 @@
     async function fetchTransactions() {
         try {
             if (tokenExplorer === undefined || tokenExplorer === null) {
-                tokenExplorer = new TokenExplorerService(
-                    settings.tokenCanisterId,
-                );
+                tokenExplorer = new TokenExplorerService(settings.tokenCanisterId);
                 await tokenExplorer.InitializeAsync();
             }
 
@@ -282,22 +235,12 @@
                     searchTxValue = totalLastTxIndex;
                 }
 
-                let searchValueToUse: number = Math.max(
-                    searchTxValue - maxItemsPerPage + 1,
-                    0,
-                );
+                let searchValueToUse: number = Math.max(searchTxValue - maxItemsPerPage + 1, 0);
 
-                const response =
-                    await tokenExplorer.GetTransactionsByStartTxIdAsync(
-                        searchValueToUse,
-                        maxItemsPerPage,
-                    );
+                const response = await tokenExplorer.GetTransactionsByStartTxIdAsync(searchValueToUse, maxItemsPerPage);
 
                 if (response === undefined || response?.hasError == true) {
-                    console.error(
-                        'Error fetching transactions:',
-                        response?.errorMessage,
-                    );
+                    console.error('Error fetching transactions:', response?.errorMessage);
                     return;
                 }
 
@@ -310,28 +253,19 @@
 </script>
 
 <div>
-    <div
-        class="token-explorer"
-        style="background-color: rgba(84, 143, 232, 0.3);"
-    >
+    <div class="token-explorer" style="background-color: rgba(84, 143, 232, 0.3);">
         <h2 style="color: white; font-weight:bold">
             Token Explorer - {settings.tokenSymbol} ({settings.tokenName})
         </h2>
 
-        <div
-            style="margin-top: 0.0rem;margin-bottom:1.0rem; margin-left:0.0rem"
-        >
+        <div style="margin-top: 0.0rem;margin-bottom:1.0rem; margin-left:0.0rem">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <label for="rows" style="color: white;">Rows:</label>
                 <select
                     id="rows"
                     onchange={async (e: Event) => {
                         const target = e.target as HTMLSelectElement;
-                        if (
-                            !target ||
-                            target.value === undefined ||
-                            target.value === null
-                        ) {
+                        if (!target || target.value === undefined || target.value === null) {
                             return;
                         }
 
@@ -354,9 +288,7 @@
                 <p style="color: white; width: 4.0rem; text-align: right;">
                     {pageShownMaxTxId}
                 </p>
-                <p style="color: white; width: 0.5rem; text-align: center;">
-                    -
-                </p>
+                <p style="color: white; width: 0.5rem; text-align: center;">-</p>
                 <p style="color: white;width: 4.0rem;">{pageShownMinTxId}</p>
                 <div style="width: 2.5rem;"></div>
 
@@ -410,11 +342,7 @@
 
         <div class="token-list">
             {#each tokenExplorerItems as items, index}
-                <div
-                    class="token-item"
-                    in:fade={{duration: 300}}
-                    out:fade={{duration: 300}}
-                >
+                <div class="token-item" in:fade={{duration: 300}} out:fade={{duration: 300}}>
                     <div style="display: flex; gap: 1rem;">
                         <p style="width: 3.5rem;">Txid:</p>
                         <p style="width: 4rem;">{items.txIndex}</p>
@@ -467,6 +395,7 @@
     }
 
     .token-item {
+        max-width: 33rem;
         padding: 0.5rem;
         border: 1px solid rgba(84, 143, 232, 0.3);
         border-radius: 8px;
@@ -481,27 +410,8 @@
         transform: translateZ(0);
     }
 
-    .token-item h3 {
-        margin: 0;
-        font-size: 1.2rem;
-    }
-
     .token-item p {
         margin: 0.2rem 0;
-    }
-
-    .token-item button {
-        margin-top: 0.5rem;
-        padding: 0.5rem;
-        border: none;
-        border-radius: 4px;
-        background-color: #007bff;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    .token-item button:hover {
-        background-color: #0056b3;
     }
 
     .tokenexplorer-navigation-rewind-button {

@@ -46,16 +46,11 @@ class InternalMainClass {
         // Simulate a delay
         const prefetchData = async () => {
             if (typeof window === 'undefined' || !window.sessionStorage) {
-                console.warn(
-                    'Session storage is not available. Prefetching will not store data.',
-                );
+                console.warn('Session storage is not available. Prefetching will not store data.');
                 return;
             }
 
-            await Promise.all([
-                this.fetchDataTokenInfoAsync(),
-                this.fetchDataTokenExplorerAsync(),
-            ]);
+            await Promise.all([this.fetchDataTokenInfoAsync(), this.fetchDataTokenExplorerAsync()]);
 
             console.log(
                 'Prefetching data done. TRA and TRAPRE token information and explorer data are stored in session storage.',
@@ -71,12 +66,18 @@ class InternalMainClass {
     }
 
     private async fetchDataTokenExplorerAsync() {
-        var trabyterExplorerService = new TokenExplorerService(
-            TrabyterBucks_CanisterId,
-        );
-        var trabyterPremiumExplorerService = new TokenExplorerService(
-            TrabyterPremium_CanisterId,
-        );
+        const firstTraKey: string = 'ExplorerResponse_' + TrabyterBucks_CanisterId;
+        const secondTraKey: string = 'ExplorerResponseLastTx_' + TrabyterBucks_CanisterId;
+
+        const firstTrapreKey: string = 'ExplorerResponse_' + TrabyterPremium_CanisterId;
+        const secondTrapreKey: string = 'ExplorerResponseLastTx_' + TrabyterPremium_CanisterId;
+        sessionStorage.removeItem(firstTraKey); // Clear previous data
+        sessionStorage.removeItem(secondTraKey); // Clear previous data
+        sessionStorage.removeItem(firstTrapreKey); // Clear previous data
+        sessionStorage.removeItem(secondTrapreKey); // Clear previous data
+
+        var trabyterExplorerService = new TokenExplorerService(TrabyterBucks_CanisterId);
+        var trabyterPremiumExplorerService = new TokenExplorerService(TrabyterPremium_CanisterId);
 
         await Promise.all([
             trabyterExplorerService.InitializeAsync(),
@@ -89,62 +90,35 @@ class InternalMainClass {
         ]);
 
         let numberTralastTx: number = Number(traLastTx) - Number(1);
-        let numberTraPremiumLastTx: number =
-            Number(traPremiumLastTx) - Number(1);
+        let numberTraPremiumLastTx: number = Number(traPremiumLastTx) - Number(1);
 
-        const [traPremiumExplorerResponse, traExplorerResponse] =
-            await Promise.all([
-                trabyterPremiumExplorerService.GetTransactionsByStartTxIdAsync(
-                    numberTraPremiumLastTx - 4,
-                    5,
-                ),
-                trabyterExplorerService.GetTransactionsByStartTxIdAsync(
-                    numberTralastTx - 4,
-                    5,
-                ),
-            ]);
+        const [traPremiumExplorerResponse, traExplorerResponse] = await Promise.all([
+            trabyterPremiumExplorerService.GetTransactionsByStartTxIdAsync(numberTraPremiumLastTx - 4, 5),
+            trabyterExplorerService.GetTransactionsByStartTxIdAsync(numberTralastTx - 4, 5),
+        ]);
 
-        if (
-            traExplorerResponse != null &&
-            traExplorerResponse.hasError == false
-        ) {
-            var firstKey: string =
-                'ExplorerResponse_' + TrabyterBucks_CanisterId;
-            var secondKey: string =
-                'ExplorerResponseLastTx_' + TrabyterBucks_CanisterId;
-
+        if (traExplorerResponse != null && traExplorerResponse.hasError == false) {
             // Store into session storage
             try {
-                const serializableResponse =
-                    JSON.stringify(traExplorerResponse);
-                sessionStorage.setItem(firstKey, serializableResponse);
+                const serializableResponse = JSON.stringify(traExplorerResponse);
+
+                sessionStorage.setItem(firstTraKey, serializableResponse);
             } catch (error) {
-                console.error(
-                    'Failed to serialize traExplorerResponse:',
-                    error,
-                );
+                console.error('Failed to serialize traExplorerResponse:', error);
             }
             try {
                 const numberTralastTxString = JSON.stringify(numberTralastTx);
-                sessionStorage.setItem(secondKey, numberTralastTxString);
+
+                sessionStorage.setItem(secondTraKey, numberTralastTxString);
             } catch (error) {
                 console.error('Failed to serialize numberTralastTx:', error);
             }
         }
 
-        if (
-            traPremiumExplorerResponse != null &&
-            traPremiumExplorerResponse.hasError == false
-        ) {
+        if (traPremiumExplorerResponse != null && traPremiumExplorerResponse.hasError == false) {
             // Store into session storage
-            sessionStorage.setItem(
-                'ExplorerResponse_' + TrabyterPremium_CanisterId,
-                JSON.stringify(traPremiumExplorerResponse),
-            );
-            sessionStorage.setItem(
-                'ExplorerResponseLastTx_' + TrabyterPremium_CanisterId,
-                JSON.stringify(numberTraPremiumLastTx),
-            );
+            sessionStorage.setItem(firstTrapreKey, JSON.stringify(traPremiumExplorerResponse));
+            sessionStorage.setItem(secondTrapreKey, JSON.stringify(numberTraPremiumLastTx));
         }
     }
 

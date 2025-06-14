@@ -1,7 +1,4 @@
-import {
-    GetCustomDictionaryFromVariant,
-    GetValueFromDictionary,
-} from '$lib/javascript/Utils/CommonUtils';
+import {GetCustomDictionaryFromVariant, GetValueFromDictionary} from '$lib/javascript/Utils/CommonUtils';
 import {TokenActor} from '$lib/javascript/Utils/TokenActor';
 import {TokenBalance} from '$lib/javascript/Utils/TokenBalance';
 
@@ -13,9 +10,7 @@ import type {
 
 export class TokenInformationService {
     async fetchTickersAsync(): Promise<Ticker[]> {
-        const response = await fetch(
-            'https://uvevg-iyaaa-aaaak-ac27q-cai.raw.ic0.app/tickers',
-        );
+        const response = await fetch('https://uvevg-iyaaa-aaaak-ac27q-cai.raw.ic0.app/tickers');
         if (!response.ok) {
             throw new Error('Failed to fetch ticker data');
         }
@@ -50,9 +45,7 @@ export class TokenInformationService {
         return [];
     }
 
-    async getTickerAsync(
-        settings: TokenInformationSettings,
-    ): Promise<Ticker | undefined> {
+    async getTickerAsync(settings: TokenInformationSettings): Promise<Ticker | undefined> {
         const tickers = await this.fetchTickersAsync();
         return tickers.find(
             (ticker) =>
@@ -69,9 +62,7 @@ export class TokenInformationService {
     ): Promise<TokenInfo | undefined> {
         let ticker = await this.getTickerAsync(settings);
         if (!ticker || !tokenInfo) {
-            console.error(
-                'Ticker or tokenInfo is null, cannot update information.',
-            );
+            console.error('Ticker or tokenInfo is null, cannot update information.');
             return;
         }
         let tokenActor = new TokenActor();
@@ -82,14 +73,8 @@ export class TokenInformationService {
             actor.icrc1_total_supply(),
         ]);
 
-        let totalSupply = new TokenBalance(
-            BigInt(totalSupplyRaw as string),
-            tokenInfo?.tokenDecimals,
-        ).GetValue();
-        let burnedAmount = new TokenBalance(
-            BigInt(burnedAmountRaw as string),
-            tokenInfo?.tokenDecimals,
-        ).GetValue();
+        let totalSupply = new TokenBalance(BigInt(totalSupplyRaw as string), tokenInfo?.tokenDecimals).GetValue();
+        let burnedAmount = new TokenBalance(BigInt(burnedAmountRaw as string), tokenInfo?.tokenDecimals).GetValue();
 
         tokenInfo.burnedAmount = burnedAmount;
         tokenInfo.tokenSupply = totalSupply;
@@ -104,9 +89,14 @@ export class TokenInformationService {
         return tokenInfo;
     }
 
-    async initTokenInformationAsync(
-        settings: TokenInformationSettings,
-    ): Promise<TokenInfo | undefined> {
+    async initTokenInformationAsync(settings: TokenInformationSettings): Promise<TokenInfo | undefined> {
+        if (typeof window === 'undefined') {
+            console.error('This method is not supported in server-side rendering.');
+            return;
+        }
+        let key = 'tokenInfo' + settings.baseCurrency;
+        sessionStorage.removeItem(key); // Clear previous data
+
         let tokenActor = new TokenActor();
 
         const [ticker, actor] = await Promise.all([
@@ -115,32 +105,26 @@ export class TokenInformationService {
         ]);
 
         if (actor) {
-            const [burnedAmountRaw, metadata, tokenStandards, totalSupplyRaw] =
-                await Promise.all([
-                    actor.get_burned_amount(),
-                    actor.icrc1_metadata(),
-                    actor.icrc1_supported_standards(),
-                    actor.icrc1_total_supply(),
-                ]);
+            const [burnedAmountRaw, metadata, tokenStandards, totalSupplyRaw] = await Promise.all([
+                actor.get_burned_amount(),
+                actor.icrc1_metadata(),
+                actor.icrc1_supported_standards(),
+                actor.icrc1_total_supply(),
+            ]);
 
             let decimals: number = 8;
             let logoBase64: string | undefined = undefined;
             let name: string = '';
             if (metadata) {
                 let metaDic = GetCustomDictionaryFromVariant(metadata);
-                decimals = Number(
-                    GetValueFromDictionary(metaDic, 'icrc1:decimals'),
-                );
+                decimals = Number(GetValueFromDictionary(metaDic, 'icrc1:decimals'));
                 logoBase64 = GetValueFromDictionary(metaDic, 'icrc1:logo');
                 name = GetValueFromDictionary(metaDic, 'icrc1:name');
             } else {
                 console.error('Metadata is null or undefined.');
             }
 
-            let totalSupply = new TokenBalance(
-                BigInt(totalSupplyRaw as string),
-                decimals,
-            ).GetValue();
+            let totalSupply = new TokenBalance(BigInt(totalSupplyRaw as string), decimals).GetValue();
 
             var tokenStandardsString = '';
             for (let item of tokenStandards as any) {
@@ -150,10 +134,7 @@ export class TokenInformationService {
             }
             let supportedStandards = tokenStandardsString;
 
-            let burnedAmount = new TokenBalance(
-                BigInt(burnedAmountRaw as string),
-                decimals,
-            ).GetValue();
+            let burnedAmount = new TokenBalance(BigInt(burnedAmountRaw as string), decimals).GetValue();
 
             let tokenInfo: TokenInfo = {
                 tokenName: name || 'Unknown Token',
@@ -170,7 +151,6 @@ export class TokenInformationService {
             };
 
             if (typeof window !== 'undefined' && tokenInfo) {
-                let key = 'tokenInfo' + settings.baseCurrency;
                 sessionStorage.setItem(key, JSON.stringify(tokenInfo));
             }
             return tokenInfo;

@@ -7,7 +7,6 @@ import {
     TokenExplorerItem,
     TokenExplorerResponse,
     TokenExplorerService,
-    type,
 } from '$lib/javascript/Services/TokenExplorerService';
 import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService';
 import {writable} from 'svelte/store';

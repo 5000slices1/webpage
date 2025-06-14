@@ -178,13 +178,7 @@
         } else if (searchMode == TokenExplorerSearchMode.SearchByPrincipal) {
             // In searchmode 'searchByPrincipal' the 'tokenExplorerResponse.items' array can
             // have higher count as 'tokenExplorerItems'.
-
-            // Calculate the min and max txid from tokenExplorerResponse.items
-            let cachedMaxTxId: number = tokenExplorerResponse.items[0].txIndex;
-            let cachedMinTxId: number = tokenExplorerResponse.items[tokenExplorerResponse.items.length - 1].txIndex;
-
-            goToFirstPagePossible = pageShownMaxTxId < cachedMaxTxId;
-            goToLastPagePossible = cachedMinTxId > cachedMinTxId;
+            //TODO: Implement logic for SearchByPrincipal mode.
         } else {
             console.warn('Unknown search mode:', searchMode);
         }

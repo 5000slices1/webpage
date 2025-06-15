@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" style="font-size: 1em">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preload" as="image" href="/icons/TraByterLogo.png" />
+        <link rel="preload" as="image" href="/images/NftMarketAppBuyLogo.avif" />
+        <link rel="preload" as="image" href="/images/NftMarketAppBuyLogo.png" />
+        <link rel="preload" as="image" href="/images/StakingAppTreeLogo.avif" />
+        <link rel="preload" as="image" href="/images/StakingAppTreeLogo.png" />
+        <script>
+            const images = [
+                '/icons/TraByterLogo.png',
+                '/images/NftMarketAppBuyLogo.avif',
+                '/images/NftMarketAppBuyLogo.png',
+                '/images/StakingAppTreeLogo.avif',
+                '/images/StakingAppTreeLogo.png',
+            ];
+            images.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => {
+                    console.log(`${src} is loaded.`);
+                };
+            });
+        </script>
+        <title>Trabyter Webpage</title>
+        %sveltekit.head%
+    </head>
+
+    <body data-sveltekit-preload-data="hover" style="background-color: #0e0f2c">
+        <!-- <div class="browser-warning">
+		⚠️ If this page appears broken, try reloading. If the problem persists, try switching browsers; Chrome or
+		Firefox are recommended.
+	</div> -->
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
+</html>

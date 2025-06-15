@@ -1,5 +1,8 @@
-{  
-  "web3_frontend": {
+{
+  "TrabyterHub_frontend": {
     "ic": "2jdlv-jyaaa-aaaal-qjhkq-cai"
+  },
+  "TrabyterHub_backend": {
+    "ic": "c33rl-3yaaa-aaaap-qp3bq-cai"
   }
 }

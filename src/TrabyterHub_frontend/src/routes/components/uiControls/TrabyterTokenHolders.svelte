@@ -3,7 +3,6 @@
         tokenCanisterId: string;
         tokenName: string;
         tokenSymbol: string;
-        //tokenDecimals: number;
     }
 </script>
 

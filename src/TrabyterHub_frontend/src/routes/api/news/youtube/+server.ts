@@ -1,10 +1,13 @@
-import {NewsOnYoutubeModelItem} from '$lib/javascript/Abstractions/news/youtube/newsOnYoutubeModelItem.js';
+import { NewsOnYoutubeModelItem } from '$lib/javascript/Abstractions/news/youtube/newsOnYoutubeModelItem.js';
 
-import {json} from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 
 export const prerender = true;
 
 export async function GET() {
+
+    // Define an array to hold items of type NewsOnYoutubeModelItem
+
     let items: NewsOnYoutubeModelItem[] = [];
     items.push(
         new NewsOnYoutubeModelItem(
@@ -34,7 +37,4 @@ export async function GET() {
     );
 
     return json(items);
-    //return json({time: new Date().toISOString()});
-    //return JSON.stringify('hello');
-    //return json('message:hello');
 }

@@ -32,16 +32,12 @@
     let service: TokenHoldersService;
 
     onMount(async () => {
-        console.log('TokenHolders onMount called');
         if (items === undefined || items === null || items.length === 0) {
-            console.log('Initializing TokenHoldersService');
             service = new TokenHoldersService(settings.tokenCanisterId);
             await service.InitializeAsync();
             holdersCount = await service.GetHoldersCountAsync();
             items = await service.GetHoldersAsync(0, parseInt(rowsPerPage));
-            console.log('TokenHoldersService initialized');
-            console.log('Holders count:', holdersCount);
-            console.log('Items:', items);
+
             await updateUi();
         }
     });
@@ -53,14 +49,9 @@
             console.warn('No items available to update navigation information.');
             return;
         }
-        console.log('Updating navigation information...');
-        console.log('Current start index:', currentStartIndex);
-        console.log('Holders count:', holdersCount);
+
         goToFirstPagePossible = currentStartIndex > 0;
         goToLastPagePossible = currentStartIndex + parseInt(rowsPerPage) < holdersCount;
-
-        console.log('Go to first page possible:', goToFirstPagePossible);
-        console.log('Go to last page possible:', goToLastPagePossible);
     }
 
     async function updateUi() {

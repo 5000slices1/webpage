@@ -3,6 +3,7 @@
     import {json} from '@sveltejs/kit';
     import NewsOnYoutubeItem from '../../../components/uiControls/NewsOnYoutubeItem.svelte';
     import {onMount} from 'svelte';
+    import {fade, fly, slide, scale} from 'svelte/transition';
     let data = $props();
     let newsItems: NewsOnYoutubeModelItem[] = $state([]);
 
@@ -56,11 +57,59 @@
         grid-template-columns: 15rem repeat(auto-fit, minmax(15rem, 15rem));
         column-gap: min(4rem, 100%);
         row-gap: 2rem;
+        transition: opacity 1.5s ease-in-out;
     }
 
     .news-item {
         display: flex;
         flex-direction: column;
         align-items: center;
+        transition: opacity 1.5s ease-in-out;
+    }
+
+    .news-item:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
+    }
+    .news-item:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease-in-out;
+    }
+    .news-item:focus {
+        outline: none;
+    }
+    .news-item:focus-visible {
+        outline: 0.2rem solid rgba(24, 146, 234, 0.6);
+        outline-offset: 0.2rem;
+    }
+    .news-item:focus-within {
+        outline: 0.2rem solid rgba(24, 146, 234, 0.6);
+        outline-offset: 0.2rem;
+    }
+    .news-item:focus-within:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
+    }
+    .news-item:focus-within:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease-in-out;
+    }
+    .news-item:focus-within:focus {
+        outline: none;
+    }
+    .news-item:focus-within:focus-visible {
+        outline: 0.2rem solid rgba(24, 146, 234, 0.6);
+        outline-offset: 0.2rem;
+    }
+    .news-item:focus-within:focus-visible:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
+    }
+    .news-item:focus-within:focus-visible:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease-in-out;
+    }
+    .news-item:focus-within:focus-visible:focus {
+        outline: none;
     }
 </style>

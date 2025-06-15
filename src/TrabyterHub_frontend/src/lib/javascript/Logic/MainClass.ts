@@ -29,7 +29,6 @@ class InternalMainClass {
         }
         await this.IdentityProvider.Init();
         this.#init_done = true;
-        console.log('GlobalTypes.InitAsync done');
         await this.PrefetchSomeDataInBackgroundAsync();
     }
 

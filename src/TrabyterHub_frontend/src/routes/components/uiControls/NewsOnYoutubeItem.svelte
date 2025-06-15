@@ -14,8 +14,13 @@
                 </td>
             </tr>
             <tr style="height: 1rem;">
-                <td class="news_item_youtube_card_view_more_item">
-                    <a href={data.videoUrl} target="_blank" rel="noopener noreferrer">View more...</a>
+                <td class="news_item_youtube_card_view_more_item" style="padding-right: 1rem;">
+                    <a
+                        href={data.videoUrl}
+                        target="_blank"
+                        style="color: rgba(255, 255, 255, 0.6); cursor: pointer;"
+                        rel="noopener noreferrer">View more...</a
+                    >
                 </td>
             </tr>
             <tr style="height: 8rem;">

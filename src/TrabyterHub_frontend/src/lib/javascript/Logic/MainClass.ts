@@ -1,4 +1,5 @@
 import TokenInformation from '$lib/../routes/components/uiControls/tokeninformation.svelte';
+import {EmbeddedAppsInformation} from '$lib/javascript/Abstractions/apps/embeddedAppsInformation'; // Adjust the path as needed
 import {
     TrabyterBucks_CanisterId,
     TrabyterPremium_CanisterId,
@@ -12,15 +13,23 @@ import {TokenInformationService} from '$lib/javascript/Services/TokenInformation
 import {writable} from 'svelte/store';
 
 import {IdentityProvider} from './identity/IdentityProvider';
+import {MessageProvider} from './messages/messageProvider';
 
 import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
+
 class InternalMainClass {
     #init_done: boolean = false;
     IdentityProvider: IdentityProvider;
     counter: number = 0;
+    MessageProvider: MessageProvider;
+    EmbeddedPageFullScreenMode: boolean = false;
+    EmbeddedAppsInformation: EmbeddedAppsInformation;
+
     constructor() {
         this.IdentityProvider = new IdentityProvider();
         this.counter = 0;
+        this.MessageProvider = new MessageProvider();
+        this.EmbeddedAppsInformation = new EmbeddedAppsInformation();
     }
 
     async InitAsync() {
@@ -28,6 +37,7 @@ class InternalMainClass {
             return;
         }
         await this.IdentityProvider.Init();
+        await this.MessageProvider.Init();
         this.#init_done = true;
         await this.PrefetchSomeDataInBackgroundAsync();
     }

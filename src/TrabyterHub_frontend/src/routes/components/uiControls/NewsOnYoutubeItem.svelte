@@ -26,7 +26,7 @@
             <tr style="height: 8rem;">
                 <td class="news_item_youtube_card_image">
                     <img
-                        src="images/news/youtube/{data.thumbnailUrl}.png"
+                        src="/images/news/youtube/{data.thumbnailUrl}.png"
                         alt="Thumbnail"
                         style="width: 100%; height: calc(100% - 1px); object-fit: fill;
                         rounded: 0rem 0rem 2rem 2rem; border-radius: 0rem 0rem 2rem 2rem;

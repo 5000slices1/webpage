@@ -2,6 +2,7 @@
     //import adapter from '@sveltejs/adapter-static';
     import {browser, version} from '$app/environment';
     import {onMount} from 'svelte';
+    import {fade} from 'svelte/transition';
     import {MainClass} from '$lib/javascript/Logic/MainClass';
     import {ModelWalletTypes} from '$lib/javascript/Abstractions/Identity/ModelWalletTypes';
     import './../app.css';
@@ -9,6 +10,8 @@
     import TokenInformation from '$lib/../routes/components/uiControls/tokeninformation.svelte';
     import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
     import {TrabyterBucks_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
+    import {AppName} from '$lib/javascript/Abstractions/apps/embeddedAppsInformation';
+    import {TrabyterStakingAppUrl} from '$lib/javascript/Abstractions/constants/globalConstants.js';
 
     import type {
         SubNavigationItem,
@@ -17,10 +20,12 @@
 
     import IconTrabyter from '/icons/TraByterLogo.png';
     import SubNavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
+    import Subnavigation from '$lib/../routes/components/navigation/subnavigation.svelte';
     const canisterId = process.env.CANISTER_ID_TRABYTERHUB_FRONTEND;
     let data = $props();
 
     $MainClass.counter = 3;
+
     let headerButtonsHorizontalSpacing: string = '0.8rem';
     let subNavigationItems: SubNavigationItem[] = $state([]);
     let subNavigationSettings: SubNavigationSettings = $state({
@@ -29,6 +34,7 @@
     });
 
     let subNavigation: SubNavigation;
+    //let embeddedPageFullScreenMode: boolean = $state($MainClass.EmbeddedPageFullScreenMode);
 
     if (browser) {
         // Initialize the main navigation button styling
@@ -41,9 +47,44 @@
                 return;
             }
             await $MainClass.InitAsync();
+            navigateToHomePageClicked();
         }
     });
 
+    async function ShowSubNavigationAppsItems() {
+        // first make it invisible
+        subNavigationSettings.navigationIsVisible = false;
+
+        // Adjust the height of the buttons
+        subNavigationSettings.buttonHeightStyleValue = '3.0rem';
+
+        // Now adjust the items
+        subNavigationItems = [
+            {
+                text: 'Overview',
+                href: '/pages/apps/overview',
+                styleWidth: '8.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+                },
+            },
+            {
+                text: 'Nft Staking',
+                href: '/pages/apps/nftstaking',
+                styleWidth: '8.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.NftStaking;
+                },
+            },
+        ];
+
+        // first navigate to the default page
+        //await subNavigation.NavigateTo('/pages/apps/nftstaking');
+        await subNavigation.NavigateTo('/pages/apps/overview');
+
+        // Now make it visible
+        subNavigationSettings.navigationIsVisible = true;
+    }
     async function ShowSubNavigationNftsItems() {
         // first make it invisible
         subNavigationSettings.navigationIsVisible = false;
@@ -57,16 +98,25 @@
                 text: 'Overview',
                 href: '/pages/tokensNft/overview',
                 styleWidth: '8.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+                },
             },
             {
                 text: 'Trabyter Bucks',
                 href: '/pages/tokensNft/trabyterbucks',
                 styleWidth: '8.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+                },
             },
             {
                 text: 'Trabyter Premium',
                 href: '/pages/tokensNft/trabyterpremium',
                 styleWidth: '8.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+                },
             },
             {text: 'NFTS', href: '/pages/tokensNft/nfts', styleWidth: '8.0rem'},
         ];
@@ -91,11 +141,17 @@
                 text: 'News on youtube',
                 href: '/pages/news/youtubeNews',
                 styleWidth: '12.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+                },
             },
             {
                 text: 'News about development state',
                 href: '/pages/news/developingStateNews',
                 styleWidth: '12.0rem',
+                onNavigateAction: async () => {
+                    $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+                },
             },
         ];
 
@@ -130,10 +186,7 @@
     if (browser) {
         window.onclick = function (event) {
             var targetElement = event?.target as HTMLElement;
-            if (
-                targetElement == null ||
-                !targetElement.className.toString().match('walletLoginButton')
-            ) {
+            if (targetElement == null || !targetElement.className.toString().match('walletLoginButton')) {
                 const element = document.getElementById('dropDownWalletMenu');
                 if (element != null && element.classList.contains('show')) {
                     element.classList.remove('show');
@@ -158,27 +211,36 @@
 
     async function navigateToHomePageClicked() {
         subNavigationSettings.navigationIsVisible = false;
+        $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
         MainNavButtonStylingUpdate('navButtonHome');
         await navigateToUrl('/');
     }
 
     async function navigateToAppsPageClicked() {
-        subNavigationSettings.navigationIsVisible = false;
+        $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
+        await ShowSubNavigationAppsItems();
+        //subNavigationSettings.navigationIsVisible = false;
         MainNavButtonStylingUpdate('navButtonApps');
-        let url = '/pages/apps';
-        await navigateToUrl(url);
+        //let url = '/pages/apps';
+        //await navigateToUrl(url);
     }
 
     async function navigateToTokensNftPageClicked() {
+        $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
         await ShowSubNavigationNftsItems();
         MainNavButtonStylingUpdate('navButtonNfts');
     }
     async function navigateToNewsPageClicked() {
+        $MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp = AppName.None;
         await await ShowSubNavigationNewsItems();
         MainNavButtonStylingUpdate('navButtonNews');
     }
 
     async function navigateToUrl(url: string) {
+        await goto(url);
+    }
+
+    async function navigateToUrlOld(url: string) {
         await goto(url, {
             replaceState: true,
         });
@@ -198,24 +260,17 @@
     vertical-align: top;
     "
         >
-            <table
-                cellspacing="0"
-                cellpadding="0"
-                style="width: 100%;height:100%"
-            >
+            <table cellspacing="0" cellpadding="0" style="width: 100%;height:100%">
                 <tbody>
                     <tr>
                         <td style="height: 0.2rem;"> </td>
                     </tr>
                     <tr>
-                        <td>
+                        <!-- {#if !$MainClass.EmbeddedPageFullScreenMode} -->
+                        <td style="display: {$MainClass.EmbeddedPageFullScreenMode ? 'none' : 'table-cell'};">
                             <!-- Header section -->
                             <header class="main-header">
-                                <div
-                                    class="main-header-div"
-                                    id="divMainMenu"
-                                    style="vertical-align: top;"
-                                >
+                                <div class="main-header-div" id="divMainMenu" style="vertical-align: top;">
                                     <table
                                         cellspacing="0"
                                         cellpadding="0"
@@ -224,10 +279,7 @@
                                     >
                                         <tbody>
                                             <tr>
-                                                <td
-                                                    style="width: 0.0em; min-width: 0.0em;"
-                                                >
-                                                </td>
+                                                <td style="width: 0.0em; min-width: 0.0em;"> </td>
 
                                                 <td>
                                                     <div
@@ -246,17 +298,13 @@
                                                         />
                                                     </div>
                                                 </td>
-                                                <td
-                                                    style="width: 0.0em; min-width: 0.0em;"
-                                                >
-                                                </td>
+                                                <td style="width: 0.0em; min-width: 0.0em;"> </td>
                                                 <td>
                                                     <button
                                                         class="main-header-button"
                                                         id="navButtonHome"
                                                         type="button"
-                                                        onclick={async () =>
-                                                            await navigateToHomePageClicked()}
+                                                        onclick={async () => await navigateToHomePageClicked()}
                                                         >Home</button
                                                     >
                                                 </td>
@@ -268,8 +316,7 @@
                                                         class="main-header-button"
                                                         id="navButtonApps"
                                                         type="button"
-                                                        onclick={async () =>
-                                                            await navigateToAppsPageClicked()}
+                                                        onclick={async () => await navigateToAppsPageClicked()}
                                                         >Apps</button
                                                     >
                                                 </td>
@@ -282,8 +329,7 @@
                                                         class="main-header-button"
                                                         id="navButtonNfts"
                                                         type="button"
-                                                        onclick={async () =>
-                                                            await navigateToTokensNftPageClicked()}
+                                                        onclick={async () => await navigateToTokensNftPageClicked()}
                                                         >Tokens / NFT</button
                                                     >
                                                 </td>
@@ -298,8 +344,7 @@
                                                         class="main-header-button"
                                                         id="navButtonNews"
                                                         type="button"
-                                                        onclick={async () =>
-                                                            await navigateToNewsPageClicked()}
+                                                        onclick={async () => await navigateToNewsPageClicked()}
                                                         >News</button
                                                     >
                                                 </td>
@@ -322,10 +367,7 @@
                                                             id="dropDownWalletMenu"
                                                             class="wallet-control-not-logged-in"
                                                         >
-                                                            <table
-                                                                cellspacing="0"
-                                                                cellpadding="0"
-                                                            >
+                                                            <table cellspacing="0" cellpadding="0">
                                                                 <tbody>
                                                                     <tr>
                                                                         <td>
@@ -345,9 +387,7 @@
                                                                                 <div
                                                                                     style="margin: auto;text-align: center;margin-top: 2px;"
                                                                                 >
-                                                                                    Connect
-                                                                                    with
-                                                                                    Plug
+                                                                                    Connect with Plug
                                                                                 </div>
                                                                             </button>
                                                                         </td>
@@ -390,11 +430,55 @@
                                 </div>
                             </header>
                         </td>
+                        <!-- {/if} -->
                     </tr>
 
                     <tr style="height: 100%;vertical-align: top;">
                         <td>
-                            {@render data.children()}
+                            <div style="margin-top: {$MainClass.EmbeddedPageFullScreenMode ? '0rem' : '1.4rem'};">
+                                <div
+                                    style="display: {$MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp ==
+                                    AppName.None
+                                        ? 'block'
+                                        : 'none'};"
+                                >
+                                    {@render data.children()}
+                                </div>
+
+                                <!-- #region Embedded Apps Section -->
+                                <div
+                                    style="display: {$MainClass.EmbeddedAppsInformation.CurrentlyEmbeddedApp !=
+                                    AppName.None
+                                        ? 'block'
+                                        : 'none'};"
+                                >
+                                    <div class="content-control-div" style="width: 100%; height: 100%;color:white">
+                                        <div class="inner-content-control-spacing-embedded-app" style="width: auto;">
+                                            <!-- #region NFT Staking App -->
+                                            <div
+                                                style="display: {$MainClass.EmbeddedAppsInformation
+                                                    .CurrentlyEmbeddedApp == AppName.NftStaking
+                                                    ? 'block'
+                                                    : 'none'};"
+                                            >
+                                                <iframe
+                                                    src={TrabyterStakingAppUrl}
+                                                    style="width: 100%;
+                                                    height: {$MainClass.EmbeddedPageFullScreenMode === true
+                                                        ? 'calc(100vh - 2.5rem)'
+                                                        : 'calc(100vh - 20rem)'};
+
+                                                    border: none;"
+                                                    title="Trabyter Staking App"
+                                                ></iframe>
+                                            </div>
+
+                                            <!-- #endregion NFT Staking App -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- #endregion Embedded Apps Section -->
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -402,10 +486,10 @@
                             <footer
                                 id="mainpage_footer"
                                 class="footer"
-                                style="
-    font-size: 1.0em;width: calc(100% - 1em);
-    height:4em;margin-top:1em;
-    "
+                                style="font-size: 1.0em;width: calc(100% - 1em);
+                                       height:4em;margin-top:1em;
+                                       display: {$MainClass.EmbeddedPageFullScreenMode ? 'none' : 'block'};
+                                     "
                             >
                                 <div>
                                     Join Community: <a
@@ -415,33 +499,23 @@
                                         >OpenChat</a
                                     >
                                     <div class="col-sm-5">
-                                        <ul
-                                            class="social_icon"
-                                            style="margin-left:-3.4em;"
-                                        >
+                                        <ul class="social_icon" style="margin-left:-3.4em;">
                                             <li>
-                                                <a
-                                                    target="_blank"
-                                                    href="https://www.trabyter.com"
-                                                    >Trabyter.com</a
-                                                >
+                                                <a target="_blank" href="https://www.trabyter.com">Trabyter.com</a>
                                             </li>
                                             <li>
                                                 <a
                                                     target="_blank"
                                                     aria-label="Facebook"
                                                     href="https://www.facebook.com/mysliceinfo"
-                                                    ><i class="fa fa-facebook-f"
-                                                    ></i></a
+                                                    ><i class="fa fa-facebook-f"></i></a
                                                 >
                                             </li>
                                             <li>
                                                 <a
                                                     target="_blank"
                                                     aria-label="Twitter"
-                                                    href="https://x.com/trabyter_apps"
-                                                    ><i class="fa fa-twitter"
-                                                    ></i></a
+                                                    href="https://x.com/trabyter_apps"><i class="fa fa-twitter"></i></a
                                                 >
                                             </li>
                                             <li>
@@ -449,10 +523,7 @@
                                                     target="_blank"
                                                     aria-label="YouTube"
                                                     href="https://www.youtube.com/channel/UCErWBRjdOWo_hmHNqb4yxDg"
-                                                    ><i
-                                                        class="fa fa-youtube-play"
-                                                        aria-hidden="true"
-                                                    ></i></a
+                                                    ><i class="fa fa-youtube-play" aria-hidden="true"></i></a
                                                 >
                                             </li>
                                             <li>
@@ -460,21 +531,12 @@
                                                     target="_blank"
                                                     aria-label="GitHub"
                                                     href="https://github.com/5000slices1?tab=repositories"
-                                                    ><i
-                                                        class="fa fa-github"
-                                                        aria-hidden="true"
-                                                    ></i></a
+                                                    ><i class="fa fa-github" aria-hidden="true"></i></a
                                                 >
                                             </li>
                                             <li>
-                                                <a
-                                                    target="_blank"
-                                                    aria-label="Telegram"
-                                                    href="https://t.me/mysliceinfo"
-                                                    ><i
-                                                        class="fa fa-telegram"
-                                                        aria-hidden="true"
-                                                    ></i></a
+                                                <a target="_blank" aria-label="Telegram" href="https://t.me/mysliceinfo"
+                                                    ><i class="fa fa-telegram" aria-hidden="true"></i></a
                                                 >
                                             </li>
                                             <li>
@@ -482,10 +544,7 @@
                                                     target="_blank"
                                                     aria-label="Instagram"
                                                     href="https://www.instagram.com/5000slices"
-                                                    ><i
-                                                        class="fa fa-instagram"
-                                                        aria-hidden="true"
-                                                    ></i></a
+                                                    ><i class="fa fa-instagram" aria-hidden="true"></i></a
                                                 >
                                             </li>
                                         </ul>

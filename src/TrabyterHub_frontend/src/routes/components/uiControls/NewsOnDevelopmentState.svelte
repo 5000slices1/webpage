@@ -18,7 +18,7 @@
             <tr style="height: 12rem;">
                 <td class="news_item_developmentstatus_card_image" style="padding:0.5rem;">
                     <img
-                        src="images/news/development/{data.thumbnailUrl}.png"
+                        src="/images/news/development/{data.thumbnailUrl}.png"
                         alt="Thumbnail"
                         style="width: 100%; height: 12rem; object-fit: fill;
                         border: 0.0rem solid white;"

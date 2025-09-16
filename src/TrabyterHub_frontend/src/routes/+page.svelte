@@ -4,17 +4,12 @@
 
 <div
     class="content-control-div"
-    style="width: 100%; height: 100%; margin-top: 1.4rem;max-height:calc(100% - 2em);"
+    style="width: 100%; height: 100%; margin-top: 1.4rem;
+    max-height:calc(100% - 2em);"
 >
     <div class="inner-content-control-spacing" style="width: auto;">
-        <div
-            style="width: 100%; height:100%; max-width:1400px; max-height:calc(100% - 23em); "
-        >
-            <table
-                cellspacing="0"
-                cellpadding="0"
-                style="width: 100%; height: 100%;"
-            >
+        <div style="width: 100%; height:100%; max-width:1400px; max-height:calc(100% - 23em); ">
+            <table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
                 <tbody>
                     <tr>
                         <!-- #region main page content area -->
@@ -29,35 +24,20 @@
                                     xmlns:xlink="http://www.w3.org/1999/xlink"
                                 >
                                     <g>
-                                        <path
-                                            d="M724.619 1H1267.5V319H644L724.619 1Z"
-                                            fill="#0E0F2C"
-                                        />
+                                        <path d="M724.619 1H1267.5V319H644L724.619 1Z" fill="#0E0F2C" />
                                         <path
                                             d="M724.619 1H1267.5V319H644L724.619 1Z"
                                             fill="#EDEDF3"
                                             fill-opacity="0.12"
                                         />
-                                        <path
-                                            d="M0 0.5H706L544.5 650.5H0V0.5Z"
-                                            fill="#0E0F2C"
-                                        />
-                                        <path
-                                            d="M640.619 333H1268V651H560L640.619 333Z"
-                                            fill="#0E0F2C"
-                                        />
+                                        <path d="M0 0.5H706L544.5 650.5H0V0.5Z" fill="#0E0F2C" />
+                                        <path d="M640.619 333H1268V651H560L640.619 333Z" fill="#0E0F2C" />
                                         <path
                                             d="M640.619 333H1268V651H560L640.619 333Z"
                                             fill="#EDEDF3"
                                             fill-opacity="0.12"
                                         />
-                                        <rect
-                                            x="30em"
-                                            y="34em"
-                                            width="309"
-                                            height="232"
-                                            fill="url(#pattern0_0_1)"
-                                        />
+                                        <rect x="30em" y="34em" width="309" height="232" fill="url(#pattern0_0_1)" />
                                         <!-- <image src="../../icons/StakingTreeLogo.png" width="300px" height="300px"></image> -->
 
                                         <foreignobject
@@ -68,10 +48,7 @@
                                             style="line-height: 0.9em;"
                                         >
                                             <picture>
-                                                <source
-                                                    srcset="/images/StakingAppTreeLogo.avif"
-                                                    type="image/avif"
-                                                />
+                                                <source srcset="/images/StakingAppTreeLogo.avif" type="image/avif" />
                                                 <img
                                                     src="/images/StakingAppTreeLogo.png"
                                                     style="width: 22em;height:15em;opacity: 0.85;"
@@ -93,10 +70,7 @@
                                             style="line-height: 0.9em;"
                                         >
                                             <picture>
-                                                <source
-                                                    srcset="/images/NftMarketAppBuyLogo.avif"
-                                                    type="image/avif"
-                                                />
+                                                <source srcset="/images/NftMarketAppBuyLogo.avif" type="image/avif" />
                                                 <img
                                                     src="/images/NftMarketAppBuyLogo.png"
                                                     style="width: 19em;height:15em;opacity: 0.85;"
@@ -107,8 +81,7 @@
                                             <p
                                                 style="font-size: 1.4em; color:rgb(237, 168, 89); opacity:0.9;text-align:center"
                                             >
-                                                Bundled Nft buy - And buy
-                                                more...
+                                                Bundled Nft buy - And buy more...
                                             </p>
                                         </foreignobject>
 
@@ -123,78 +96,45 @@
                                                 style="font-size: {mainTextFontSize}; color:red; opacity:0.9;margin-bottom:2.0em "
                                             >
                                                 Decentralized
-                                                <font style="color: white;"
-                                                    >Trade By Barter Hub</font
-                                                >
+                                                <font style="color: white;">Trade By Barter Hub</font>
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 We have revived the time-honored
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
-                                                practice of Trade By Barter
-                                                within
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
+                                                practice of Trade By Barter within
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 our marketplace. Here,
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
-                                                participants have the
-                                                opportunity
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
+                                                participants have the opportunity
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 to leverage their current NFTs/
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 Tokens by bundling them and
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
-                                                exchanging them for desired
-                                                items
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
+                                                exchanging them for desired items
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 that are currently beyond their
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 reach. Furthermore, our platform
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
-                                                facilitates NFT staking and
-                                                peer-to-
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
+                                                facilitates NFT staking and peer-to-
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 peer token transactions without
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
-                                                the requirement for initial
-                                                liquidity
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
+                                                the requirement for initial liquidity
                                             </p>
-                                            <p
-                                                style="font-size: {mainTextFontSize}; color:White; opacity:0.9"
-                                            >
+                                            <p style="font-size: {mainTextFontSize}; color:White; opacity:0.9">
                                                 or volume.
                                             </p>
                                         </foreignobject>

@@ -10,12 +10,12 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import {fade} from 'svelte/transition';
-    import {TokenExplorerSearchMode} from '$lib/javascript/Abstractions/explorer/searchMode';
+    import {TokenExplorerSearchMode} from '$lib/javascript/Abstractions/explorer/searchMode.js';
     import {
         TokenExplorerResponse,
         TokenExplorerService,
         type TokenExplorerItem,
-    } from '$lib/javascript/Services/TokenExplorerService';
+    } from '$lib/javascript/Services/TokenExplorerService.js';
 
     // Props passed to the component, with default settings for token information.
     let {

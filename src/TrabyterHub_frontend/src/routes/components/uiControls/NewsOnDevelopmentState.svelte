@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {NewsOnDevelopmentModelItem} from '$lib/javascript/Abstractions/news/development/newsOnDevelopmentModelItem';
+    import {NewsOnDevelopmentModelItem} from '$lib/javascript/Abstractions/news/development/newsOnDevelopmentModelItem.js';
 
     let data: NewsOnDevelopmentModelItem = $props();
 </script>

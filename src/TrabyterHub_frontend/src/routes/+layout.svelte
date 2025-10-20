@@ -3,14 +3,14 @@
     import {browser, version} from '$app/environment';
     import {onMount} from 'svelte';
     import {fade} from 'svelte/transition';
-    import {MainClass} from '$lib/javascript/Logic/MainClass';
-    import {ModelWalletTypes} from '$lib/javascript/Abstractions/Identity/ModelWalletTypes';
+    import {MainClass} from '$lib/javascript/Logic/MainClass.js';
+    import {ModelWalletTypes} from '$lib/javascript/Abstractions/Identity/ModelWalletTypes.js';
     import './../app.css';
     import {goto} from '$app/navigation';
     import TokenInformation from '$lib/../routes/components/uiControls/tokeninformation.svelte';
     import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
     import {TrabyterBucks_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
-    import {AppName} from '$lib/javascript/Abstractions/apps/embeddedAppsInformation';
+    import {AppName} from '$lib/javascript/Abstractions/apps/embeddedAppsInformation.js';
     import {TrabyterStakingAppUrl} from '$lib/javascript/Abstractions/constants/globalConstants.js';
 
     import type {

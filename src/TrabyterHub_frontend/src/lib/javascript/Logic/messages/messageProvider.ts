@@ -1,8 +1,8 @@
-import {MessageRawData} from '$lib/javascript/Abstractions/messages/messageRawData';
+import {RequestFullScreenMessage} from '$lib/shared/common/abstractions/types/messages/FromEmbeddedApp/requestFullScreenMessage';
+import {MessageRawData} from '$lib/shared/common/abstractions/types/messages/messageRawData';
 //import {browser} from '$app/environment';
-import {MessageType} from '$lib/javascript/Abstractions/messages/messagetype';
+import {MessageType} from '$lib/shared/common/abstractions/types/messages/messagetype';
 
-import {MessageFullScreenRequestMessage} from '../../Abstractions/messages/messageData/FullScreen/messageFullScreenRequestMessage';
 import {MainClass} from '../MainClass';
 
 import type {Writable} from 'svelte/store';
@@ -35,24 +35,49 @@ export class MessageProvider {
             //     event.source.postMessage({ type: 'RESPONSE_DATA', requestId: event.data.requestId, payload: 'your data' }, event.origin);
             // }
 
-            const messageData = MessageRawData.fromString(event.data.data);
+            const messageData: MessageRawData = MessageRawData.fromString(event.data.data);
+            console.log('Parsed MessageData:');
+            console.log(messageData);
             if (messageData.Type === MessageType.FullScreenRequest) {
-                var message = MessageFullScreenRequestMessage.fromString<MessageFullScreenRequestMessage>(
-                    messageData.Data,
-                );
+                //var internalJsonString: string = await messageData.GetInternalDataStringAsync();
+                //console.log('Decrypted internal JSON string:', internalJsonString);
 
+                let internalJsonString: string = await messageData.GetInternalDataStringAsync();
+                console.log('Decrypted internal JSON string:', internalJsonString);
+                var message: RequestFullScreenMessage | null =
+                    RequestFullScreenMessage.fromString<RequestFullScreenMessage>(internalJsonString);
+
+                console.log('Website: Parsed FullScreenRequest MessageData:', message);
                 if (message != null) {
-                    let userFullScreen: boolean = message.UseFullScreen;
-                    MainClass.update((mc) => {
-                        mc.EmbeddedPageFullScreenMode = userFullScreen;
-                        return mc;
-                    });
+                    // Defensive: if message is still a string, try parsing again
+                    if (typeof message === 'string') {
+                        try {
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            message = JSON.parse(message as any) as RequestFullScreenMessage;
+                        } catch (e) {
+                            console.error('Failed to parse nested FullScreenRequest JSON:', e);
+                            message = null;
+                        }
+                    }
 
-                    let embeddedPageFullScreenMode: boolean = false;
-                    MainClass.subscribe((mc) => {
-                        embeddedPageFullScreenMode = mc.EmbeddedPageFullScreenMode;
-                    })();
-                    console.log('Full screen mode changed to: ' + embeddedPageFullScreenMode);
+                    if (message == null) {
+                        console.warn('FullScreenRequest message is null after parsing; aborting.');
+                    } else {
+                        const userFullScreen: boolean = (message as any).UseFullScreen;
+
+                        console.log('Website: Full screen request received. New full screen mode: ' + userFullScreen);
+                        MainClass.update((mc) => {
+                            mc.EmbeddedPageFullScreenMode = userFullScreen;
+                            return mc;
+                        });
+
+                        //check the new value
+                        let embeddedPageFullScreenMode: boolean = false;
+                        MainClass.subscribe((mc) => {
+                            embeddedPageFullScreenMode = mc.EmbeddedPageFullScreenMode;
+                        })();
+                        console.log('Full screen mode changed to: ' + embeddedPageFullScreenMode);
+                    }
                 }
             }
         } catch (e) {

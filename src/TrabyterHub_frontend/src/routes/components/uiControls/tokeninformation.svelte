@@ -43,7 +43,7 @@
 
 <script lang="ts">
     import {onMount} from 'svelte';
-    import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService';
+    import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService.js';
 
     let tokenService = new TokenInformationService();
 

@@ -9,7 +9,7 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import {fade} from 'svelte/transition';
-    import {TokenHoldersItemModel, TokenHoldersService} from '$lib/javascript/Services/TokenHoldersService';
+    import {TokenHoldersItemModel, TokenHoldersService} from '$lib/javascript/Services/TokenHoldersService.js';
 
     let {
         settings = {

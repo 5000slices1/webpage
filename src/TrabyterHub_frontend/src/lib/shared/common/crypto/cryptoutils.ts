@@ -1,7 +1,7 @@
+import {ResponsePublicKeyMessage} from '../abstractions/messages/fromAny/responsePublicKeyMessage';
+import {MessageRawData} from '../abstractions/messages/messageRawData';
+import {MessageType} from '../abstractions/messages/messagetype';
 import {AppIdentifier} from '../abstractions/types/commonTypes';
-import {ResponsePublicKeyMessage} from '../abstractions/types/messages/fromAny/responsePublicKeyMessage';
-import {MessageRawData} from '../abstractions/types/messages/messageRawData';
-import {MessageType} from '../abstractions/types/messages/messagetype';
 
 export class CryptoUtils {
     //my personal keys
@@ -79,16 +79,23 @@ export class CryptoUtils {
     }
 
     public static async EncryptAndReturnAsRawMessageAsync<T>(
+        targetIdentifier: AppIdentifier,
+        sourceIdentifier: AppIdentifier,
         receiversPublicKey: CryptoKey,
         messageType: MessageType,
         message: T,
         messageId: string | null = null,
-        senderId?: string,
     ): Promise<MessageRawData> {
         const jsonString: string = JSON.stringify(message);
         const encryptedData = await this.EncryptStringAsync(jsonString, receiversPublicKey);
 
-        var result = new MessageRawData(messageType, encryptedData.encryptedData, messageId, senderId);
+        var result = new MessageRawData(
+            targetIdentifier,
+            sourceIdentifier,
+            messageType,
+            encryptedData.encryptedData,
+            messageId,
+        );
         result.EncryptedKey = encryptedData.encryptedKey;
         result.Iv = encryptedData.iv;
         result.IsDataEncrypted = true;

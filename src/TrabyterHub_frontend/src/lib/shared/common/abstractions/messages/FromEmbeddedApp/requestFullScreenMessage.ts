@@ -1,4 +1,4 @@
-import {MessageCommon} from '$lib/shared/common/abstractions/types/messages/messageCommon';
+import {MessageCommon} from '$lib/shared/common/abstractions/messages/messageCommon';
 
 export class RequestFullScreenMessage extends MessageCommon<RequestFullScreenMessage> {
     UseFullScreen: boolean;

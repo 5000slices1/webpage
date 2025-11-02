@@ -1,19 +1,27 @@
-import {CryptoUtils} from '../../../crypto/cryptoutils.js';
-import {MessageType} from './messagetype.js';
+import {CryptoUtils} from '../../crypto/cryptoutils';
+import {AppIdentifier} from '../types/commonTypes';
+import {MessageType} from './messagetype';
 
 export class MessageRawData {
     public MessageId: string;
     public Type: MessageType;
     public data: string;
-    public Sender: string = '';
+    public TargetIdentifier: AppIdentifier = AppIdentifier.Unknown;
+    public SourceIdentifier: AppIdentifier = AppIdentifier.Unknown;
     public EncryptedKey?: string;
     public Iv?: string;
     public IsDataEncrypted: boolean = false;
 
-    constructor(type: MessageType, data: string, messageId: string | null = null, senderId?: string) {
-        if (senderId != null) {
-            this.Sender = senderId;
-        }
+    constructor(
+        targetIdentifier: AppIdentifier,
+        sourceIdentifier: AppIdentifier,
+
+        type: MessageType,
+        data: string,
+        messageId: string | null = null,
+    ) {
+        this.TargetIdentifier = targetIdentifier;
+        this.SourceIdentifier = sourceIdentifier;
         if (messageId !== null) {
             this.MessageId = messageId ? messageId : MessageRawData.generateUUID();
         } else {
@@ -84,9 +92,10 @@ export class MessageRawData {
             const type: MessageType = parsed?.Type ?? MessageType.Unknown;
             const data: string = parsed?.data ?? '';
             const messageId: string | null = parsed?.MessageId ?? null;
-            const sender: string | undefined = parsed?.Sender ?? undefined;
+            const targetIdentifier: AppIdentifier = parsed?.TargetIdentifier ?? AppIdentifier.Unknown;
+            const sourceIdentifier: AppIdentifier = parsed?.SourceIdentifier ?? AppIdentifier.Unknown;
 
-            const msg = new MessageRawData(type, data, messageId, sender);
+            const msg = new MessageRawData(targetIdentifier, sourceIdentifier, type, data, messageId);
             msg.EncryptedKey = parsed?.EncryptedKey;
             msg.Iv = parsed?.Iv;
             msg.IsDataEncrypted = parsed?.IsDataEncrypted ?? false;
@@ -94,7 +103,7 @@ export class MessageRawData {
             return msg;
         } catch (e) {
             console.error('Error parsing MessageData from string:', e);
-            return new MessageRawData(MessageType.Unknown, '', '');
+            return new MessageRawData(AppIdentifier.Unknown, AppIdentifier.Unknown, MessageType.Unknown, '', '');
         }
     }
 }

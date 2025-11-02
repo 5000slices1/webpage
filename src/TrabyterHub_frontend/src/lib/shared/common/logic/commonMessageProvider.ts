@@ -1,7 +1,7 @@
-import {RequestFullScreenMessage} from '$lib/shared/common/abstractions/types/messages/FromEmbeddedApp/requestFullScreenMessage';
-import {MessageRawData} from '$lib/shared/common/abstractions/types/messages/messageRawData';
+import {RequestFullScreenMessage} from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
+import {MessageRawData} from '$lib/shared/common/abstractions/messages/messageRawData';
 //import {browser} from '$app/environment';
-import {MessageType} from '$lib/shared/common/abstractions/types/messages/messagetype';
+import {MessageType} from '$lib/shared/common/abstractions/messages/messagetype';
 
 import {CryptoUtils} from '../crypto/cryptoutils';
 

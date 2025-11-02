@@ -1,7 +1,7 @@
-import {RequestFullScreenMessage} from '$lib/shared/common/abstractions/types/messages/FromEmbeddedApp/requestFullScreenMessage';
-import {MessageRawData} from '$lib/shared/common/abstractions/types/messages/messageRawData';
+import {RequestFullScreenMessage} from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
+import {MessageRawData} from '$lib/shared/common/abstractions/messages/messageRawData';
 //import {browser} from '$app/environment';
-import {MessageType} from '$lib/shared/common/abstractions/types/messages/messagetype';
+import {MessageType} from '$lib/shared/common/abstractions/messages/messagetype';
 
 import {MainClass} from '../MainClass';
 
@@ -12,7 +12,7 @@ export class MessageProvider {
         window.addEventListener('message', async (event) => await this.MessageReceived(event));
     }
 
-    SendMessageToHost(messageType: MessageType, messageValue: string, id: string | null = null) {
+    SendMessageToHostNoEnryption(messageType: MessageType, messageValue: string, id: string | null = null) {
         try {
             var messageData = new MessageRawData(messageType, messageValue, id);
 
@@ -42,46 +42,50 @@ export class MessageProvider {
                 //var internalJsonString: string = await messageData.GetInternalDataStringAsync();
                 //console.log('Decrypted internal JSON string:', internalJsonString);
 
-                let internalJsonString: string = await messageData.GetInternalDataStringAsync();
-                console.log('Decrypted internal JSON string:', internalJsonString);
-                var message: RequestFullScreenMessage | null =
-                    RequestFullScreenMessage.fromString<RequestFullScreenMessage>(internalJsonString);
-
-                console.log('Website: Parsed FullScreenRequest MessageData:', message);
-                if (message != null) {
-                    // Defensive: if message is still a string, try parsing again
-                    if (typeof message === 'string') {
-                        try {
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            message = JSON.parse(message as any) as RequestFullScreenMessage;
-                        } catch (e) {
-                            console.error('Failed to parse nested FullScreenRequest JSON:', e);
-                            message = null;
-                        }
-                    }
-
-                    if (message == null) {
-                        console.warn('FullScreenRequest message is null after parsing; aborting.');
-                    } else {
-                        const userFullScreen: boolean = (message as any).UseFullScreen;
-
-                        console.log('Website: Full screen request received. New full screen mode: ' + userFullScreen);
-                        MainClass.update((mc) => {
-                            mc.EmbeddedPageFullScreenMode = userFullScreen;
-                            return mc;
-                        });
-
-                        //check the new value
-                        let embeddedPageFullScreenMode: boolean = false;
-                        MainClass.subscribe((mc) => {
-                            embeddedPageFullScreenMode = mc.EmbeddedPageFullScreenMode;
-                        })();
-                        console.log('Full screen mode changed to: ' + embeddedPageFullScreenMode);
-                    }
-                }
+                await this.handleFullScreenRequest(messageData);
             }
         } catch (e) {
             console.error('Error processing received message:', e);
+        }
+    }
+
+    private async handleFullScreenRequest(messageData: MessageRawData) {
+        let internalJsonString: string = await messageData.GetInternalDataStringAsync();
+        console.log('Decrypted internal JSON string:', internalJsonString);
+        var message: RequestFullScreenMessage | null =
+            RequestFullScreenMessage.fromString<RequestFullScreenMessage>(internalJsonString);
+
+        console.log('Website: Parsed FullScreenRequest MessageData:', message);
+        if (message != null) {
+            // Defensive: if message is still a string, try parsing again
+            if (typeof message === 'string') {
+                try {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    message = JSON.parse(message as any) as RequestFullScreenMessage;
+                } catch (e) {
+                    console.error('Failed to parse nested FullScreenRequest JSON:', e);
+                    message = null;
+                }
+            }
+
+            if (message == null) {
+                console.warn('FullScreenRequest message is null after parsing; aborting.');
+            } else {
+                const userFullScreen: boolean = (message as any).UseFullScreen;
+
+                console.log('Website: Full screen request received. New full screen mode: ' + userFullScreen);
+                MainClass.update((mc) => {
+                    mc.EmbeddedPageFullScreenMode = userFullScreen;
+                    return mc;
+                });
+
+                //check the new value
+                let embeddedPageFullScreenMode: boolean = false;
+                MainClass.subscribe((mc) => {
+                    embeddedPageFullScreenMode = mc.EmbeddedPageFullScreenMode;
+                })();
+                console.log('Full screen mode changed to: ' + embeddedPageFullScreenMode);
+            }
         }
     }
 }

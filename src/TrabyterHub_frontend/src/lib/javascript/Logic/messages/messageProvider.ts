@@ -1,4 +1,8 @@
-import { AllowedOriginUrls } from '$lib/javascript/Abstractions/constants/globalConstants';
+import
+    {
+        AllowedOriginUrls,
+        AppIdentifierToUrl,
+    } from '$lib/javascript/Abstractions/constants/globalConstants';
 import { RequestFullScreenMessage } from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
 import { MessageRawData } from '$lib/shared/common/abstractions/messages/messageRawData';
 import { MessageType } from '$lib/shared/common/abstractions/messages/messagetype';
@@ -16,7 +20,7 @@ export class MessageProvider extends CommonMessageProvider implements IMessagePr
 {
     constructor(myAppIdentifier: AppIdentifier)
     {
-        super(myAppIdentifier, AllowedOriginUrls);
+        super(myAppIdentifier, AllowedOriginUrls, AppIdentifierToUrl);
     }
 
     async InitAsync()

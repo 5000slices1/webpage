@@ -1,5 +1,6 @@
 <script lang="ts">
     let mainTextFontSize: string = '1.6em';
+    console.log('env node value: ' + process.env.NODE_ENV);
 </script>
 
 <div

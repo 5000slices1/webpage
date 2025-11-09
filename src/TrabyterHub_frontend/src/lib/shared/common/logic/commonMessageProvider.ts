@@ -26,9 +26,11 @@ export class CommonMessageProvider
 {
     public MyAppIdentifier: AppIdentifier;
     private _allowedOriginUrls: string[];
+    private _appIdentifierToUrl: Partial<Record<AppIdentifier, string>>;
 
-    constructor(myAppIdentifier: AppIdentifier, allowedOriginUrls: string[])
+    constructor(myAppIdentifier: AppIdentifier, allowedOriginUrls: string[], appIdentifierToUrl: Partial<Record<AppIdentifier, string>>)
     {
+        this._appIdentifierToUrl = appIdentifierToUrl;
         this.MyAppIdentifier = myAppIdentifier;
         this._allowedOriginUrls = allowedOriginUrls;
         if (isBrowser())
@@ -183,9 +185,11 @@ export class CommonMessageProvider
                 console.warn('Not in browser environment. Cannot post message to parent.');
                 return;
             }
-            if (!window.parent)
+
+            // Check if we're actually in an iframe
+            if (!window.parent || window.parent === window)
             {
-                console.warn('No parent window found. Cannot post message to parent.');
+                console.warn('Not embedded in iframe. Cannot post message to parent.');
                 return;
             }
 
@@ -195,7 +199,28 @@ export class CommonMessageProvider
                     messageData, encrypted, messageId,
                 );
 
-            window.parent.postMessage({ type: messageType, data: messageRawDataString }, '*');
+            let originTarget: string = this._appIdentifierToUrl[targetIdentifier]!;
+
+            // Validate origin format
+            if (!originTarget || originTarget === '*')
+            {
+                console.error('Invalid or insecure target origin:', originTarget);
+                return;
+            }
+
+            // Ensure origin doesn't include path
+            try
+            {
+                const url = new URL(originTarget);
+                originTarget = `${url.protocol}//${url.host}`;
+            } catch (e)
+            {
+                console.error('Invalid origin URL:', originTarget, e);
+                return;
+            }
+
+
+            window.parent.postMessage({ type: messageType, data: messageRawDataString }, originTarget);
 
 
         } catch (e)
@@ -239,8 +264,28 @@ export class CommonMessageProvider
                 return;
             }
 
+            let originTarget: string = this._appIdentifierToUrl[targetIdentifier]!;
+
+            // Validate origin format
+            if (!originTarget || originTarget === '*')
+            {
+                console.error('Invalid or insecure target origin:', originTarget);
+                return;
+            }
+
+            // Ensure origin doesn't include path
+            try
+            {
+                const url = new URL(originTarget);
+                originTarget = `${url.protocol}//${url.host}`;
+            } catch (e)
+            {
+                console.error('Invalid origin URL:', originTarget, e);
+                return;
+            }
+
             // Send a message to the child iframe
-            iframe.contentWindow.postMessage({ type: messageType, data: messageRawDataString }, '*');
+            iframe.contentWindow.postMessage({ type: messageType, data: messageRawDataString }, originTarget);
         } catch (e)
         {
             console.error('Error sending message to child app:', e);

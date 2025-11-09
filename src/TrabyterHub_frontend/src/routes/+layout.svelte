@@ -12,6 +12,7 @@
     import {TrabyterBucks_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
     import {AppName} from '$lib/javascript/Abstractions/apps/embeddedAppsInformation.js';
     import {TrabyterStakingAppUrl} from '$lib/javascript/Abstractions/constants/globalConstants.js';
+    import {AppIdentifier} from '$lib/shared/common/abstractions/types/commonTypes.js';
 
     import type {
         SubNavigationItem,
@@ -463,6 +464,7 @@
                                             >
                                                 <iframe
                                                     src={TrabyterStakingAppUrl}
+                                                    data-app-id={AppIdentifier.TrabyterStaking}
                                                     style="width: 100%;
                                                     height: {$MainClass.EmbeddedPageFullScreenMode === true
                                                         ? 'calc(100vh - 2.5rem)'

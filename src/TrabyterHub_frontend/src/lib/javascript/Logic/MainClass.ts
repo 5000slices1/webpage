@@ -10,12 +10,15 @@ import {
     TokenExplorerService,
 } from '$lib/javascript/Services/TokenExplorerService';
 import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService';
+import {AppIdentifier} from '$lib/shared/common/abstractions/types/commonTypes';
+import {CryptoUtils} from '$lib/shared/common/crypto/cryptoutils';
 import {writable} from 'svelte/store';
 
 import {IdentityProvider} from './identity/IdentityProvider';
 import {MessageProvider} from './messages/messageProvider';
 
 import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
+//import { AppIdentifier } from '../../shared/common/abstractions/types/commonTypes';
 
 class InternalMainClass {
     #init_done: boolean = false;
@@ -28,7 +31,7 @@ class InternalMainClass {
     constructor() {
         this.IdentityProvider = new IdentityProvider();
         this.counter = 0;
-        this.MessageProvider = new MessageProvider();
+        this.MessageProvider = new MessageProvider(AppIdentifier.MainWebsite);
         this.EmbeddedAppsInformation = new EmbeddedAppsInformation();
     }
 

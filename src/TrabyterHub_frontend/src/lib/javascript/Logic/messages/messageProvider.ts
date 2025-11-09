@@ -1,91 +1,87 @@
-import {RequestFullScreenMessage} from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
-import {MessageRawData} from '$lib/shared/common/abstractions/messages/messageRawData';
-//import {browser} from '$app/environment';
-import {MessageType} from '$lib/shared/common/abstractions/messages/messagetype';
+import { AllowedOriginUrls } from '$lib/javascript/Abstractions/constants/globalConstants';
+import { RequestFullScreenMessage } from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
+import { MessageRawData } from '$lib/shared/common/abstractions/messages/messageRawData';
+import { MessageType } from '$lib/shared/common/abstractions/messages/messagetype';
+import { AppIdentifier } from '$lib/shared/common/abstractions/types/commonTypes';
+import { CommonMessageProvider } from '$lib/shared/common/logic/commonMessageProvider';
 
-import {MainClass} from '../MainClass';
+import { Bool } from '@dfinity/candid/lib/cjs/idl';
 
-import type {Writable} from 'svelte/store';
+import { MainClass } from '../MainClass';
 
-export class MessageProvider {
-    async Init() {
-        window.addEventListener('message', async (event) => await this.MessageReceived(event));
+import type { IMessageProvider } from '$lib/shared/common/logic/commonMessageProvider';
+
+import type { Writable } from 'svelte/store';
+export class MessageProvider extends CommonMessageProvider implements IMessageProvider
+{
+    constructor(myAppIdentifier: AppIdentifier)
+    {
+        super(myAppIdentifier, AllowedOriginUrls);
     }
 
-    SendMessageToHostNoEnryption(messageType: MessageType, messageValue: string, id: string | null = null) {
-        try {
-            var messageData = new MessageRawData(messageType, messageValue, id);
-
-            // Send a message to the parent
-            window.parent.postMessage({type: messageType, data: messageData.toString}, '*');
-        } catch (e) {
-            console.error('Error sending message to host:', e);
-        }
+    async Init()
+    {
+        await super.InitAsync();
     }
 
-    async MessageReceived(event: MessageEvent) {
-        try {
-            // Validate the origin of the message
-            // if (event.origin !== window.origin) {
-            //     console.warn('Received message from unknown origin:', event.origin);
-            //     return;
-            // }
-            // if (event.data.type === 'REQUEST_DATA') {
-            //     // Respond with custom data
-            //     event.source.postMessage({ type: 'RESPONSE_DATA', requestId: event.data.requestId, payload: 'your data' }, event.origin);
-            // }
+    public async MessageReceived(
+        targetIdentifier: AppIdentifier,
+        sourceIdentifier: AppIdentifier,
+        messageType: MessageType,
+        messageDataAsJsonString: string,
 
-            const messageData: MessageRawData = MessageRawData.fromString(event.data.data);
-            console.log('Parsed MessageData:');
-            console.log(messageData);
-            if (messageData.Type === MessageType.FullScreenRequest) {
-                //var internalJsonString: string = await messageData.GetInternalDataStringAsync();
-                //console.log('Decrypted internal JSON string:', internalJsonString);
+    ): Promise<void>
+    {
+        try
+        {
+            console.log('sourceIdentifier:', sourceIdentifier);
+            console.log('targetIdentifier:', targetIdentifier);
 
-                await this.handleFullScreenRequest(messageData);
+            if (targetIdentifier !== this.MyAppIdentifier)
+            {
+                return;
             }
-        } catch (e) {
+
+            console.log('MessageData as json string:');
+            console.log(messageDataAsJsonString);
+            if (messageType === MessageType.FullScreenRequest)
+            {
+                var message: RequestFullScreenMessage | null =
+                    RequestFullScreenMessage.fromString<RequestFullScreenMessage>(messageDataAsJsonString);
+                console.log('Parsed FullScreenRequest MessageData:', message);
+
+                if (message == null)
+                {
+                    console.warn('FullScreenRequest message is null; aborting.');
+                    return;
+                }
+                const useFullSCreen: boolean = (message as RequestFullScreenMessage)?.UseFullScreen;
+                console.log('fullscreen: ', (message as RequestFullScreenMessage)?.UseFullScreen);
+
+                await this.handleFullScreenRequest(useFullSCreen);
+            }
+        } catch (e)
+        {
             console.error('Error processing received message:', e);
         }
     }
 
-    private async handleFullScreenRequest(messageData: MessageRawData) {
-        let internalJsonString: string = await messageData.GetInternalDataStringAsync();
-        console.log('Decrypted internal JSON string:', internalJsonString);
-        var message: RequestFullScreenMessage | null =
-            RequestFullScreenMessage.fromString<RequestFullScreenMessage>(internalJsonString);
+    private async handleFullScreenRequest(fullScreen: boolean)
+    {
+        console.log('Website: Full screen request received. New full screen mode: ' + fullScreen);
+        MainClass.update((mc) =>
+        {
+            mc.EmbeddedPageFullScreenMode = fullScreen;
+            return mc;
+        });
 
-        console.log('Website: Parsed FullScreenRequest MessageData:', message);
-        if (message != null) {
-            // Defensive: if message is still a string, try parsing again
-            if (typeof message === 'string') {
-                try {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    message = JSON.parse(message as any) as RequestFullScreenMessage;
-                } catch (e) {
-                    console.error('Failed to parse nested FullScreenRequest JSON:', e);
-                    message = null;
-                }
-            }
+        //check the new value
+        let embeddedPageFullScreenMode: boolean = false;
+        MainClass.subscribe((mc) =>
+        {
+            embeddedPageFullScreenMode = mc.EmbeddedPageFullScreenMode;
+        })();
 
-            if (message == null) {
-                console.warn('FullScreenRequest message is null after parsing; aborting.');
-            } else {
-                const userFullScreen: boolean = (message as any).UseFullScreen;
-
-                console.log('Website: Full screen request received. New full screen mode: ' + userFullScreen);
-                MainClass.update((mc) => {
-                    mc.EmbeddedPageFullScreenMode = userFullScreen;
-                    return mc;
-                });
-
-                //check the new value
-                let embeddedPageFullScreenMode: boolean = false;
-                MainClass.subscribe((mc) => {
-                    embeddedPageFullScreenMode = mc.EmbeddedPageFullScreenMode;
-                })();
-                console.log('Full screen mode changed to: ' + embeddedPageFullScreenMode);
-            }
-        }
+        console.log('Full screen mode changed to: ' + embeddedPageFullScreenMode);
     }
 }

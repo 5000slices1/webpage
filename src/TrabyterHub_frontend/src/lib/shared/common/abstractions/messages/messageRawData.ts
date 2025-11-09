@@ -1,109 +1,127 @@
-import {CryptoUtils} from '../../crypto/cryptoutils';
-import {AppIdentifier} from '../types/commonTypes';
-import {MessageType} from './messagetype';
+import { CryptoUtils } from '../../crypto/cryptoutils';
+import { AppIdentifier } from '../types/commonTypes';
+import { MessageType } from './messagetype';
 
-export class MessageRawData {
+export class MessageRawData
+{
     public MessageId: string;
     public Type: MessageType;
-    public data: string;
+
+    /// Either the raw JSON string or the encrypted data string
+    public DataAsJsonStringOrEncryptedData: string;
     public TargetIdentifier: AppIdentifier = AppIdentifier.Unknown;
     public SourceIdentifier: AppIdentifier = AppIdentifier.Unknown;
+
+    /// This is the AES symmetric key that has been encrypted with RSA-OAEP using the recipient's public key.
+    /// This is safe to raw transmit as only the recipient can decrypt it with their private key.
     public EncryptedKey?: string;
+
+    /// This is the initialization vector (IV) used for AES encryption.
     public Iv?: string;
+
     public IsDataEncrypted: boolean = false;
 
-    constructor(
+    constructor()
+    {
+        this.DataAsJsonStringOrEncryptedData = '';
+        this.Type = MessageType.Unknown;
+        this.MessageId = '';
+    }
+
+    public async Init<T>(
         targetIdentifier: AppIdentifier,
         sourceIdentifier: AppIdentifier,
-
         type: MessageType,
-        data: string,
+        message: T,
+        shoudBeEncrypted: boolean = true,
         messageId: string | null = null,
-    ) {
+    )
+    {
         this.TargetIdentifier = targetIdentifier;
         this.SourceIdentifier = sourceIdentifier;
-        if (messageId !== null) {
-            this.MessageId = messageId ? messageId : MessageRawData.generateUUID();
-        } else {
+
+        if (messageId !== null)
+        {
+            this.MessageId = messageId ? messageId : CryptoUtils.generateUUID();
+        }
+        else
+        {
             this.MessageId = '';
         }
 
         this.Type = type;
-        this.data = data;
-    }
+        this.IsDataEncrypted = shoudBeEncrypted;
 
-    private static generateUUID(): string {
-        // Use the browser's crypto.randomUUID if available
-        if (
-            typeof globalThis !== 'undefined' &&
-            (globalThis as any).crypto &&
-            typeof (globalThis as any).crypto.randomUUID === 'function'
-        ) {
-            return (globalThis as any).crypto.randomUUID();
+        if (!shoudBeEncrypted)
+        {
+            this.DataAsJsonStringOrEncryptedData = JSON.stringify(message);
+        }
+        else
+        {
+            const jsonString: string = JSON.stringify(message);
+            const encryptedData = await CryptoUtils.EncryptStringAsync(jsonString, targetIdentifier);
+            var result = new MessageRawData();
+            result.EncryptedKey = encryptedData.encryptedKey;
+            result.Iv = encryptedData.iv;
+            this.DataAsJsonStringOrEncryptedData = encryptedData.encryptedData;
         }
 
-        // Fallback: generate RFC4122 v4 UUID using getRandomValues
-        const bytes = new Uint8Array(16);
-        if ((globalThis as any).crypto && typeof (globalThis as any).crypto.getRandomValues === 'function') {
-            (globalThis as any).crypto.getRandomValues(bytes);
-        } else {
-            // Last resort fallback using Math.random (not cryptographically secure)
-            for (let i = 0; i < 16; i++) {
-                bytes[i] = Math.floor(Math.random() * 256);
-            }
-        }
-        // Per RFC4122 v4
-        bytes[6] = (bytes[6] & 0x0f) | 0x40;
-        bytes[8] = (bytes[8] & 0x3f) | 0x80;
 
-        const toHex = (num: number) => num.toString(16).padStart(2, '0');
-        const parts = [
-            [...bytes.slice(0, 4)].map(toHex).join(''),
-            [...bytes.slice(4, 6)].map(toHex).join(''),
-            [...bytes.slice(6, 8)].map(toHex).join(''),
-            [...bytes.slice(8, 10)].map(toHex).join(''),
-            [...bytes.slice(10, 16)].map(toHex).join(''),
-        ];
-        return `${parts[0]}-${parts[1]}-${parts[2]}-${parts[3]}-${parts[4]}`;
     }
 
-    public async GetInternalDataStringAsync(): Promise<string> {
-        if (this.IsDataEncrypted == false) {
-            return this.data;
-        } else {
-            var tempJson: string = await CryptoUtils.DecryptStringAsync(
-                this.EncryptedKey ? this.EncryptedKey : '',
-                this.Iv ? this.Iv : '',
-                this.data,
-            );
-            return tempJson;
-        }
-    }
 
-    public toString(): string {
+
+    // /// Decrypts and returns the internal data json-string
+    // public async GetInternalDataJsonString(): Promise<string>
+    // {
+    //     if (this.IsDataEncrypted == false)
+    //     {
+    //         return this.DataAsJsonStringOrEncryptedData;
+    //     } else
+    //     {
+    //         var jsonString: string = await CryptoUtils.DecryptStringAsync(
+    //             this.EncryptedKey ? this.EncryptedKey : '',
+    //             this.Iv ? this.Iv : '',
+    //             this.DataAsJsonStringOrEncryptedData,
+    //         );
+    //         return jsonString;
+    //     }
+    // }
+
+    public toString(): string
+    {
         return JSON.stringify(this);
     }
 
-    public static fromString(jsonString: string | any): MessageRawData {
-        try {
-            // Accept either a JSON string or an already-parsed object
-            const parsed: any = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+    public static async fromString(jsonString: string): Promise<MessageRawData | null>
+    {
+        try
+        {
 
-            const type: MessageType = parsed?.Type ?? MessageType.Unknown;
-            const data: string = parsed?.data ?? '';
-            const messageId: string | null = parsed?.MessageId ?? null;
-            const targetIdentifier: AppIdentifier = parsed?.TargetIdentifier ?? AppIdentifier.Unknown;
-            const sourceIdentifier: AppIdentifier = parsed?.SourceIdentifier ?? AppIdentifier.Unknown;
+            const rawData: MessageRawData = JSON.parse(jsonString);
 
-            const msg = new MessageRawData(targetIdentifier, sourceIdentifier, type, data, messageId);
-            msg.EncryptedKey = parsed?.EncryptedKey;
-            msg.Iv = parsed?.Iv;
-            msg.IsDataEncrypted = parsed?.IsDataEncrypted ?? false;
+            if (rawData == null)
+            {
+                console.error('Parsed MessageRawData is null');
+                return null;
+            }
 
-            return msg;
-        } catch (e) {
+            if (rawData.IsDataEncrypted == true)
+            {
+                const jsonString: string = await CryptoUtils.DecryptStringAsync(
+                    rawData.EncryptedKey!,
+                    rawData.Iv!,
+                    rawData.DataAsJsonStringOrEncryptedData,
+                );
+                rawData.DataAsJsonStringOrEncryptedData = jsonString;
+            }
+
+            return rawData;
+
+        } catch (e)
+        {
             console.error('Error parsing MessageData from string:', e);
-            return new MessageRawData(AppIdentifier.Unknown, AppIdentifier.Unknown, MessageType.Unknown, '', '');
+            return null;
         }
     }
 }

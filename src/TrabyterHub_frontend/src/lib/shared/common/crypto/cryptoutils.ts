@@ -28,7 +28,9 @@ export class CryptoUtils
             // Generate signing keys
             CryptoUtils.signingKeyPair = await this.generateSigningKeyPairAsync();
             CryptoUtils.dicSigningPublicKeys[myAppIdentifier] = CryptoUtils.signingKeyPair.publicKey;
-            CryptoUtils.MySigningPublicKey = await this.signingPublicKeyToJwkString(CryptoUtils.signingKeyPair.publicKey);
+            CryptoUtils.MySigningPublicKey = await this.signingPublicKeyToJwkString(
+                CryptoUtils.signingKeyPair.publicKey,
+            );
         }
     }
 
@@ -53,6 +55,11 @@ export class CryptoUtils
         return CryptoUtils.dicSigningPublicKeys[appIdentifier];
     }
 
+    public static GetPublicKey(appIdentifier: AppIdentifier): CryptoKey | undefined
+    {
+        return CryptoUtils.dicPublicKeys[appIdentifier];
+    }
+
     private static async generateKeyPairAsync(): Promise<CryptoKeyPair>
     {
         // Generate a key pair for encryption
@@ -69,10 +76,10 @@ export class CryptoUtils
         return await window.crypto.subtle.generateKey(
             {
                 name: 'ECDSA',
-                namedCurve: 'P-256'
+                namedCurve: 'P-256',
             },
             true,
-            ['sign', 'verify']
+            ['sign', 'verify'],
         );
     }
 
@@ -87,7 +94,7 @@ export class CryptoUtils
         const signature = await window.crypto.subtle.sign(
             { name: 'ECDSA', hash: 'SHA-256' },
             CryptoUtils.signingKeyPair.privateKey,
-            encoded
+            encoded,
         );
 
         return btoa(String.fromCharCode(...new Uint8Array(signature)));
@@ -96,19 +103,19 @@ export class CryptoUtils
     public static async VerifyMessageAsync(
         message: string,
         signature: string,
-        senderSigningPublicKey: CryptoKey
+        senderSigningPublicKey: CryptoKey,
     ): Promise<boolean>
     {
         try
         {
             const encoded = new TextEncoder().encode(message);
-            const signatureBytes = Uint8Array.from(atob(signature), c => c.charCodeAt(0));
+            const signatureBytes = Uint8Array.from(atob(signature), (c) => c.charCodeAt(0));
 
             return await window.crypto.subtle.verify(
                 { name: 'ECDSA', hash: 'SHA-256' },
                 senderSigningPublicKey,
                 signatureBytes,
-                encoded
+                encoded,
             );
         } catch (error)
         {
@@ -157,13 +164,11 @@ export class CryptoUtils
         return `${parts[0]}-${parts[1]}-${parts[2]}-${parts[3]}-${parts[4]}`;
     }
 
-
     public static async EncryptStringAsync(
         input: string,
         targetIdentifier: AppIdentifier,
     ): Promise<{ encryptedKey: string; encryptedData: string; iv: string }>
     {
-
         const receiversPublicKey: CryptoKey | undefined = CryptoUtils.dicPublicKeys[targetIdentifier];
 
         if (!receiversPublicKey)
@@ -250,12 +255,6 @@ export class CryptoUtils
     public static async jwkStringToSigningPublicKey(jwkString: string): Promise<CryptoKey>
     {
         const jwk = JSON.parse(jwkString);
-        return await crypto.subtle.importKey(
-            'jwk',
-            jwk,
-            { name: 'ECDSA', namedCurve: 'P-256' },
-            true,
-            ['verify']
-        );
+        return await crypto.subtle.importKey('jwk', jwk, { name: 'ECDSA', namedCurve: 'P-256' }, true, ['verify']);
     }
 }

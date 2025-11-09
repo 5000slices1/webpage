@@ -14,16 +14,18 @@ export interface IMessageProvider
 {
     InitAsync(): Promise<void>;
 
-    MessageReceived(targetIdentifier: AppIdentifier, sourceIdentifier: AppIdentifier, messageType: MessageType, messageDataAsJsonString: string): Promise<void>;
-
-
+    MessageReceived(
+        targetIdentifier: AppIdentifier,
+        sourceIdentifier: AppIdentifier,
+        messageType: MessageType,
+        messageDataAsJsonString: string,
+    ): Promise<void>;
 }
 
 function isBrowser(): boolean
 {
     return typeof window !== 'undefined' && typeof document !== 'undefined';
 }
-
 
 export class CommonMessageProvider
 {
@@ -33,7 +35,11 @@ export class CommonMessageProvider
     private _rateLimiter: RateLimiter;
     private _nonceTracker: NonceTracker;
 
-    constructor(myAppIdentifier: AppIdentifier, allowedOriginUrls: string[], appIdentifierToUrl: Partial<Record<AppIdentifier, string>>)
+    constructor(
+        myAppIdentifier: AppIdentifier,
+        allowedOriginUrls: string[],
+        appIdentifierToUrl: Partial<Record<AppIdentifier, string>>,
+    )
     {
         this._appIdentifierToUrl = appIdentifierToUrl;
         this.MyAppIdentifier = myAppIdentifier;
@@ -56,8 +62,13 @@ export class CommonMessageProvider
         if (isBrowser() && window.parent && window.parent !== window)
         {
             console.log('Child app detected - requesting parent (MainWebsite) public key');
+
+            // Send our keys first, then request parent's keys
             await this.SendPublicKeyResponse(AppIdentifier.MainWebsite);
             await this.SendPublicKeyRequest(AppIdentifier.MainWebsite);
+
+            // Wait for key exchange to complete before proceeding
+            await this.waitForKeyExchange(AppIdentifier.MainWebsite);
         }
 
         console.log('OK. CommonMessageProvider.InitAsync' + this.MyAppIdentifier);
@@ -115,13 +126,16 @@ export class CommonMessageProvider
             // Handle public key exchange (before signature verification since we don't have keys yet)
             if (messageData.Type === MessageType.PublicKeyResponse)
             {
-                const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>
-                    (messageData.DataAsJsonStringOrEncryptedData)!;
+                const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>(
+                    messageData.DataAsJsonStringOrEncryptedData,
+                )!;
 
                 // Verify the app is trusted and origin is allowed
                 if (!TrustedAppRegistry.isAppTrusted(originalMessage.senderSource, event.origin))
                 {
-                    console.error(`❌ Rejected public key from untrusted source: ${originalMessage.senderSource} @ ${event.origin}`);
+                    console.error(
+                        `❌ Rejected public key from untrusted source: ${originalMessage.senderSource} @ ${event.origin}`,
+                    );
                     return;
                 }
 
@@ -132,12 +146,14 @@ export class CommonMessageProvider
                 const encryptionKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
                     originalMessage.senderSource,
                     importedKey,
-                    'encryption'
+                    'encryption',
                 );
 
                 if (!encryptionKeyValid)
                 {
-                    console.error(`❌ SECURITY: Encryption key fingerprint verification FAILED for ${originalMessage.senderSource}`);
+                    console.error(
+                        `❌ SECURITY: Encryption key fingerprint verification FAILED for ${originalMessage.senderSource}`,
+                    );
                     console.error(`❌ Possible MITM attack - public key has been substituted!`);
                     return;
                 }
@@ -145,18 +161,22 @@ export class CommonMessageProvider
                 CryptoUtils.AddPublicKeyToDictionary(originalMessage.senderSource, importedKey);
 
                 // Import signing public key
-                const importedSigningKey = await CryptoUtils.jwkStringToSigningPublicKey(originalMessage.signingPublicKey);
+                const importedSigningKey = await CryptoUtils.jwkStringToSigningPublicKey(
+                    originalMessage.signingPublicKey,
+                );
 
                 // Verify signing key fingerprint (MITM protection)
                 const signingKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
                     originalMessage.senderSource,
                     importedSigningKey,
-                    'signing'
+                    'signing',
                 );
 
                 if (!signingKeyValid)
                 {
-                    console.error(`❌ SECURITY: Signing key fingerprint verification FAILED for ${originalMessage.senderSource}`);
+                    console.error(
+                        `❌ SECURITY: Signing key fingerprint verification FAILED for ${originalMessage.senderSource}`,
+                    );
                     console.error(`❌ Possible MITM attack - signing key has been substituted!`);
                     return;
                 }
@@ -165,8 +185,7 @@ export class CommonMessageProvider
 
                 console.log('✅ Public keys imported and fingerprints verified for:', originalMessage.senderSource);
                 return;
-            }
-            else if (messageData.Type === MessageType.PublicKeyRequest)
+            } else if (messageData.Type === MessageType.PublicKeyRequest)
             {
                 console.log('Received PublicKeyRequest from:', messageData.SourceIdentifier);
 
@@ -237,13 +256,42 @@ export class CommonMessageProvider
         _sourceIdentifier: AppIdentifier,
         _messageType: MessageType,
         _messageDataAsJsonString: string,
-
-
     ): Promise<void>
     {
         // This method is intended to be overridden by derived classes
     }
 
+    // Helper method to wait for key exchange completion
+    private async waitForKeyExchange(targetIdentifier: AppIdentifier, timeoutMs: number = 5000): Promise<boolean>
+    {
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < timeoutMs)
+        {
+            const encryptionKey = CryptoUtils.GetPublicKey(targetIdentifier);
+            const signingKey = CryptoUtils.GetSigningPublicKey(targetIdentifier);
+
+            if (encryptionKey && signingKey)
+            {
+                console.log('✅ Key exchange completed for:', targetIdentifier);
+                return true;
+            }
+
+            // Wait 100ms before checking again
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        console.warn('⚠️ Key exchange timeout for:', targetIdentifier);
+        return false;
+    }
+
+    // Helper method to check if keys are available before sending encrypted messages
+    public hasKeysFor(targetIdentifier: AppIdentifier): boolean
+    {
+        const encryptionKey = CryptoUtils.GetPublicKey(targetIdentifier);
+        const signingKey = CryptoUtils.GetSigningPublicKey(targetIdentifier);
+        return !!(encryptionKey && signingKey);
+    }
 
     public async PostMessage<T>(
         targetIdentifier: AppIdentifier,
@@ -252,9 +300,23 @@ export class CommonMessageProvider
         messageData: T,
         encrypted: boolean = true,
         messageId: string | null = null,
-
     )
     {
+        // If encryption is requested but keys aren't available, either wait or send unencrypted
+        if (encrypted && !this.hasKeysFor(targetIdentifier))
+        {
+            console.warn(`No keys available for ${targetIdentifier}. Attempting key exchange...`);
+
+            // Try to request keys and wait briefly
+            await this.SendPublicKeyRequest(targetIdentifier);
+            const success = await this.waitForKeyExchange(targetIdentifier, 2000);
+
+            if (!success)
+            {
+                console.error(`Failed to obtain keys for ${targetIdentifier}. Message not sent.`);
+                return;
+            }
+        }
 
         if (targetIdentifier === AppIdentifier.MainWebsite)
         {
@@ -266,8 +328,7 @@ export class CommonMessageProvider
                 encrypted,
                 messageId,
             );
-        }
-        else
+        } else
         {
             await this.PostMessageToChild(
                 targetIdentifier,
@@ -287,12 +348,10 @@ export class CommonMessageProvider
         messageData: T,
         encrypted: boolean = true,
         messageId: string | null = null,
-
     )
     {
         try
         {
-
             if (!isBrowser())
             {
                 console.warn('Not in browser environment. Cannot post message to parent.');
@@ -306,11 +365,14 @@ export class CommonMessageProvider
                 return;
             }
 
-            let messageRawDataString: string = await this.GetRawMessageDataString
-                (
-                    targetIdentifier, sourceIdentifier, messageType,
-                    messageData, encrypted, messageId,
-                );
+            let messageRawDataString: string = await this.GetRawMessageDataString(
+                targetIdentifier,
+                sourceIdentifier,
+                messageType,
+                messageData,
+                encrypted,
+                messageId,
+            );
 
             let originTarget: string = this._appIdentifierToUrl[targetIdentifier]!;
 
@@ -332,10 +394,7 @@ export class CommonMessageProvider
                 return;
             }
 
-
             window.parent.postMessage({ type: messageType, data: messageRawDataString }, originTarget);
-
-
         } catch (e)
         {
             console.error('Error sending message to host:', e);
@@ -354,7 +413,6 @@ export class CommonMessageProvider
     {
         try
         {
-
             let messageRawDataString: string = await this.GetRawMessageDataString(
                 targetIdentifier,
                 sourceIdentifier,
@@ -405,15 +463,14 @@ export class CommonMessageProvider
         }
     }
 
-    private async GetRawMessageDataString<T>
-        (
-            targetIdentifier: AppIdentifier,
-            sourceIdentifier: AppIdentifier,
-            messageType: MessageType,
-            messageData: T,
-            encrypted: boolean = true,
-            messageId: string | null = null
-        ): Promise<string>
+    private async GetRawMessageDataString<T>(
+        targetIdentifier: AppIdentifier,
+        sourceIdentifier: AppIdentifier,
+        messageType: MessageType,
+        messageData: T,
+        encrypted: boolean = true,
+        messageId: string | null = null,
+    ): Promise<string>
     {
         try
         {
@@ -427,14 +484,12 @@ export class CommonMessageProvider
                 messageId,
             );
             return messageRawData.toString();
-        }
-        catch (e)
+        } catch (e)
         {
             console.error('Error serializing message data to string:', e);
             return '';
         }
     }
-
 
     // PostMessageEncryptedToParent<T>(messageType: MessageType, messageData: T, id: string | null = null) {
     //     try {
@@ -477,7 +532,6 @@ export class CommonMessageProvider
                 false,
             );
         }
-
     }
 
     public async SendPublicKeyResponse(targetIdentifier: AppIdentifier)
@@ -486,12 +540,12 @@ export class CommonMessageProvider
             targetIdentifier,
             this.MyAppIdentifier,
             CryptoUtils.MyPublicKey,
-            CryptoUtils.MySigningPublicKey
+            CryptoUtils.MySigningPublicKey,
         );
 
         console.log("In method 'SendPublicKeyResponse'");
-        console.log("  - Encryption public key:", CryptoUtils.MyPublicKey);
-        console.log("  - Signing public key:", CryptoUtils.MySigningPublicKey);
+        console.log('  - Encryption public key:', CryptoUtils.MyPublicKey);
+        console.log('  - Signing public key:', CryptoUtils.MySigningPublicKey);
 
         await this.PostMessage<ResponsePublicKeyMessage>(
             targetIdentifier,

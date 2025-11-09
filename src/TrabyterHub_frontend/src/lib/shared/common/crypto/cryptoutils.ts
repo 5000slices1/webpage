@@ -18,7 +18,13 @@ export class CryptoUtils
 
     public static async InitAsync(myAppIdentifier: AppIdentifier): Promise<void>
     {
-        if (!CryptoUtils.keyPair)
+        // Always regenerate keys if either keypair is missing or if we don't have keys for this app
+        if (
+            !CryptoUtils.keyPair ||
+            !CryptoUtils.signingKeyPair ||
+            !CryptoUtils.dicPublicKeys[myAppIdentifier] ||
+            !CryptoUtils.dicSigningPublicKeys[myAppIdentifier]
+        )
         {
             // Generate encryption keys
             CryptoUtils.keyPair = await this.generateKeyPairAsync();

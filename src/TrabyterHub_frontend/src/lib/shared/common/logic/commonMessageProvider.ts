@@ -262,7 +262,7 @@ export class CommonMessageProvider
     }
 
     // Helper method to wait for key exchange completion
-    private async waitForKeyExchange(targetIdentifier: AppIdentifier, timeoutMs: number = 5000): Promise<boolean>
+    protected async waitForKeyExchange(targetIdentifier: AppIdentifier, timeoutMs: number = 5000): Promise<boolean>
     {
         const startTime = Date.now();
 
@@ -374,6 +374,13 @@ export class CommonMessageProvider
                 messageId,
             );
 
+            // Check if message serialization failed
+            if (!messageRawDataString)
+            {
+                console.error('Failed to serialize message data. Message not sent.');
+                return;
+            }
+
             let originTarget: string = this._appIdentifierToUrl[targetIdentifier]!;
 
             // Validate origin format
@@ -421,6 +428,13 @@ export class CommonMessageProvider
                 encrypted,
                 messageId,
             );
+
+            // Check if message serialization failed
+            if (!messageRawDataString)
+            {
+                console.error('Failed to serialize message data. Message not sent.');
+                return;
+            }
 
             console.log('Posting message to child app:', targetIdentifier);
             console.log('Message raw data:', messageRawDataString);

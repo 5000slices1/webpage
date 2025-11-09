@@ -104,13 +104,13 @@ export class MessageRawData
             return false;
         }
 
-        // Check timestamp to prevent replay attacks (within 5 minutes)
-        const fiveMinutes = 5 * 60 * 1000;
+        // Get replay window based on message type (variable windows for different security levels)
+        const replayWindowMs = this.getReplayWindowForMessageType(this.Type);
         const age = Date.now() - this.Timestamp;
 
-        if (age > fiveMinutes)
+        if (age > replayWindowMs)
         {
-            console.warn(`Message too old: ${age}ms (max ${fiveMinutes}ms)`);
+            console.warn(`Message too old: ${age}ms (max ${replayWindowMs}ms for ${MessageType[this.Type]})`);
             return false;
         }
 
@@ -123,6 +123,33 @@ export class MessageRawData
         // Verify the signature
         const messageToVerify = this.getCanonicalString();
         return await CryptoUtils.VerifyMessageAsync(messageToVerify, this.Signature, senderSigningPublicKey);
+    }
+
+    /// Get replay window duration based on message type
+    /// Sensitive operations get shorter windows for tighter security
+    private getReplayWindowForMessageType(messageType: MessageType): number
+    {
+        // Define windows in milliseconds
+        const THIRTY_SECONDS = 30 * 1000;
+        const TWO_MINUTES = 2 * 60 * 1000;
+        const FIVE_MINUTES = 5 * 60 * 1000;
+
+        switch (messageType)
+        {
+            // Key exchange: Longer window acceptable (connection establishment)
+            case MessageType.PublicKeyRequest:
+            case MessageType.PublicKeyResponse:
+                return FIVE_MINUTES;
+
+            // Full screen request: Short window (security-sensitive UI action)
+            case MessageType.FullScreenRequest:
+                return THIRTY_SECONDS;
+
+            // Unknown/default: Conservative approach with moderate window
+            case MessageType.Unknown:
+            default:
+                return TWO_MINUTES;
+        }
     }
 
     /// Get canonical string representation for signing/verification

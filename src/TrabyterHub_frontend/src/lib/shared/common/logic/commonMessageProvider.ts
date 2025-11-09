@@ -6,6 +6,9 @@ import { ResponsePublicKeyMessage } from '../abstractions/messages/fromAny/respo
 import { MessageCommon } from '../abstractions/messages/messageCommon';
 import { AppIdentifier } from '../abstractions/types/commonTypes';
 import { CryptoUtils } from '../crypto/cryptoutils';
+import { NonceTracker } from '../security/nonceTracker';
+import { RateLimiter } from '../security/rateLimiter';
+import { TrustedAppRegistry } from '../security/trustedAppRegistry';
 
 export interface IMessageProvider
 {
@@ -27,12 +30,16 @@ export class CommonMessageProvider
     public MyAppIdentifier: AppIdentifier;
     private _allowedOriginUrls: string[];
     private _appIdentifierToUrl: Partial<Record<AppIdentifier, string>>;
+    private _rateLimiter: RateLimiter;
+    private _nonceTracker: NonceTracker;
 
     constructor(myAppIdentifier: AppIdentifier, allowedOriginUrls: string[], appIdentifierToUrl: Partial<Record<AppIdentifier, string>>)
     {
         this._appIdentifierToUrl = appIdentifierToUrl;
         this.MyAppIdentifier = myAppIdentifier;
         this._allowedOriginUrls = allowedOriginUrls;
+        this._rateLimiter = new RateLimiter();
+        this._nonceTracker = new NonceTracker();
         if (isBrowser())
         {
             window.removeEventListener('message', async (event) => await this.MessageReceivedInternal(event));
@@ -44,6 +51,15 @@ export class CommonMessageProvider
     {
         console.log('CommonMessageProvider.InitAsync' + this.MyAppIdentifier);
         await CryptoUtils.InitAsync(this.MyAppIdentifier);
+
+        // If this is a child app (embedded in iframe), request parent's public key
+        if (isBrowser() && window.parent && window.parent !== window)
+        {
+            console.log('Child app detected - requesting parent (MainWebsite) public key');
+            await this.SendPublicKeyResponse(AppIdentifier.MainWebsite);
+            await this.SendPublicKeyRequest(AppIdentifier.MainWebsite);
+        }
+
         console.log('OK. CommonMessageProvider.InitAsync' + this.MyAppIdentifier);
     }
 
@@ -87,27 +103,84 @@ export class CommonMessageProvider
                 return;
             }
 
+            // Check rate limit before processing (DoS protection)
+            if (!this._rateLimiter.checkRateLimit(messageData.SourceIdentifier))
+            {
+                console.error(`❌ Rate limit exceeded for ${messageData.SourceIdentifier} - message rejected`);
+                const stats = this._rateLimiter.getStatistics(messageData.SourceIdentifier);
+                console.error(`Stats: ${stats.messagesLastSecond}/sec, ${stats.messagesLastMinute}/min`);
+                return;
+            }
+
             // Handle public key exchange (before signature verification since we don't have keys yet)
             if (messageData.Type === MessageType.PublicKeyResponse)
             {
                 const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>
                     (messageData.DataAsJsonStringOrEncryptedData)!;
 
+                // Verify the app is trusted and origin is allowed
+                if (!TrustedAppRegistry.isAppTrusted(originalMessage.senderSource, event.origin))
+                {
+                    console.error(`❌ Rejected public key from untrusted source: ${originalMessage.senderSource} @ ${event.origin}`);
+                    return;
+                }
+
                 // Import encryption public key
                 const importedKey = await CryptoUtils.jwkStringToPublicKey(originalMessage.publicKey);
+
+                // Verify encryption key fingerprint (MITM protection)
+                const encryptionKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
+                    originalMessage.senderSource,
+                    importedKey,
+                    'encryption'
+                );
+
+                if (!encryptionKeyValid)
+                {
+                    console.error(`❌ SECURITY: Encryption key fingerprint verification FAILED for ${originalMessage.senderSource}`);
+                    console.error(`❌ Possible MITM attack - public key has been substituted!`);
+                    return;
+                }
+
                 CryptoUtils.AddPublicKeyToDictionary(originalMessage.senderSource, importedKey);
 
                 // Import signing public key
                 const importedSigningKey = await CryptoUtils.jwkStringToSigningPublicKey(originalMessage.signingPublicKey);
+
+                // Verify signing key fingerprint (MITM protection)
+                const signingKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
+                    originalMessage.senderSource,
+                    importedSigningKey,
+                    'signing'
+                );
+
+                if (!signingKeyValid)
+                {
+                    console.error(`❌ SECURITY: Signing key fingerprint verification FAILED for ${originalMessage.senderSource}`);
+                    console.error(`❌ Possible MITM attack - signing key has been substituted!`);
+                    return;
+                }
+
                 CryptoUtils.AddSigningPublicKeyToDictionary(originalMessage.senderSource, importedSigningKey);
 
-                console.log('✓ Public keys imported for:', originalMessage.senderSource);
+                console.log('✅ Public keys imported and fingerprints verified for:', originalMessage.senderSource);
                 return;
             }
             else if (messageData.Type === MessageType.PublicKeyRequest)
             {
                 console.log('Received PublicKeyRequest from:', messageData.SourceIdentifier);
+
+                // Send our public keys to the requester
                 await this.SendPublicKeyResponse(messageData.SourceIdentifier);
+
+                // Also request the sender's keys if we don't have them yet
+                const senderSigningKey = CryptoUtils.GetSigningPublicKey(messageData.SourceIdentifier);
+                if (!senderSigningKey)
+                {
+                    console.log('Requesting public keys from:', messageData.SourceIdentifier);
+                    await this.SendPublicKeyRequest(messageData.SourceIdentifier);
+                }
+
                 return;
             }
 
@@ -122,6 +195,9 @@ export class CommonMessageProvider
             }
 
             // Verify message signature (BEFORE decryption - signature is on encrypted data)
+            // IMPORTANT: Signature verification MUST happen before nonce check to prevent
+            // memory pollution from forged messages. Only authenticated messages should
+            // have their nonces recorded.
             const isValid = await messageData.VerifySignature(senderSigningPublicKey);
             if (!isValid)
             {
@@ -131,6 +207,14 @@ export class CommonMessageProvider
             }
 
             console.log('✅ Message signature verified for:', messageData.SourceIdentifier);
+
+            // Check nonce for replay attack prevention (AFTER signature verification)
+            // This prevents attackers from polluting the nonce tracker with forged messages
+            if (!this._nonceTracker.checkAndRecordNonce(messageData.SourceIdentifier, messageData.Nonce))
+            {
+                console.error(`❌ Duplicate nonce detected from ${messageData.SourceIdentifier} - REPLAY ATTACK!`);
+                return;
+            }
 
             // Now decrypt the message (signature verified, safe to decrypt)
             await messageData.DecryptData();

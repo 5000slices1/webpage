@@ -26,9 +26,8 @@ export class MessageProvider extends CommonMessageProvider implements IMessagePr
     async InitAsync()
     {
         await super.InitAsync();
-        await this.SendPublicKeyResponse(AppIdentifier.TrabyterStaking);
-        await this.SendPublicKeyRequest(AppIdentifier.TrabyterStaking);
-
+        // Don't proactively request child's key - child will initiate when iframe loads
+        // Parent will automatically respond when it receives the child's request
     }
 
     public async MessageReceived(

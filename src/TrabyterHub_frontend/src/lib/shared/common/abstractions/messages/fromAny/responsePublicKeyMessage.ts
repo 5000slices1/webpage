@@ -6,12 +6,14 @@ export class ResponsePublicKeyMessage extends MessageCommon<ResponsePublicKeyMes
     public readonly senderTarget: AppIdentifier;
     public readonly senderSource: AppIdentifier;
     public readonly publicKey: string;
+    public readonly signingPublicKey: string;
 
-    constructor(senderTarget: AppIdentifier, senderSource: AppIdentifier, publicKey: string)
+    constructor(senderTarget: AppIdentifier, senderSource: AppIdentifier, publicKey: string, signingPublicKey: string)
     {
         super();
         this.senderTarget = senderTarget;
         this.senderSource = senderSource;
         this.publicKey = publicKey;
+        this.signingPublicKey = signingPublicKey;
     }
 }

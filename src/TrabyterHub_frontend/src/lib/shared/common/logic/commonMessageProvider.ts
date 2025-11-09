@@ -87,32 +87,61 @@ export class CommonMessageProvider
                 return;
             }
 
+            // Handle public key exchange (before signature verification since we don't have keys yet)
             if (messageData.Type === MessageType.PublicKeyResponse)
             {
-
                 const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>
                     (messageData.DataAsJsonStringOrEncryptedData)!;
 
+                // Import encryption public key
                 const importedKey = await CryptoUtils.jwkStringToPublicKey(originalMessage.publicKey);
-
-                // Add the imported public key to the dictionary
                 CryptoUtils.AddPublicKeyToDictionary(originalMessage.senderSource, importedKey);
+
+                // Import signing public key
+                const importedSigningKey = await CryptoUtils.jwkStringToSigningPublicKey(originalMessage.signingPublicKey);
+                CryptoUtils.AddSigningPublicKeyToDictionary(originalMessage.senderSource, importedSigningKey);
+
+                console.log('✓ Public keys imported for:', originalMessage.senderSource);
+                return;
             }
             else if (messageData.Type === MessageType.PublicKeyRequest)
             {
                 console.log('Received PublicKeyRequest from:', messageData.SourceIdentifier);
-
                 await this.SendPublicKeyResponse(messageData.SourceIdentifier);
+                return;
             }
-            else
+
+            // Get sender's signing public key for verification
+            const senderSigningPublicKey = CryptoUtils.GetSigningPublicKey(messageData.SourceIdentifier);
+
+            if (!senderSigningPublicKey)
             {
-                await this.MessageReceived(
-                    messageData.TargetIdentifier,
-                    messageData.SourceIdentifier,
-                    messageData.Type,
-                    messageData.DataAsJsonStringOrEncryptedData,
-                );
+                console.error('No signing public key available for sender:', messageData.SourceIdentifier);
+                console.warn('Message rejected - missing signing key. Key exchange required first.');
+                return;
             }
+
+            // Verify message signature (BEFORE decryption - signature is on encrypted data)
+            const isValid = await messageData.VerifySignature(senderSigningPublicKey);
+            if (!isValid)
+            {
+                console.error('❌ Message signature verification FAILED for:', messageData.SourceIdentifier);
+                console.error('Possible tampering, replay attack, or message too old');
+                return;
+            }
+
+            console.log('✅ Message signature verified for:', messageData.SourceIdentifier);
+
+            // Now decrypt the message (signature verified, safe to decrypt)
+            await messageData.DecryptData();
+
+            // Process authenticated and decrypted message
+            await this.MessageReceived(
+                messageData.TargetIdentifier,
+                messageData.SourceIdentifier,
+                messageData.Type,
+                messageData.DataAsJsonStringOrEncryptedData,
+            );
         } catch (e)
         {
             console.error('Error processing received message:', e);
@@ -369,9 +398,16 @@ export class CommonMessageProvider
 
     public async SendPublicKeyResponse(targetIdentifier: AppIdentifier)
     {
-        var message = new ResponsePublicKeyMessage(targetIdentifier, this.MyAppIdentifier, CryptoUtils.MyPublicKey);
+        var message = new ResponsePublicKeyMessage(
+            targetIdentifier,
+            this.MyAppIdentifier,
+            CryptoUtils.MyPublicKey,
+            CryptoUtils.MySigningPublicKey
+        );
 
-        console.log("I method 'SendPublicKeyResponse', my public key:", CryptoUtils.MyPublicKey);
+        console.log("In method 'SendPublicKeyResponse'");
+        console.log("  - Encryption public key:", CryptoUtils.MyPublicKey);
+        console.log("  - Signing public key:", CryptoUtils.MySigningPublicKey);
 
         await this.PostMessage<ResponsePublicKeyMessage>(
             targetIdentifier,

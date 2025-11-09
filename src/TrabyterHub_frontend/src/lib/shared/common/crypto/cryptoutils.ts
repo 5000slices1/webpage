@@ -7,20 +7,28 @@ export class CryptoUtils
 {
     //my personal keys
     private static keyPair?: CryptoKeyPair;
+    private static signingKeyPair?: CryptoKeyPair;
 
     /// Dictionary to hold public keys of other apps and myself
     private static dicPublicKeys: Partial<Record<AppIdentifier, CryptoKey>> = {};
+    private static dicSigningPublicKeys: Partial<Record<AppIdentifier, CryptoKey>> = {};
+
     public static MyPublicKey: string;
+    public static MySigningPublicKey: string;
 
     public static async InitAsync(myAppIdentifier: AppIdentifier): Promise<void>
     {
         if (!CryptoUtils.keyPair)
         {
+            // Generate encryption keys
             CryptoUtils.keyPair = await this.generateKeyPairAsync();
-
-            //Add my own public key to the dictionary
             CryptoUtils.dicPublicKeys[myAppIdentifier] = CryptoUtils.keyPair.publicKey;
             CryptoUtils.MyPublicKey = await this.publicKeyToJwkString(CryptoUtils.keyPair.publicKey);
+
+            // Generate signing keys
+            CryptoUtils.signingKeyPair = await this.generateSigningKeyPairAsync();
+            CryptoUtils.dicSigningPublicKeys[myAppIdentifier] = CryptoUtils.signingKeyPair.publicKey;
+            CryptoUtils.MySigningPublicKey = await this.signingPublicKeyToJwkString(CryptoUtils.signingKeyPair.publicKey);
         }
     }
 
@@ -31,14 +39,82 @@ export class CryptoUtils
             CryptoUtils.dicPublicKeys[appIdentifier] = publicKey;
         }
     }
+
+    public static AddSigningPublicKeyToDictionary(appIdentifier: AppIdentifier, publicKey: CryptoKey): void
+    {
+        if (!CryptoUtils.dicSigningPublicKeys[appIdentifier])
+        {
+            CryptoUtils.dicSigningPublicKeys[appIdentifier] = publicKey;
+        }
+    }
+
+    public static GetSigningPublicKey(appIdentifier: AppIdentifier): CryptoKey | undefined
+    {
+        return CryptoUtils.dicSigningPublicKeys[appIdentifier];
+    }
+
     private static async generateKeyPairAsync(): Promise<CryptoKeyPair>
     {
-        // Generate a key pair
+        // Generate a key pair for encryption
         return await window.crypto.subtle.generateKey(
             { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
             true,
             ['encrypt', 'decrypt'],
         );
+    }
+
+    private static async generateSigningKeyPairAsync(): Promise<CryptoKeyPair>
+    {
+        // Generate ECDSA key pair for signing
+        return await window.crypto.subtle.generateKey(
+            {
+                name: 'ECDSA',
+                namedCurve: 'P-256'
+            },
+            true,
+            ['sign', 'verify']
+        );
+    }
+
+    public static async SignMessageAsync(message: string): Promise<string>
+    {
+        if (!CryptoUtils.signingKeyPair)
+        {
+            throw new Error('Signing key pair not initialized');
+        }
+
+        const encoded = new TextEncoder().encode(message);
+        const signature = await window.crypto.subtle.sign(
+            { name: 'ECDSA', hash: 'SHA-256' },
+            CryptoUtils.signingKeyPair.privateKey,
+            encoded
+        );
+
+        return btoa(String.fromCharCode(...new Uint8Array(signature)));
+    }
+
+    public static async VerifyMessageAsync(
+        message: string,
+        signature: string,
+        senderSigningPublicKey: CryptoKey
+    ): Promise<boolean>
+    {
+        try
+        {
+            const encoded = new TextEncoder().encode(message);
+            const signatureBytes = Uint8Array.from(atob(signature), c => c.charCodeAt(0));
+
+            return await window.crypto.subtle.verify(
+                { name: 'ECDSA', hash: 'SHA-256' },
+                senderSigningPublicKey,
+                signatureBytes,
+                encoded
+            );
+        } catch (error)
+        {
+            console.error('Signature verification failed:', error);
+            return false;
+        }
     }
 
     public static generateUUID(): string
@@ -163,5 +239,23 @@ export class CryptoUtils
     {
         const jwk = JSON.parse(jwkString);
         return await crypto.subtle.importKey('jwk', jwk, { name: 'RSA-OAEP', hash: 'SHA-256' }, true, ['encrypt']);
+    }
+
+    public static async signingPublicKeyToJwkString(key: CryptoKey): Promise<string>
+    {
+        const jwk = await crypto.subtle.exportKey('jwk', key);
+        return JSON.stringify(jwk);
+    }
+
+    public static async jwkStringToSigningPublicKey(jwkString: string): Promise<CryptoKey>
+    {
+        const jwk = JSON.parse(jwkString);
+        return await crypto.subtle.importKey(
+            'jwk',
+            jwk,
+            { name: 'ECDSA', namedCurve: 'P-256' },
+            true,
+            ['verify']
+        );
     }
 }

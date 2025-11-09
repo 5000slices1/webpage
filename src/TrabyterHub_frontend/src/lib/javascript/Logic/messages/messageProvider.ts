@@ -19,9 +19,12 @@ export class MessageProvider extends CommonMessageProvider implements IMessagePr
         super(myAppIdentifier, AllowedOriginUrls);
     }
 
-    async Init()
+    async InitAsync()
     {
         await super.InitAsync();
+        await this.SendPublicKeyResponse(AppIdentifier.TrabyterStaking);
+        await this.SendPublicKeyRequest(AppIdentifier.TrabyterStaking);
+
     }
 
     public async MessageReceived(

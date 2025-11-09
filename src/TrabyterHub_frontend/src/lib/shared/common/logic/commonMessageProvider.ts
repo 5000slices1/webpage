@@ -40,7 +40,9 @@ export class CommonMessageProvider
 
     public async InitAsync(): Promise<void>
     {
+        console.log('CommonMessageProvider.InitAsync' + this.MyAppIdentifier);
         await CryptoUtils.InitAsync(this.MyAppIdentifier);
+        console.log('OK. CommonMessageProvider.InitAsync' + this.MyAppIdentifier);
     }
 
     private async MessageReceivedInternal(event: MessageEvent): Promise<void>
@@ -89,33 +91,26 @@ export class CommonMessageProvider
                 const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>
                     (messageData.DataAsJsonStringOrEncryptedData)!;
 
-                console.log('OriginalMessage:', originalMessage);
-
-                const importedKey = await window.crypto.subtle.importKey(
-                    'jwk',
-                    originalMessage.publicKey as JsonWebKey,
-                    { name: 'RSA-OAEP', hash: 'SHA-256' },
-                    true,
-                    ['encrypt'],
-                );
+                const importedKey = await CryptoUtils.jwkStringToPublicKey(originalMessage.publicKey);
 
                 // Add the imported public key to the dictionary
                 CryptoUtils.AddPublicKeyToDictionary(originalMessage.senderSource, importedKey);
-                return;
             }
-            // if (event.data.type === MessageType.FullScreenRequest) {
-            //     const messageData = MessageRawData.fromString<RequestFullScreenMessage>(event.data.data);
-            //     console.log('Parsed MessageData:', messageData);
-            //     return;
-            // }
-            await this.MessageReceived(
-                messageData.TargetIdentifier,
-                messageData.SourceIdentifier,
-                messageData.Type,
-                messageData.DataAsJsonStringOrEncryptedData,
+            else if (messageData.Type === MessageType.PublicKeyRequest)
+            {
+                console.log('Received PublicKeyRequest from:', messageData.SourceIdentifier);
 
-
-            );
+                await this.SendPublicKeyResponse(messageData.SourceIdentifier);
+            }
+            else
+            {
+                await this.MessageReceived(
+                    messageData.TargetIdentifier,
+                    messageData.SourceIdentifier,
+                    messageData.Type,
+                    messageData.DataAsJsonStringOrEncryptedData,
+                );
+            }
         } catch (e)
         {
             console.error('Error processing received message:', e);
@@ -123,15 +118,51 @@ export class CommonMessageProvider
     }
 
     protected async MessageReceived(
-        targetIdentifier: AppIdentifier,
-        sourceIdentifier: AppIdentifier,
-        messageType: MessageType,
-        messageDataAsJsonString: string,
+        _targetIdentifier: AppIdentifier,
+        _sourceIdentifier: AppIdentifier,
+        _messageType: MessageType,
+        _messageDataAsJsonString: string,
 
 
     ): Promise<void>
     {
         // This method is intended to be overridden by derived classes
+    }
+
+
+    public async PostMessage<T>(
+        targetIdentifier: AppIdentifier,
+        sourceIdentifier: AppIdentifier,
+        messageType: MessageType,
+        messageData: T,
+        encrypted: boolean = true,
+        messageId: string | null = null,
+
+    )
+    {
+
+        if (targetIdentifier === AppIdentifier.MainWebsite)
+        {
+            await this.PostMessageToParent(
+                targetIdentifier,
+                sourceIdentifier,
+                messageType,
+                messageData,
+                encrypted,
+                messageId,
+            );
+        }
+        else
+        {
+            await this.PostMessageToChild(
+                targetIdentifier,
+                sourceIdentifier,
+                messageType,
+                messageData,
+                encrypted,
+                messageId,
+            );
+        }
     }
 
     public async PostMessageToParent<T>(
@@ -194,6 +225,9 @@ export class CommonMessageProvider
                 encrypted,
                 messageId,
             );
+
+            console.log('Posting message to child app:', targetIdentifier);
+            console.log('Message raw data:', messageRawDataString);
 
             // Find the iframe element for the target app identifier
             const iframeSelector = `iframe[data-app-id="${targetIdentifier}"]`;
@@ -285,7 +319,22 @@ export class CommonMessageProvider
                 false,
             );
         }
-        console.error('SendPublicKeyRequest: Unsupported target identifier:', targetIdentifier);
+
+    }
+
+    public async SendPublicKeyResponse(targetIdentifier: AppIdentifier)
+    {
+        var message = new ResponsePublicKeyMessage(targetIdentifier, this.MyAppIdentifier, CryptoUtils.MyPublicKey);
+
+        console.log("I method 'SendPublicKeyResponse', my public key:", CryptoUtils.MyPublicKey);
+
+        await this.PostMessage<ResponsePublicKeyMessage>(
+            targetIdentifier,
+            this.MyAppIdentifier,
+            MessageType.PublicKeyResponse,
+            message,
+            false,
+        );
     }
 
     // Add this new method for secure origin validation

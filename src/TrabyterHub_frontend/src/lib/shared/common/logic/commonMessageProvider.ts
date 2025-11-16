@@ -2,7 +2,9 @@ import { MessageRawData } from '$lib/shared/common/abstractions/messages/message
 import { MessageType } from '$lib/shared/common/abstractions/messages/messagetype';
 
 import { RequestPublicKeyMessage } from '../abstractions/messages/fromAny/requestPublicKeyMessage';
+import { RequestWalletStatusMessage } from '../abstractions/messages/fromAny/RequestWalletStatusMessage';
 import { ResponsePublicKeyMessage } from '../abstractions/messages/fromAny/responsePublicKeyMessage';
+import { ResponseWalletStatusMessage } from '../abstractions/messages/fromAny/ResponseWalletStatusMessage';
 import { MessageCommon } from '../abstractions/messages/messageCommon';
 import { AppIdentifier } from '../abstractions/types/commonTypes';
 import { CryptoUtils } from '../crypto/cryptoutils';
@@ -34,6 +36,7 @@ export class CommonMessageProvider
     private _appIdentifierToUrl: Partial<Record<AppIdentifier, string>>;
     private _rateLimiter: RateLimiter;
     private _nonceTracker: NonceTracker;
+    private _immediateMessages: Map<string, MessageCommon<any>> = new Map<string, MessageCommon<any>>();
 
     constructor(
         myAppIdentifier: AppIdentifier,
@@ -74,11 +77,28 @@ export class CommonMessageProvider
         console.log('OK. CommonMessageProvider.InitAsync' + this.MyAppIdentifier);
     }
 
+    private async ClearOldImmediateMessages(): Promise<void>
+    {
+        const now: bigint = BigInt(Date.now());
+        const expirationTimeMs: bigint = BigInt(5 * 60 * 1000); // 5 minutes
+        for (const [messageId, message] of this._immediateMessages)
+        {
+            if (now - message.TimeStamp > expirationTimeMs)
+            {
+                this._immediateMessages.delete(messageId);
+                console.log(`Cleared old immediate message: ${messageId}`);
+            }
+        }
+    }
+
     private async MessageReceivedInternal(event: MessageEvent): Promise<void>
     {
         try
         {
             console.log('MessageProvider.MessageReceived', event);
+
+            // Clear old immediate messages
+            await this.ClearOldImmediateMessages();
 
             if (!this.isOriginAllowed(event.origin, this._allowedOriginUrls))
             {
@@ -86,15 +106,7 @@ export class CommonMessageProvider
                 console.log('Allowed origins are: ', this._allowedOriginUrls);
                 return;
             }
-            // Validate the origin of the message
-            // if (event.origin !== window.origin) {
-            //     console.warn('Received message from unknown origin:', event.origin);
-            //     return;
-            // }
-            // if (event.data.type === 'REQUEST_DATA') {
-            //     // Respond with custom data
-            //     event.source.postMessage({ type: 'RESPONSE_DATA', requestId: event.data.requestId, payload: 'your data' }, event.origin);
-            // }
+
             if (!event.data || !event.data.type || !event.data.data)
             {
                 console.warn('Received malformed message:', event.data);
@@ -126,64 +138,7 @@ export class CommonMessageProvider
             // Handle public key exchange (before signature verification since we don't have keys yet)
             if (messageData.Type === MessageType.PublicKeyResponse)
             {
-                const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>(
-                    messageData.DataAsJsonStringOrEncryptedData,
-                )!;
-
-                // Verify the app is trusted and origin is allowed
-                if (!TrustedAppRegistry.isAppTrusted(originalMessage.senderSource, event.origin))
-                {
-                    console.error(
-                        `❌ Rejected public key from untrusted source: ${originalMessage.senderSource} @ ${event.origin}`,
-                    );
-                    return;
-                }
-
-                // Import encryption public key
-                const importedKey = await CryptoUtils.jwkStringToPublicKey(originalMessage.publicKey);
-
-                // Verify encryption key fingerprint (MITM protection)
-                const encryptionKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
-                    originalMessage.senderSource,
-                    importedKey,
-                    'encryption',
-                );
-
-                if (!encryptionKeyValid)
-                {
-                    console.error(
-                        `❌ SECURITY: Encryption key fingerprint verification FAILED for ${originalMessage.senderSource}`,
-                    );
-                    console.error(`❌ Possible MITM attack - public key has been substituted!`);
-                    return;
-                }
-
-                CryptoUtils.AddPublicKeyToDictionary(originalMessage.senderSource, importedKey);
-
-                // Import signing public key
-                const importedSigningKey = await CryptoUtils.jwkStringToSigningPublicKey(
-                    originalMessage.signingPublicKey,
-                );
-
-                // Verify signing key fingerprint (MITM protection)
-                const signingKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
-                    originalMessage.senderSource,
-                    importedSigningKey,
-                    'signing',
-                );
-
-                if (!signingKeyValid)
-                {
-                    console.error(
-                        `❌ SECURITY: Signing key fingerprint verification FAILED for ${originalMessage.senderSource}`,
-                    );
-                    console.error(`❌ Possible MITM attack - signing key has been substituted!`);
-                    return;
-                }
-
-                CryptoUtils.AddSigningPublicKeyToDictionary(originalMessage.senderSource, importedSigningKey);
-
-                console.log('✅ Public keys imported and fingerprints verified for:', originalMessage.senderSource);
+                await this.processPublicKeyResponse(event, messageData);
                 return;
             } else if (messageData.Type === MessageType.PublicKeyRequest)
             {
@@ -238,6 +193,18 @@ export class CommonMessageProvider
             // Now decrypt the message (signature verified, safe to decrypt)
             await messageData.DecryptData();
 
+            if (messageData.Type === MessageType.ResponseWalletStatus)
+            {
+                const walletStatusMessage: ResponseWalletStatusMessage =
+                    MessageCommon.fromString<ResponseWalletStatusMessage>(messageData.DataAsJsonStringOrEncryptedData)!;
+                if (walletStatusMessage.ImmediateResponseRequested == true)
+                {
+                    this._immediateMessages.set(messageData.MessageId, walletStatusMessage);
+                    console.log('Stored immediate wallet status message:', messageData.MessageId);
+                }
+                return;
+            }
+
             // Process authenticated and decrypted message
             await this.MessageReceived(
                 messageData.TargetIdentifier,
@@ -259,6 +226,66 @@ export class CommonMessageProvider
     ): Promise<void>
     {
         // This method is intended to be overridden by derived classes
+    }
+
+    private async processPublicKeyResponse(event: MessageEvent, messageData: MessageRawData): Promise<void>
+    {
+        const originalMessage: ResponsePublicKeyMessage = MessageCommon.fromString<ResponsePublicKeyMessage>(
+            messageData.DataAsJsonStringOrEncryptedData,
+        )!;
+
+        // Verify the app is trusted and origin is allowed
+        if (!TrustedAppRegistry.isAppTrusted(originalMessage.senderSource, event.origin))
+        {
+            console.error(
+                `❌ Rejected public key from untrusted source: ${originalMessage.senderSource} @ ${event.origin}`,
+            );
+            return;
+        }
+
+        // Import encryption public key
+        const importedKey = await CryptoUtils.jwkStringToPublicKey(originalMessage.publicKey);
+
+        // Verify encryption key fingerprint (MITM protection)
+        const encryptionKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
+            originalMessage.senderSource,
+            importedKey,
+            'encryption',
+        );
+
+        if (!encryptionKeyValid)
+        {
+            console.error(
+                `❌ SECURITY: Encryption key fingerprint verification FAILED for ${originalMessage.senderSource}`,
+            );
+            console.error(`❌ Possible MITM attack - public key has been substituted!`);
+            return;
+        }
+
+        CryptoUtils.AddPublicKeyToDictionary(originalMessage.senderSource, importedKey);
+
+        // Import signing public key
+        const importedSigningKey = await CryptoUtils.jwkStringToSigningPublicKey(originalMessage.signingPublicKey);
+
+        // Verify signing key fingerprint (MITM protection)
+        const signingKeyValid = await TrustedAppRegistry.verifyPublicKeyFingerprint(
+            originalMessage.senderSource,
+            importedSigningKey,
+            'signing',
+        );
+
+        if (!signingKeyValid)
+        {
+            console.error(
+                `❌ SECURITY: Signing key fingerprint verification FAILED for ${originalMessage.senderSource}`,
+            );
+            console.error(`❌ Possible MITM attack - signing key has been substituted!`);
+            return;
+        }
+
+        CryptoUtils.AddSigningPublicKeyToDictionary(originalMessage.senderSource, importedSigningKey);
+
+        console.log('✅ Public keys imported and fingerprints verified for:', originalMessage.senderSource);
     }
 
     // Helper method to wait for key exchange completion
@@ -505,19 +532,55 @@ export class CommonMessageProvider
         }
     }
 
-    // PostMessageEncryptedToParent<T>(messageType: MessageType, messageData: T, id: string | null = null) {
-    //     try {
-    //         var messageRawData: MessageRawData = CryptoUtils.EncryptAndReturnAsRawMessageAsync(
-    //             messageData,
-    //             messageType,
-    //             id,
-    //         );PostMessageToChild
+    // Sends a request for wallet info and waits for the response
+    public async SendRequestWalletInfoMessageAsync(): Promise<ResponseWalletStatusMessage | null>
+    {
+        var messageId: string = CryptoUtils.generateUUID();
 
-    //         window.parent.postMessage({type: messageType, data: messageRawData.toString()}, '*');
-    //     } catch (e) {
-    //         console.error('Error sending message to host:', e);
-    //     }
-    // }
+        var requestMessage = new RequestWalletStatusMessage();
+        requestMessage.ImmediateResponseRequested = true;
+
+        await this.PostMessage<RequestWalletStatusMessage>(
+            AppIdentifier.MainWebsite,
+            this.MyAppIdentifier,
+            MessageType.RequestWalletStatus,
+            requestMessage,
+            true,
+            messageId,
+        );
+
+        const responseMessage = await this.WaitForImmediateMessageReceived<ResponseWalletStatusMessage>(
+            messageId,
+            5000,
+        );
+        var result: ResponseWalletStatusMessage = responseMessage as ResponseWalletStatusMessage;
+        return result ? result : null;
+    }
+
+    // Waits for an immediate response message with the specified messageId
+    private async WaitForImmediateMessageReceived<T>(
+        messageId: string,
+        timeoutMs: number = 5000,
+    ): Promise<MessageCommon<T> | null>
+    {
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < timeoutMs)
+        {
+            if (this._immediateMessages.has(messageId))
+            {
+                const message = this._immediateMessages.get(messageId)!;
+                this._immediateMessages.delete(messageId);
+                return message as MessageCommon<T>;
+            }
+
+            // Wait 100ms before checking again
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        console.warn('⚠️ Immediate message wait timeout for messageId:', messageId);
+        return null;
+    }
 
     // Sends a public key request message to the parent window
     public async SendPublicKeyRequest(targetIdentifier: AppIdentifier)

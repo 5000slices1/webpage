@@ -1,6 +1,6 @@
 <script lang="ts">
     import {MainClass} from '$lib/javascript/Logic/MainClass.js';
-    import {TrabyterStakingAppUrl} from '$lib/javascript/Abstractions/constants/globalConstants.js';
+    import {TrabyterStakingAppUrl} from '$lib/shared/common/security/trustedAppRegistry.js';
     let data = $props();
     console.log('NFT Staking Layout loaded with data:');
 </script>

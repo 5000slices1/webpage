@@ -1,13 +1,14 @@
-import
-    {
-        AllowedOriginUrls,
-        AppIdentifierToUrl,
-    } from '$lib/javascript/Abstractions/constants/globalConstants';
+
 import { RequestFullScreenMessage } from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
 import { MessageRawData } from '$lib/shared/common/abstractions/messages/messageRawData';
 import { MessageType } from '$lib/shared/common/abstractions/messages/messagetype';
 import { AppIdentifier } from '$lib/shared/common/abstractions/types/commonTypes';
 import { CommonMessageProvider } from '$lib/shared/common/logic/commonMessageProvider';
+import
+    {
+        AllowedOriginUrls,
+        AppIdentifierToUrl,
+    } from '$lib/shared/common/security/trustedAppRegistry.js';
 
 import { Bool } from '@dfinity/candid/lib/cjs/idl';
 

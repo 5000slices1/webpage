@@ -1,8 +1,9 @@
-import {Principal} from '@dfinity/principal';
+import { Principal } from '@dfinity/principal';
 
-import {ModelWalletTypes} from './ModelWalletTypes';
+import { ModelWalletTypes } from './ModelWalletTypes';
 
-export class ModelUsersIdentity {
+export class ModelUsersIdentity
+{
     //Connected, true or false
     IsConnected: boolean;
 
@@ -18,7 +19,8 @@ export class ModelUsersIdentity {
     //The users wallet-principal
     AccountPrincipal: Principal;
 
-    constructor() {
+    constructor()
+    {
         this.IsConnected = false;
         this.Type = ModelWalletTypes.NoWallet;
         this.Name = '';
@@ -26,7 +28,8 @@ export class ModelUsersIdentity {
         this.AccountPrincipal = Principal.anonymous();
     }
 
-    Reset() {
+    Reset()
+    {
         this.IsConnected = false;
         this.Type = ModelWalletTypes.NoWallet;
         this.Name = '';

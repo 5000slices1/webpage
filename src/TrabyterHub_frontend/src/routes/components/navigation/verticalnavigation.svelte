@@ -54,10 +54,7 @@
         <tbody>
             {#each navigationItems as item, i (item.href)}
                 <tr>
-                    <td
-                        style="height: {navigationSettings.buttonVerticalDistanceStyleHeight};"
-                    >
-                    </td>
+                    <td style="height: {navigationSettings.buttonVerticalDistanceStyleHeight};"> </td>
                 </tr>
                 <tr>
                     <td align="center">
@@ -66,8 +63,7 @@
                             type="button"
                             id={item.href}
                             aria-label={item.text}
-                            class:content-control-left-navigation-button-active={selectedHref ===
-                                item.href}
+                            class:content-control-left-navigation-button-active={selectedHref === item.href}
                             style="height: {item.buttonHeightStyleValue};
                                 width: {navigationSettings.buttonWidthStyleValue};
                                 font-size: {navigationSettings.buttonTextStyleFontSize};
@@ -139,16 +135,5 @@
             0.03rem -0.03rem 0.3rem 0.05rem rgba(0, 0, 0, 0.6);
     }
 
-    .content-control-div-header-text {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: rgba(228, 235, 255, 1);
-        font-family: 'Montserrat', sans-serif;
-        text-align: left;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.072rem;
-        -webkit-text-stroke: 0.057rem #060606;
-        paint-order: stroke fill;
-    }
+    /* Removed unused CSS selector: .content-control-div-header-text */
 </style>

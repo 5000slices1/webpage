@@ -251,7 +251,7 @@
     }
 
     .tokenexplorer-navigation-button {
-        width: 1rem;
+        width: 1.2rem;
         height: 1.5rem;
         margin: 0em;
         padding: 0em;
@@ -265,8 +265,17 @@
     }
 
     .tokenexplorer-navigation-rewind-button {
-        composes: tokenexplorer-navigation-button;
+        /* Inherit base button styles */
         width: 1.2rem;
         height: 1.5rem;
+        margin: 0em;
+        padding: 0em;
+        border: 0px;
+        background-color: transparent;
+        color: white;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
     }
 </style>

@@ -11,7 +11,7 @@
     import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
     import {TrabyterBucks_CanisterId} from '$lib/javascript/Abstractions/constants/globalConstants.js';
     import {AppName} from '$lib/javascript/Abstractions/apps/embeddedAppsInformation.js';
-    import {TrabyterStakingAppUrl} from '$lib/javascript/Abstractions/constants/globalConstants.js';
+    import {TrabyterStakingAppUrl} from '$lib/shared/common/security/trustedAppRegistry.js';
     import {AppIdentifier} from '$lib/shared/common/abstractions/types/commonTypes.js';
 
     import type {

@@ -1,7 +1,7 @@
 export class MessageCommon<T>
 {
     public ImmediateResponseRequested: boolean = false;
-    public TimeStamp: bigint = BigInt(Date.now());
+    public TimeStamp: number = Date.now();
 
     constructor() { }
 

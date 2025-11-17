@@ -8,7 +8,7 @@ export interface TrustedAppConfig
     description?: string;
 }
 
-const InProduction: boolean = false;
+const InProduction: boolean = true;
 export const TrabyterWebsiteUrl: string =
     InProduction
         ? 'https://c42x7-waaaa-aaaap-qp3ba-cai.icp0.io'

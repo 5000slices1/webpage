@@ -1,4 +1,6 @@
 
+import { RequestWalletStatusMessage } from '$lib/shared/common/abstractions/messages/fromAny/RequestWalletStatusMessage';
+import { ResponseWalletStatusMessage } from '$lib/shared/common/abstractions/messages/fromAny/ResponseWalletStatusMessage';
 import { RequestFullScreenMessage } from '$lib/shared/common/abstractions/messages/FromEmbeddedApp/requestFullScreenMessage';
 import { MessageRawData } from '$lib/shared/common/abstractions/messages/messageRawData';
 import { MessageType } from '$lib/shared/common/abstractions/messages/messagetype';
@@ -12,11 +14,14 @@ import
 
 import { Bool } from '@dfinity/candid/lib/cjs/idl';
 
+import { ModelIdentityProvider } from '../../Abstractions/Identity/ModelIdentityProvider';
 import { MainClass } from '../MainClass';
 
 import type { IMessageProvider } from '$lib/shared/common/logic/commonMessageProvider';
 
 import type { Writable } from 'svelte/store';
+import type { IdentityProvider } from '../identity/IdentityProvider';
+
 export class MessageProvider extends CommonMessageProvider implements IMessageProvider
 {
     constructor(myAppIdentifier: AppIdentifier)
@@ -36,6 +41,7 @@ export class MessageProvider extends CommonMessageProvider implements IMessagePr
         sourceIdentifier: AppIdentifier,
         messageType: MessageType,
         messageDataAsJsonString: string,
+        messageId: string | null
 
     ): Promise<void>
     {
@@ -66,10 +72,69 @@ export class MessageProvider extends CommonMessageProvider implements IMessagePr
                 console.log('fullscreen: ', (message as RequestFullScreenMessage)?.UseFullScreen);
 
                 await this.handleFullScreenRequest(useFullSCreen);
+            } else if (messageType === MessageType.RequestWalletStatus)
+            {
+                console.log('Received RequestWalletStatus message');
+
+                var requestMessage: RequestWalletStatusMessage | null =
+                    RequestWalletStatusMessage.fromString<RequestWalletStatusMessage>(messageDataAsJsonString);
+
+                if (requestMessage == null)
+                {
+                    console.warn('RequestWalletStatus message is null; aborting.');
+                    return;
+                }
+
+                await this.SendUsersIdentityAsync(sourceIdentifier);
+
             }
         } catch (e)
         {
             console.error('Error processing received message:', e);
+        }
+    }
+
+    public async SendUsersIdentityAsyncToAllConnectedAppsAsync(): Promise<void>
+    {
+        // Iterate over all registered app identifiers
+        for (const appId of Object.keys(AppIdentifierToUrl) as AppIdentifier[])
+        {
+            // Skip sending to ourselves
+            if (appId !== this.MyAppIdentifier)
+            {
+                console.log('Sending user identity to app:', appId);
+                await this.SendUsersIdentityAsync(appId);
+            }
+        }
+    }
+
+    public async SendUsersIdentityAsync(targetIdentifier: AppIdentifier): Promise<void>
+    {
+        let identityProvider: IdentityProvider | undefined;
+        MainClass.subscribe((mc) =>
+        {
+            identityProvider = mc.IdentityProvider;
+        })();
+
+        console.log('Preparing to send user identity to:', targetIdentifier);
+        if (identityProvider)
+        {
+            var ModelIdentityProvider = identityProvider.GetModelUsersIdenity();
+            var responseWalletMessage: ResponseWalletStatusMessage = new ResponseWalletStatusMessage();
+            responseWalletMessage.IsConnected = ModelIdentityProvider.IsConnected;
+            responseWalletMessage.PrincipalText = ModelIdentityProvider.AccountPrincipalText;
+            responseWalletMessage.TimeStamp = Date.now();
+            console.log('IdentityProvider:', identityProvider);
+
+            var messageId: string | null = null;
+            console.log('Sending ResponseWalletStatus message with ID:', messageId);
+            await this.PostMessage(targetIdentifier, this.MyAppIdentifier, MessageType.ResponseWalletStatus,
+                responseWalletMessage, true, messageId);
+
+
+        } else
+        {
+            console.warn('IdentityProvider is undefined.');
         }
     }
 

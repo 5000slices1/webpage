@@ -19,6 +19,9 @@ export class ModelUsersIdentity
     //The users wallet-principal
     AccountPrincipal: Principal;
 
+    //✅ Add this field for ICP Ledger Account Identifier
+    AccountId: string;
+
     constructor()
     {
         this.IsConnected = false;
@@ -26,6 +29,7 @@ export class ModelUsersIdentity
         this.Name = '';
         this.AccountPrincipalText = '';
         this.AccountPrincipal = Principal.anonymous();
+        this.AccountId = '';
     }
 
     Reset()
@@ -35,5 +39,6 @@ export class ModelUsersIdentity
         this.Name = '';
         this.AccountPrincipalText = '';
         this.AccountPrincipal = Principal.anonymous();
+        this.AccountId = '';
     }
 }

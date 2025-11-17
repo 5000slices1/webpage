@@ -74,7 +74,7 @@ export class IdentityProvider
         return true;
     }
 
-    public GetModelUsersIdenity(): ModelUsersIdentity
+    public GetModelUsersIdentity(): ModelUsersIdentity
     {
         // Return a deep clone to prevent external modifications to internal state
         const clone = new ModelUsersIdentity();
@@ -82,6 +82,10 @@ export class IdentityProvider
         clone.Type = this.#_model.UsersIdentity.Type;
         clone.Name = this.#_model.UsersIdentity.Name;
         clone.AccountPrincipalText = this.#_model.UsersIdentity.AccountPrincipalText;
+
+        // ✅ Clone Account ID
+        clone.AccountId = this.#_model.UsersIdentity.AccountId;
+
         // Principal objects are immutable, but we create a new instance from text for safety
         clone.AccountPrincipal = Principal.fromText(
             this.#_model.UsersIdentity.AccountPrincipalText || Principal.anonymous().toText()
@@ -132,6 +136,16 @@ export class IdentityProvider
                     this.#_model.UsersIdentity.Name = connectedWalletInfo.name;
                     this.#_model.UsersIdentity.AccountPrincipalText = principalText;
                     this.#_model.UsersIdentity.AccountPrincipal = principal;
+
+                    // ✅ Store Account Identifier
+                    if (this.#_model.PlugWalletConnected)
+                    {
+                        this.#_model.UsersIdentity.AccountId = this.#_model.Adapter.accountId as string;
+                    } else
+                    {
+                        this.#_model.UsersIdentity.AccountId = connectedWalletInfo.accountId as string || '';
+                    }
+
                     //let provider = this.#_adapter?.provider;
                     this.#_model.UsersIdentity.IsConnected = true;
 
@@ -147,6 +161,8 @@ export class IdentityProvider
             } finally
             {
                 PubSub.publish('UserIdentityChanged', null);
+                console.log("this.model: ");
+                console.log(this.#_model);
 
                 // Send updated identity to all connected apps
                 try

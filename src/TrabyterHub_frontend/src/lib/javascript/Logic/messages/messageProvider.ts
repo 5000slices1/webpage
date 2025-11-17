@@ -119,10 +119,11 @@ export class MessageProvider extends CommonMessageProvider implements IMessagePr
         console.log('Preparing to send user identity to:', targetIdentifier);
         if (identityProvider)
         {
-            var ModelIdentityProvider = identityProvider.GetModelUsersIdenity();
+            var ModelIdentityProvider = identityProvider.GetModelUsersIdentity();
             var responseWalletMessage: ResponseWalletStatusMessage = new ResponseWalletStatusMessage();
             responseWalletMessage.IsConnected = ModelIdentityProvider.IsConnected;
             responseWalletMessage.PrincipalText = ModelIdentityProvider.AccountPrincipalText;
+            responseWalletMessage.AccountId = ModelIdentityProvider.AccountId;
             responseWalletMessage.TimeStamp = Date.now();
             console.log('IdentityProvider:', identityProvider);
 

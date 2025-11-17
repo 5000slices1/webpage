@@ -6,6 +6,7 @@ export class ResponseWalletStatusMessage extends MessageCommon<ResponseWalletSta
     public IsConnected: boolean;
     public WalletName: string;
     public PrincipalText: string;
+    public AccountId: string;
 
     constructor()
     {
@@ -13,5 +14,6 @@ export class ResponseWalletStatusMessage extends MessageCommon<ResponseWalletSta
         this.IsConnected = false;
         this.WalletName = '';
         this.PrincipalText = '';
+        this.AccountId = '';
     }
 }

@@ -39,21 +39,13 @@
         if (verticalNavigation && !initDone) {
             initDone = true;
             // Navigate to the default page if not already set
-            await verticalNavigation.NavigateTo(
-                '/pages/tokensNft/trabyterpremium/info',
-            );
+            await verticalNavigation.NavigateTo('/pages/tokensNft/trabyterpremium/info');
         }
     });
 </script>
 
-<div
-    style="height: 100%;width: 100%;margin-top: 1.5rem;max-height:calc(100% - 2em);"
->
-    <table
-        cellspacing="0"
-        cellpadding="0"
-        style="height: 100%;width: 100%;min-height: 100%;"
-    >
+<div style="height: 100%;width: 100%;margin-top: 1.5rem;max-height:calc(100% - 2em);">
+    <table cellspacing="0" cellpadding="0" style="height: 100%;width: 100%;min-height: 100%;">
         <tbody>
             <tr>
                 <td>
@@ -66,14 +58,8 @@
                 </td>
                 <td style="width:1.0rem;min-width:1.0rem"><div></div></td>
                 <td style="width: 100%;height: 100%;">
-                    <div
-                        class="content-control-div"
-                        style="height: 100%;width:100%; "
-                    >
-                        <div
-                            class="inner-content-control-spacing"
-                            style="width: auto;"
-                        >
+                    <div class="content-control-div" style="height: 100%;width:100%; ">
+                        <div class="inner-content-control-spacing" style="width: auto;">
                             <!-- Main Content -->
                             {@render data.children()}
                         </div>

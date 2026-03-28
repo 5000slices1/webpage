@@ -10,12 +10,12 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import {fade} from 'svelte/transition';
-    import {TokenExplorerSearchMode} from '$lib/javascript/Abstractions/explorer/searchMode';
+    import {TokenExplorerSearchMode} from '$lib/javascript/Abstractions/explorer/searchMode.js';
     import {
         TokenExplorerResponse,
         TokenExplorerService,
         type TokenExplorerItem,
-    } from '$lib/javascript/Services/TokenExplorerService';
+    } from '$lib/javascript/Services/TokenExplorerService.js';
 
     // Props passed to the component, with default settings for token information.
     let {
@@ -423,7 +423,7 @@
     }
 
     .tokenexplorer-navigation-button {
-        width: 1rem;
+        width: 1.2rem;
         height: 1.5rem;
         margin: 0em;
         padding: 0em;
@@ -437,8 +437,17 @@
     }
 
     .tokenexplorer-navigation-rewind-button {
-        composes: tokenexplorer-navigation-button;
+        /* Inherit base button styles */
         width: 1.2rem;
         height: 1.5rem;
+        margin: 0em;
+        padding: 0em;
+        border: 0px;
+        background-color: transparent;
+        color: white;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
     }
 </style>

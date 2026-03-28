@@ -88,7 +88,7 @@
 }
 
 .walletLoginButton {
-    display: none;
+    display: block;
     width: auto;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -118,14 +118,13 @@
     display: none;
     /* display: block; */
     position: absolute;
-
     text-align: end;
     margin-left: -2.4rem;
-    margin-top: 1.14rem;
+    margin-top: 2.14rem;
     padding-bottom: 2rem;
     background-color: #55557b;
     height: 5rem;
-    padding-top: 1rem;
+    padding-top: 1.2rem;
     width: 12rem;
     border-bottom-left-radius: 1.4rem;
     border-bottom-right-radius: 1.4rem;
@@ -182,6 +181,14 @@
     padding-top: 2rem;
     padding-bottom: 2rem;
 }
+
+.inner-content-control-spacing-embedded-app {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
 /* #endregion control spacings */
 
 footer {

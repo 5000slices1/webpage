@@ -1,8 +1,9 @@
-import {Principal} from '@dfinity/principal';
+import { Principal } from '@dfinity/principal';
 
-import {ModelWalletTypes} from './ModelWalletTypes';
+import { ModelWalletTypes } from './ModelWalletTypes';
 
-export class ModelUsersIdentity {
+export class ModelUsersIdentity
+{
     //Connected, true or false
     IsConnected: boolean;
 
@@ -18,19 +19,26 @@ export class ModelUsersIdentity {
     //The users wallet-principal
     AccountPrincipal: Principal;
 
-    constructor() {
+    //✅ Add this field for ICP Ledger Account Identifier
+    AccountId: string;
+
+    constructor()
+    {
         this.IsConnected = false;
         this.Type = ModelWalletTypes.NoWallet;
         this.Name = '';
         this.AccountPrincipalText = '';
         this.AccountPrincipal = Principal.anonymous();
+        this.AccountId = '';
     }
 
-    Reset() {
+    Reset()
+    {
         this.IsConnected = false;
         this.Type = ModelWalletTypes.NoWallet;
         this.Name = '';
         this.AccountPrincipalText = '';
         this.AccountPrincipal = Principal.anonymous();
+        this.AccountId = '';
     }
 }

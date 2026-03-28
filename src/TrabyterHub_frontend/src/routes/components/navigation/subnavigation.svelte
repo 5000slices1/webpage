@@ -4,6 +4,7 @@
         text: string;
         href: string;
         styleWidth?: string; // Optional width property
+        onNavigateAction?: () => void; // Optional action on navigation
     }
     export interface SubNavigationSettings {
         buttonHeightStyleValue: string;
@@ -29,23 +30,28 @@
         navigationSettings?: SubNavigationSettings;
     }>();
 
-    export async function NavigateTo(url: string) {
+    export async function NavigateTo(url: string, onNavigateAction?: () => void) {
+        selectedHref = url;
+        await goto(url);
+        if (onNavigateAction) {
+            onNavigateAction();
+        }
+    }
+
+    export async function NavigateToOld(url: string) {
         selectedHref = url;
         await goto(url, {
             replaceState: true,
         });
         // This is a workaround to avoid the issue with the browser history
+        // Also some images (inside navigation News) will not be shown if we are not doing this
         window.history.replaceState(history.state, '', '/');
     }
 </script>
 
 <!-- Render the navigation items as links -->
 
-<div
-    style="display: {navigationSettings.navigationIsVisible
-        ? 'block'
-        : 'none'};"
->
+<div style="display: {navigationSettings.navigationIsVisible ? 'block' : 'none'};">
     <table cellspacing="0" cellpadding="0" width="auto">
         <tbody>
             <tr>
@@ -53,28 +59,20 @@
                     <td>
                         <div
                             class="sub-navigation-div"
-                            style="border-bottom-left-radius: {i === 0
-                                ? '1.0rem'
-                                : '0rem'};
-                                    border-bottom-right-radius: {i ===
-                            navigationItems.length - 1
-                                ? '1.0rem'
-                                : '0rem'};
+                            style="border-bottom-left-radius: {i === 0 ? '1.0rem' : '0rem'};
+                                    border-bottom-right-radius: {i === navigationItems.length - 1 ? '1.0rem' : '0rem'};
                                 "
                         >
                             <button
-                                class="sub-navigation-button {selectedHref ===
-                                item.href
+                                class="sub-navigation-button {selectedHref === item.href
                                     ? 'sub-navigation-button-selected'
                                     : ''}"
                                 type="button"
                                 style:height={navigationSettings.buttonHeightStyleValue}
                                 id={item.href}
-                                style:width={item.styleWidth
-                                    ? item.styleWidth
-                                    : 'auto'}
+                                style:width={item.styleWidth ? item.styleWidth : 'auto'}
                                 onclick={async () => {
-                                    await NavigateTo(item.href);
+                                    await NavigateTo(item.href, item.onNavigateAction);
                                 }}
                             >
                                 {item.text}<br />

@@ -8,6 +8,9 @@
       "type": "motoko"
     },
     "TrabyterHub_frontend": {
+      "declarations": {
+        "node_compatibility": true
+      },
       "dependencies": [
         "TrabyterHub_backend"
       ],

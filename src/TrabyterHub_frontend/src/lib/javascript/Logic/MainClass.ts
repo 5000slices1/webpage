@@ -1,49 +1,72 @@
 import TokenInformation from '$lib/../routes/components/uiControls/tokeninformation.svelte';
-import {
-    TrabyterBucks_CanisterId,
-    TrabyterPremium_CanisterId,
-} from '$lib/javascript/Abstractions/constants/globalConstants.js';
-import {
-    TokenExplorerItem,
-    TokenExplorerResponse,
-    TokenExplorerService,
-} from '$lib/javascript/Services/TokenExplorerService';
-import {TokenInformationService} from '$lib/javascript/Services/TokenInformationService';
-import {writable} from 'svelte/store';
+import { EmbeddedAppsInformation } from '$lib/javascript/Abstractions/apps/embeddedAppsInformation'; // Adjust the path as needed
+import
+    {
+        TrabyterBucks_CanisterId,
+        TrabyterPremium_CanisterId,
+    } from '$lib/javascript/Abstractions/constants/globalConstants.js';
+import
+    {
+        TokenExplorerItem,
+        TokenExplorerResponse,
+        TokenExplorerService,
+    } from '$lib/javascript/Services/TokenExplorerService';
+import { TokenInformationService } from '$lib/javascript/Services/TokenInformationService';
+import { AppIdentifier } from '$lib/shared/common/abstractions/types/commonTypes';
+import { CryptoUtils } from '$lib/shared/common/crypto/cryptoutils';
+import { writable } from 'svelte/store';
 
-import {IdentityProvider} from './identity/IdentityProvider';
+import { IdentityProvider } from './identity/IdentityProvider';
+import { MessageProvider } from './messages/messageProvider';
 
-import type {TokenInformationSettings} from '$lib/../routes/components/uiControls/tokeninformation.svelte';
-class InternalMainClass {
+import type { TokenInformationSettings } from '$lib/../routes/components/uiControls/tokeninformation.svelte';
+//import { AppIdentifier } from '../../shared/common/abstractions/types/commonTypes';
+
+class InternalMainClass
+{
     #init_done: boolean = false;
     IdentityProvider: IdentityProvider;
     counter: number = 0;
-    constructor() {
+    MessageProvider: MessageProvider;
+    EmbeddedPageFullScreenMode: boolean = false;
+    EmbeddedAppsInformation: EmbeddedAppsInformation;
+
+    constructor()
+    {
+        this.MessageProvider = new MessageProvider(AppIdentifier.MainWebsite);
         this.IdentityProvider = new IdentityProvider();
         this.counter = 0;
+        this.EmbeddedAppsInformation = new EmbeddedAppsInformation();
     }
 
-    async InitAsync() {
-        if (this.#init_done) {
+    async InitAsync()
+    {
+        if (this.#init_done)
+        {
             return;
         }
+        await this.MessageProvider.InitAsync();
         await this.IdentityProvider.Init();
         this.#init_done = true;
         await this.PrefetchSomeDataInBackgroundAsync();
     }
 
-    IsInitDone() {
+    IsInitDone()
+    {
         return this.#init_done;
     }
 
-    async PrefetchSomeDataInBackgroundAsync() {
+    async PrefetchSomeDataInBackgroundAsync()
+    {
         // This method can be used to prefetch some data in the background
         // For example, you can call some API or load some data that is needed later
         // This is just a placeholder for now
         //console.log('Prefetching some data in background...');
         // Simulate a delay
-        const prefetchData = async () => {
-            if (typeof window === 'undefined' || !window.sessionStorage) {
+        const prefetchData = async () =>
+        {
+            if (typeof window === 'undefined' || !window.sessionStorage)
+            {
                 console.warn('Session storage is not available. Prefetching will not store data.');
                 return;
             }
@@ -56,14 +79,16 @@ class InternalMainClass {
         };
 
         // Run the prefetchData function in the background
-        prefetchData().catch((error) => {
+        prefetchData().catch((error) =>
+        {
             console.error('Error while prefetching data:', error);
         });
 
         //console.log('Data prefetched.');
     }
 
-    private async fetchDataTokenExplorerAsync() {
+    private async fetchDataTokenExplorerAsync()
+    {
         const firstTraKey: string = 'ExplorerResponse_' + TrabyterBucks_CanisterId;
         const secondTraKey: string = 'ExplorerResponseLastTx_' + TrabyterBucks_CanisterId;
 
@@ -95,32 +120,39 @@ class InternalMainClass {
             trabyterExplorerService.GetTransactionsByStartTxIdAsync(numberTralastTx - 4, 5),
         ]);
 
-        if (traExplorerResponse != null && traExplorerResponse.hasError == false) {
+        if (traExplorerResponse != null && traExplorerResponse.hasError == false)
+        {
             // Store into session storage
-            try {
+            try
+            {
                 const serializableResponse = JSON.stringify(traExplorerResponse);
 
                 sessionStorage.setItem(firstTraKey, serializableResponse);
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('Failed to serialize traExplorerResponse:', error);
             }
-            try {
+            try
+            {
                 const numberTralastTxString = JSON.stringify(numberTralastTx);
 
                 sessionStorage.setItem(secondTraKey, numberTralastTxString);
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('Failed to serialize numberTralastTx:', error);
             }
         }
 
-        if (traPremiumExplorerResponse != null && traPremiumExplorerResponse.hasError == false) {
+        if (traPremiumExplorerResponse != null && traPremiumExplorerResponse.hasError == false)
+        {
             // Store into session storage
             sessionStorage.setItem(firstTrapreKey, JSON.stringify(traPremiumExplorerResponse));
             sessionStorage.setItem(secondTrapreKey, JSON.stringify(numberTraPremiumLastTx));
         }
     }
 
-    private async fetchDataTokenInfoAsync() {
+    private async fetchDataTokenInfoAsync()
+    {
         var traTokenService = new TokenInformationService();
         var traPremiumTokenService = new TokenInformationService();
 
